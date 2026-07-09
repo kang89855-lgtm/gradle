@@ -141,6 +141,9 @@
   #btnJump:active{transform:translateY(2px)}
   #sndBtn{position:fixed;top:64px;right:3vw;z-index:20;width:44px;height:44px;border-radius:50%;
          background:var(--card);box-shadow:var(--shadow);font-size:19px}
+  #langBtn{position:fixed;top:64px;right:calc(3vw + 54px);z-index:75;height:44px;padding:0 16px;
+         border-radius:999px;background:var(--navy);color:#fff;box-shadow:var(--shadow);
+         font-size:13px;font-weight:900;letter-spacing:.06em}
   #panel input{flex:1 1 100%;border:2px solid #E4EAF5;border-radius:14px;padding:12px 16px;
          font-size:15px;font-weight:700;font-family:inherit;color:var(--navy)}
   #panel input:focus{outline:3px solid var(--blue);border-color:var(--blue)}
@@ -432,6 +435,7 @@
   <div class="g"></div><div class="lbl">벚꽃 마을</div>
 </div>
 <button id="sndBtn" aria-label="소리 켜기/끄기">🔊</button>
+<button id="langBtn" aria-label="언어 전환">EN</button>
 <button id="btnJump">⤴ 점프</button>
 <button id="btnGo">🚶 자동 걷기</button>
 <div id="stick" aria-label="조이스틱"><div id="knob"></div></div>
@@ -651,6 +655,35 @@ const ST_RE=[
  {t:'주변의 시선 때문에 재혼을 망설이거나 서두른다.',k:'가족',r:1},
  {t:'재혼이 깨질까 봐 하고 싶은 말을 미리 포기한다.',k:'대화',r:1,f:'침묵 인내'}
 ];
+/* ══ 영어 번역 (내장 i18n — 외부 API 없음) ══ */
+var LANG='ko';
+function tr(ko,en){return LANG==='en'?en:ko}
+const AREA_EN={감정:'Emotional stability',경제:'Financial reality',가족:'Family independence',책임:'Responsibility',존중:'Respect',현실:'Reality sense',대화:'Real talk',위험:'Red-flag awareness'};
+function areaName(k){return LANG==='en'?AREA_EN[k]:AREA_NAME[k]}
+const LAP1_EN=['I feel anxious or angry when my partner replies late.','Even after a fight, I can calm myself down.','If I marry now, my loneliness will be solved.','I have calculated the monthly cost of married life.','I can honestly share my income, debt, and savings with my partner.',"I feel pressured to marry soon because of my parents' expectations.","I can separate my parents' expectations from my partner's feelings.",'Marriage is about sharing responsibility, not just feelings.','When problems arise, I blame my partner or the situation first.','If you love someone, some control and interference should be tolerated.','I try not to repeat things my partner said they dislike.',"Even when I see my partner's flaws, I think 'marriage will change them.'",'I imagine married life more often than the wedding day.','We have talked concretely about money, housing, and children.','In conflict, I choose conversation over silence or disappearing.'];
+const LAP1_HEN=["Don't pick the 'right' answer — recall yesterday's you!",'Recovery speed is the stamina of marriage.','Loneliness is a signal to care for, not a reason to marry.',"Love doesn't hate numbers!",'Money talk getting comfortable = marriage getting safer.',"Your clock can differ from your parents'.","'Informing' and 'asking permission' are different.",'How fast you nod here is your readiness.',"Be honest! Nobody's watching.",'If you hesitated here, that hesitation is data.','Respect is small repetitions, not big events.','What if they stay exactly like this for 30 years?','The wedding is one day; the marriage is 30 years.','Postponed talks charge interest after marriage.','Last question of this course! Checkpoint ahead 🎉'];
+const COMMON2_EN=["My whole day's mood depends on my partner's reactions.","When I can't reach my partner, I imagine the worst.","I've been told my words or actions get rough when angry.",'I can spend time alone comfortably.','When stressed, I take it out on my partner.','I know my income, debt, and savings in exact numbers.','I know the realistic scale of wedding costs (housing, ceremony).','Bringing up money feels awkward and uncomfortable.','I have my own standards for managing income and sharing expenses.','I often spend big impulsively and regret it.','Even if my parents object, I can make my own marriage decision.','I can settle holiday and family-event matters together with my spouse.',"For big decisions, my parents' approval comes to mind first.",'If my parents and spouse clash, I can mediate between them.',"Sometimes my parents' satisfaction feels more important than my spouse's.",'When things get hard, I look for solutions rather than avoid.','I keep my promises even at a loss.',"I can apologize first when I'm wrong.",'I often put off chores, waiting for my partner to do them.','I have steadily cared for a pet or even a plant.',"I listen fully even when my partner's opinion differs.","I've mocked my partner's job, family, or past as a 'joke'.",'Understanding matters more than winning in a relationship.',"I can sincerely celebrate my partner's success.","I've punished my partner with silence when they went against me.",'Marriage will naturally solve my current problems.','Boredom and conflict in marriage are mine to handle too.','I have imagined 30 years with my partner exactly as they are.',"I'd be disappointed if drama-like love doesn't continue.",'I have pictured my concrete daily routine after marriage.',"I can propose 'let's set a time to talk' about hard topics.",'When my partner shares hurt, I listen before making excuses.','I can offer words of reconciliation first after a fight.','In conflict, I dig up past mistakes and pile them on.',"I can express feelings like 'I felt hurt because…'.",'I can tell love from obsession.',"I've noticed red flags and ignored them.",'When others worry about my partner, I get angry first.',"I've stayed in a relationship knowing why I should leave.",'I quickly notice people who treat me carelessly.',"We've talked about what we learned after conflicts.",'I believe I can be happy even without marriage.',"Meeting my partner's friends and family feels comfortable.",'We have agreed standards for sharing dating expenses.','I often say thank you to my partner.'];
+const MALE_EN=["I can concretely explain what a 'good husband' does.","I've sketched income and spending for the first 5 years of marriage.",'I have a plan to keep the family going even if my spouse gets sick or stops working.',"I'm approaching marriage with a 'things will work out somehow' mindset.","Housework and childcare are things to share, not to 'help with'.",'Marrying late feels embarrassing in front of others.','A broken engagement feels like failing in front of my parents.',"Words like 'at your age, lower your standards' shake me.","I'm rushing marriage to end eating and sleeping alone.",'The fact of getting married matters more than who I marry.','My daily life runs fine even without marriage.','If I spend more money, my partner should follow my words.',"I sometimes want to control my partner's spending, clothes, or friends.","I feel urges to check my partner's phone or SNS.",'I expect rewards (attitude, affection) for paying for dates.',"My partner's money and time fully belong to them.",'Fear of being left makes me over-promise.',"I still haven't told my partner about my past relationship wounds.",'I swallow hurt feelings fearing the relationship might break.','I believe relationships can recover after conflict.',"'Don't miss this one' from others makes me hasty.",'We just met, but I want to set a wedding date already.','If conditions match, feelings will grow after marriage.','The final call on marriage is mine, no one else\'s.','If I stop this marriage now, there will be no next chance.'];
+const FEMALE_EN=['I feel at ease in body and mind with my partner.',"I've felt scared when my partner gets angry.","I stay tense choosing words so my partner's mood won't sour.",'I feel safe voicing disagreement to my partner.',"My partner's drinking, driving, or venting has made me anxious.",'My partner respects my work, dreams, and time.','My partner belittles me with jokes in front of others.','My partner repeats behaviors I clearly said I dislike.','My partner asks my opinion and reflects it in decisions.',"I can barely remember hearing 'I'm sorry' from my partner.","I feel like I'm the only one working to keep this relationship.",'After seeing my partner, I feel drained rather than recharged.',"I postpone my own feelings while reading my partner's mood.",'I can confidently claim my share of happiness in this relationship.','My partner interferes with my clothes, friends, or curfew.','My partner has tried to check my phone, location, or SNS.',"I fear what might happen if I say let's break up.",'I decide my own spending and money management.',"We've discussed rules for in-law relationships after marriage.",'My partner would take my side in front of their parents.','When I raise in-law worries, my partner avoids or gets angry.',"I know my partner's income and debt in detail.","I've tolerated uncomfortable behavior because of my partner's finances.",'I keep my own money and career plans after marriage.',"Thinking it's hard to start over at this age, I rush marriage."];
+const STD_EN=["We've discussed plans for children (whether and when).","We've checked our differences in religion and politics.","We know each other's health conditions and history.","We've talked about where to live after marriage.","We know each other's expectations about who works and earns.","My partner's spending habits have worried me.",'I can discuss how to split wedding preparation costs.',"I've experienced my partner's family atmosphere firsthand.",'We can promise not to run to our parents after fights.','Our ways of spending weekends and holidays match well.','We can set concrete standards for sharing housework.','I can name 3 flaws of my partner — and still choose them.','My life is solid enough not to collapse even imagining a breakup.',"I've felt a temperature gap between my partner's heart and mine.","I've pressured my partner about proposal or marriage timing."];
+const INTL_EN=['We share a language deep enough for emotional conversations.','We can resolve conflicts by talking, without translator apps.',"I concretely know my partner's country's marriage and family culture.","I'm willing to learn at least some of my partner's language.",'For culture clashes, I think my partner should adapt to Korea.',"We can agree before marriage on remittances to my partner's family.","I've thought about how to handle conflicts over remittances.","I trust what I verified with my partner over the agency's words.",'Even if the agency rushes me, I can decide at my own pace.','I feel impatient that a delayed marriage means a loss.',"We've talked honestly about the intentions behind this marriage.","I accept my partner's right to choose or refuse me too.","We planned my partner's settlement together — language classes, jobs.",'I have imagined the isolation my partner may feel in Korea.',"I'd feel safer managing my partner's passport, bankbook, or phone."];
+const RE_EN=['I can explain why my previous marriage ended, without emotion.','I acknowledge my own part in the previous marriage.','Anger or lingering feelings toward my ex affect this relationship.','I catch myself comparing my new partner with my ex.','I have had enough time to heal since the divorce or loss.','I know the conflict patterns that repeated in my previous marriage.','I watch whether those patterns appear in this new relationship.',"I postpone verifying things, hoping 'this time will be different.'",'If I have children, I have a plan for how to tell them.','I can wait patiently for my children and new partner to bond.','I can discuss child support and assets before marriage.',"I've been transparent about ex-related matters (contact, visitation).","I'm rushing remarriage because being alone is hard.","Other people's eyes make me hesitate — or rush — remarriage.",'I give up saying things for fear this marriage might break.'];
+const FLAG_EN={'반응 민감':'Reaction-sensitive','외로움 결혼':'Marrying loneliness','경제 미계산':'Unbudgeted','부모 압박':'Parental pressure','책임 회피':'Blame-shifting','통제 수용':'Tolerating control','결혼 환상':'Marriage fantasy','대화 공백':'Talk gap','불안 상상':'Catastrophizing','분노 조절':'Anger control','독립 지연':'Delayed independence','존중 결핍':'Respect deficit','침묵 처벌':'Silent punishment','문제 해결 환상':'Fix-it fantasy','신호 무시':'Ignored red flags','체면 불안':'Face anxiety','외로움 조급':'Lonely haste','결혼 자체 목표':'Marriage-as-goal','돈-권력 등식':'Money = power','통제 충동':'Control urge','감시 충동':'Surveillance urge','불안 과약속':'Anxious over-promising','주변 재촉':'Peer rush','성급 진행':'Rushing ahead','마지막 기회 사고':'Last-chance thinking','안전감 흔들림':'Shaken safety','긴장 관계':'Walking on eggshells','행동 불안':'Behavior anxiety','공개 비하':'Public belittling','경계 무시':'Boundary ignoring','감정 소모':'Emotional drain','생활 간섭':'Life interference','감시 시도':'Surveillance attempt','이별 공포':'Breakup fear','시댁 대화 회피':'In-law talk avoidance','경제 의존 인내':'Financial endurance','성급 결혼':'Rushed marriage','일방 적응 요구':'One-way adaptation','진행 조급':'Process haste','통제 위험':'Control risk','과거 미해결':'Unresolved past','확인 미룸':'Postponed verification','외로움 재혼':'Lonely remarriage','침묵 인내':'Silent endurance'};
+function flagName(f){return LANG==='en'?(FLAG_EN[f]||f):f}
+const STATUS_KO=['연애 중','결혼 고민 중','재혼 고민 중','국제결혼 고민 중','아직 상대는 없지만 준비 중'];
+const STATUS_EN=['Dating','Considering marriage','Considering remarriage','Considering international marriage','Preparing, no partner yet'];
+/* te(영문) 필드 부착 */
+[[LAP1,LAP1_EN],[COMMON2,COMMON2_EN],[MALE,MALE_EN],[FEMALE,FEMALE_EN],[ST_DEFAULT,STD_EN],[ST_INTL,INTL_EN],[ST_RE,RE_EN]]
+ .forEach(([pool,en])=>pool.forEach((q,i)=>q.te=en[i]||q.t));
+LAP1.forEach((q,i)=>q.he=LAP1_HEN[i]);
+const WANTS_EN=[
+ {k:'Stability',me:"Your core need is a secure base. You thrive on stability signals — but when anxious, you may try to 'buy' calm through checking (messages, promises).",pt:'You believe your partner wants stability. Then your spontaneity may read as shakiness — keeping schedules and promises becomes your best love language.'},
+ {k:'Excitement',me:"Thrill feels like proof of love. Careful — marital calm can be misread as 'love fading.' Butterflies are also a skill you build.",pt:'You think your partner wants excitement. You might over-prove love with big events — ask whether they want events, or everyday attention.'},
+ {k:'Respect',me:"Recognition fuels you. Your strength is fairness; your weak spot is criticism. Practice saying 'that just hurt me' right away.",pt:'You think your partner wants respect. Good sign — but respect only travels through actions: listening fully, reflecting opinions.'},
+ {k:'Freedom',me:"You need independence and distance control. Healthy — but 'time alone to sort things out' may read as avoidance. Announce when you'll be back.",pt:"You believe your partner wants freedom. If true, less interference is the answer — but check that you're not rationalizing their distancing."},
+ {k:'Care',me:"Giving care is your love language. But piled-up 'I gave this much' becomes an invoice. Practice asking for what you want, in words.",pt:'You think your partner wants care. Are you seeing them as someone to fix? One-way care becomes a savior pattern.'},
+ {k:'Financial security',me:"Great reality sense. But financial safety and emotional safety are separate accounts — don't fill one with the other.",pt:"You think your partner wants financial security. That belief can turn into burden or power ('I pay, so…'). Transparent money talk is the antidote."}
+];
 let BANK=[...LAP1,...COMMON2,...MALE,...ST_DEFAULT]; // 기본값 — 선택 후 재구성
 function buildBank(){
   const g=S.gender==='여성'?FEMALE:MALE;
@@ -667,6 +700,7 @@ const WANTS=[
  {k:'돌봄',emo:'🤲',me:'주고받는 돌봄이 사랑의 언어인 타입이에요. "내가 이만큼 주니까"가 쌓이면 청구서가 돼요. 받고 싶은 것을 말로 요청하는 연습이 필요해요.',pt:'상대가 돌봄을 원한다고 믿고 있어요. 혹시 상대를 돌봐야 할 사람으로 보고 있진 않나요? 한 방향 돌봄은 구원자 패턴이 됩니다.'},
  {k:'경제적 안전',emo:'💰',me:'현실 감각이 뛰어난 타입이에요. 다만 경제적 안전과 정서적 안전은 별개 계좌예요. 조건이 채워줄 수 없는 것을 조건으로 채우려 하지 않는지 점검해보세요.',pt:'상대가 경제적 안전을 원한다고 믿고 있어요. 그 믿음이 부담이나 권력("내가 쓰니까")으로 변하기 쉬워요. 돈 이야기를 숫자로 투명하게 나누세요.'}
 ];
+WANTS.forEach((w,i)=>{w.ke=WANTS_EN[i].k;w.mee=WANTS_EN[i].me;w.pte=WANTS_EN[i].pt});
 const S={name:'',age:'',color:'#43C3F0',acc:'none',gender:null,status:null,wantMe:null,wantPartner:null,ans:{},skipped:0,discounted:false,lastShown:false};
 
 /* ══ 귀여운 사운드 (WebAudio 합성 — 외부 파일 없음) ══ */
@@ -706,17 +740,28 @@ addSt({type:'talk',x:CX,y:CY+300,npc:'haran',tag:'하란 Lv.10',
   '저에겐 수집품이 있어요 — 헤어진 커플 200쌍의 <b>"그때 알았더라면"</b>이라는 문장들. 위험신호는 언제나 있었어요. 못 본 척했을 뿐이죠.',
   '한 가지 약속만 해요 — <b>솔직하게</b> 답하기. 솔직하지 않으면 결과도 솔직하지 않거든요. 부담스러운 질문은 <b>건너뛰어도</b> 괜찮아요.',
   '이 마을 곳곳에 친구들이 있어요. <b>분홍 화살표</b>를 따라 자유롭게 걸어다니면서 만나보세요. 자, 출발!'
+ ],
+ pages_en:[
+  "Welcome, {NAME}! I'm <b>Haran</b> — 36 years old, a relationship-psychology editor for 10 years, with 400+ couple-coaching sessions.",
+  "My personality? Friends call me <b>'kindly direct'</b>. I don't sugarcoat, but I never blame. <b>'Let's check'</b> comes before 'it's okay'!",
+  "I collect something special — the words <b>'if only I had known'</b> from 200 couples who broke up. The red flags were always there. We just looked away.",
+  "One promise — answer <b>honestly</b>. If you're not honest, the result can't be honest either. Skipping heavy questions is <b>okay</b>!",
+  "Friends are all around this village. Follow the <b>pink arrow</b> and walk anywhere you like. Let's go!"
  ]});
-addSt({type:'choice',x:CX+320,y:CY+80,npc:'sign',tag:'갈림길 표지판',who:'MAP',
+addSt({type:'choice',x:CX+320,y:CY+80,npc:'sign',tag:'갈림길 표지판',tag_en:'Crossroads sign',who:'MAP',
  txt:'지금 어느 <b>맵</b>에 있나요? 선택에 따라 심화 코스가 준비돼요.',
- opts:['💗 연애 중','💍 결혼 고민 중','🌱 재혼 고민 중','🌏 국제결혼 고민 중','🧭 아직 상대는 없지만 준비 중'],
- set:(i,label)=>{S.status=label.replace(/^\S+\s/,'');buildBank()}});
-addSt({type:'choice',x:CX-200,y:CY-260,npc:'market',tag:'마음 장터 🏮',who:'MARKET',
+ txt_en:'Which <b>map</b> are you on now? Your choice adds a deeper course.',
+ opts:STATUS_KO.map((s,i)=>['💗','💍','🌱','🌏','🧭'][i]+' '+s),
+ opts_en:STATUS_EN.map((s,i)=>['💗','💍','🌱','🌏','🧭'][i]+' '+s),
+ set:(i)=>{S.status=STATUS_KO[i];buildBank()}});
+addSt({type:'choice',x:CX-200,y:CY-260,npc:'market',tag:'마음 장터 🏮',tag_en:'Heart Market 🏮',who:'MARKET',
  txt:'장터 친구들이 저마다 <b>원하는 것</b>을 들고 있어요. 관계에서 <b>당신이 가장 원하는 것</b>은?',
- opts:WANTS.map(w=>w.emo+' '+w.k),set:(i)=>{S.wantMe=i}});
-addSt({type:'choice',x:CX+200,y:CY-260,npc:'market2',tag:'마음 장터 🏮',who:'MARKET',
+ txt_en:'Each market friend holds what they want most. In a relationship, <b>what do YOU want most</b>?',
+ dyn:1,set:(i)=>{S.wantMe=i}});
+addSt({type:'choice',x:CX+200,y:CY-260,npc:'market2',tag:'마음 장터 🏮',tag_en:'Heart Market 🏮',who:'MARKET',
  txt:'그렇다면 <b>상대방(또는 미래의 상대)</b>은 당신에게 무엇을 가장 원할까요? 원한다고 <b>믿는 것</b>을 골라요.',
- opts:WANTS.map(w=>w.emo+' '+w.k),set:(i)=>{S.wantPartner=i}});
+ txt_en:'Then what does <b>your partner (or future partner)</b> want most from you? Pick what you <b>believe</b> they want.',
+ dyn:1,set:(i)=>{S.wantPartner=i}});
 for(let i=0;i<FLAGN;i++){
   const ang=(90+i*(360/FLAGN))*Math.PI/180;
   addSt({type:'scale',qi:i,tag:'문항 '+(i+1),
@@ -730,7 +775,7 @@ function resetLap(){
     const gi=lap*FLAGN+i;
     if(gi>=TOTAL){s.done=true;s.el.style.display='none';return}
     s.done=false;s.el.style.display='';s.el.classList.remove('done');
-    s.el.querySelector('.fl').textContent='🚩 문항 '+(gi+1);
+    s.el.querySelector('.fl').textContent=tr('🚩 문항 ','🚩 Q ')+(gi+1);
   });
 }
 
@@ -914,61 +959,73 @@ function esc(s){return s.replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;
 function setupFlow(st){
   stepAge();
   function stepAge(){resetPanel();pWho.textContent='HARAN';
-    pTxt.innerHTML='<b>'+esc(S.name)+'</b>님, 나이대는 어떻게 되세요?';
-    ['20대','30대 초반','30대 후반','40대','50대 이상'].forEach(a=>{
+    pTxt.innerHTML=tr('<b>'+esc(S.name)+'</b>님, 나이대는 어떻게 되세요?',
+                      '<b>'+esc(S.name)+'</b>, which age group are you in?');
+    (LANG==='en'?['20s','early 30s','late 30s','40s','50s+']:['20대','30대 초반','30대 후반','40대','50대 이상']).forEach(a=>{
       const c=document.createElement('button');c.textContent=a;
       c.onclick=()=>{S.age=a;sfx('ok');stepColor()};pBtns.appendChild(c)});
   }
   function stepColor(){resetPanel();pWho.textContent='CUSTOM ✨';
-    pTxt.innerHTML='이제 <b>'+esc(S.name)+'</b>님의 모습을 꾸며볼까요? 마음에 드는 <b>색</b>을 골라요. (바로 적용돼요)';
-    [['하늘','#43C3F0'],['복숭아','#F97BB1'],['새싹','#7FD6A4'],['라벤더','#9B7FD4'],['레몬','#FFD84D']].forEach(pair=>{
+    pTxt.innerHTML=tr('이제 <b>'+esc(S.name)+'</b>님의 모습을 꾸며볼까요? 마음에 드는 <b>색</b>을 골라요. (바로 적용돼요)',
+                      'Time to style you, <b>'+esc(S.name)+'</b>! Pick your favorite <b>color</b>. (applies instantly)');
+    [[tr('하늘','Sky'),'#43C3F0'],[tr('복숭아','Peach'),'#F97BB1'],[tr('새싹','Sprout'),'#7FD6A4'],[tr('라벤더','Lavender'),'#9B7FD4'],[tr('레몬','Lemon'),'#FFD84D']].forEach(pair=>{
       const b2=document.createElement('button');b2.textContent=pair[0];
       b2.style.background=pair[1];b2.style.color='#fff';b2.style.textShadow='0 1px 0 rgba(40,53,106,.4)';
       b2.onclick=()=>{S.color=pair[1];refreshPlayer();sfx('pop')};pBtns.appendChild(b2)});
-    const next=document.createElement('button');next.className='primary';next.textContent='이 색으로 할게요 →';
+    const next=document.createElement('button');next.className='primary';
+    next.textContent=tr('이 색으로 할게요 →','This color →');
     next.onclick=()=>{sfx('ok');stepAcc()};pBtns.appendChild(next);
   }
   function stepAcc(){resetPanel();pWho.textContent='CUSTOM ✨';
-    pTxt.innerHTML='마지막! <b>액세서리</b>를 골라요.';
-    [['없음','none'],['🧢 모자','cap'],['🎀 리본','ribbon'],['😎 선글라스','glasses'],['🎧 헤드폰','head']].forEach(pair=>{
+    pTxt.innerHTML=tr('마지막! <b>액세서리</b>를 골라요.','Last! Pick an <b>accessory</b>.');
+    [[tr('없음','None'),'none'],[tr('🧢 모자','🧢 Cap'),'cap'],[tr('🎀 리본','🎀 Ribbon'),'ribbon'],[tr('😎 선글라스','😎 Sunglasses'),'glasses'],[tr('🎧 헤드폰','🎧 Headphones'),'head']].forEach(pair=>{
       const b3=document.createElement('button');b3.textContent=pair[0];
       b3.onclick=()=>{S.acc=pair[1];refreshPlayer();sfx('pop')};pBtns.appendChild(b3)});
-    const go=document.createElement('button');go.className='green';go.textContent='완성! 출발 🚶';
+    const go=document.createElement('button');go.className='green';
+    go.textContent=tr('완성! 출발 🚶','Done! Let\'s go 🚶');
     go.onclick=()=>{sfx('win');markDone(st);closePanel();autoGo()};pBtns.appendChild(go);
   }
 }
 
+let curSt=null;
 function openStation(st){
-  panelOpen=true;resetPanel();sfx('pop');
+  panelOpen=true;curSt=st;resetPanel();sfx('pop');
+  const NAME='<b>'+esc(S.name||tr('여행자','traveler'))+'</b>';
   if(st.type==='talk'){
     pWho.textContent='HARAN';let p=0;
-    const show=()=>{pTxt.innerHTML=st.pages[p].replace('{NAME}','<b>'+esc(S.name||'여행자')+'</b>');pBtns.innerHTML='';
+    const pages=(LANG==='en'&&st.pages_en)?st.pages_en:st.pages;
+    const show=()=>{pTxt.innerHTML=pages[p].replace('{NAME}',NAME);pBtns.innerHTML='';
       const b=document.createElement('button');
-      b.className=p<st.pages.length-1?'primary':'green';
-      b.textContent=p<st.pages.length-1?'다음 →':'계속 →';
-      b.onclick=()=>{p++;p<st.pages.length?show():setupFlow(st)};
+      b.className=p<pages.length-1?'primary':'green';
+      b.textContent=p<pages.length-1?tr('다음 →','Next →'):tr('계속 →','Continue →');
+      b.onclick=()=>{p++;p<pages.length?show():setupFlow(st)};
       pBtns.appendChild(b)};
     show();
   }else if(st.type==='choice'){
-    pWho.textContent=st.who;pTxt.innerHTML=st.txt;
-    st.opts.forEach((label,i)=>{
+    pWho.textContent=st.who;
+    pTxt.innerHTML=(LANG==='en'&&st.txt_en)?st.txt_en:st.txt;
+    const opts=st.dyn?WANTS.map(w=>w.emo+' '+(LANG==='en'?w.ke:w.k))
+                     :((LANG==='en'&&st.opts_en)?st.opts_en:st.opts);
+    opts.forEach((label,i)=>{
       const b=document.createElement('button');b.textContent=label;
       b.onclick=()=>{st.set(i,label);markDone(st);closePanel();autoGo()};
       pBtns.appendChild(b)});
   }else if(st.type==='scale'){
     const gi=lap*FLAGN+st.qi, q=BANK[gi];
     const HGEN=['천천히, 솔직하게요.','어제의 당신 기준으로요!','고민되면 3 말고, 더 가까운 쪽으로요.','좋아요, 잘 가고 있어요!','이 질문, 은근 중요해요.'];
-    pWho.textContent='문항 '+(gi+1)+' / '+TOTAL;
-    pArea.style.display='block';pArea.textContent=AREA_NAME[q.k]+' 영역';
-    pTxt.textContent=q.t;
+    const HGEN_EN=['Slowly, and honestly.',"Judge by yesterday's you!","If torn, pick the closer side — not 3.",'Nice, you are doing great!','This one matters more than it looks.'];
+    pWho.textContent=tr('문항 ','Q ')+(gi+1)+' / '+TOTAL;
+    pArea.style.display='block';pArea.textContent=areaName(q.k)+tr(' 영역','');
+    pTxt.textContent=LANG==='en'?(q.te||q.t):q.t;
     pScale.style.display='grid';pCap.style.display='flex';
-    pMini.style.display='block';pMini.innerHTML='<b>하란:</b> '+(q.h||HGEN[gi%HGEN.length]);
+    pMini.style.display='block';
+    pMini.innerHTML='<b>Haran:</b> '+(LANG==='en'?(q.he||HGEN_EN[gi%5]):(q.h||HGEN[gi%5]));
     for(let v=1;v<=5;v++){
       const b=document.createElement('button');b.textContent=v;
       b.onclick=()=>{S.ans[gi]=v;markDone(st);closePanel();autoGo()};
       pScale.appendChild(b)}
     const sk=document.createElement('button');
-    sk.textContent='🙈 이 질문은 건너뛸게요';
+    sk.textContent=tr('🙈 이 질문은 건너뛸게요','🙈 Skip this question');
     sk.onclick=()=>{S.ans[gi]=0;S.skipped++;markDone(st);closePanel();autoGo()};
     pBtns.appendChild(sk);
   }else if(st.type==='finish'){
@@ -976,14 +1033,20 @@ function openStation(st){
     if(answered<TOTAL){
       const courseN=lap+1, nextCount=Math.min(TOTAL-answered,FLAGN);
       pWho.textContent='CHECKPOINT '+courseN+' / 7';
-      pTxt.innerHTML='🏁 <b>'+esc(S.name||'여행자')+'</b>님, '+courseN+'번째 코스 완주! 지금까지 <b>'+answered+'문항</b>을 지났어요. 잠깐 쉬면서 광고 한 편 보고, 다음 <b>'+nextCount+'문항</b> 코스로 가요!';
-      const b=document.createElement('button');b.className='green';b.textContent='광고 보고 계속하기 ▶';
+      pTxt.innerHTML=tr(
+        '🏁 '+NAME+'님, '+courseN+'번째 코스 완주! 지금까지 <b>'+answered+'문항</b>을 지났어요. 잠깐 쉬면서 광고 한 편 보고, 다음 <b>'+nextCount+'문항</b> 코스로 가요!',
+        '🏁 '+NAME+', course '+courseN+' cleared! You have passed <b>'+answered+' questions</b>. Take a short ad break, then on to the next <b>'+nextCount+'</b>!');
+      const b=document.createElement('button');b.className='green';
+      b.textContent=tr('광고 보고 계속하기 ▶','Watch ad & continue ▶');
       b.onclick=()=>{showAd('inter',()=>{closePanel();lap++;resetLap();autoGo()})};
       pBtns.appendChild(b);
     }else{
       pWho.textContent='HARAN';
-      pTxt.innerHTML='🎉 <b>'+esc(S.name||'여행자')+'</b>님, <b>100문항 전체 완주</b>! 정말 대단해요. 광고 한 편 보고 나면 <b>전체 리포트</b>가 무료로 열려요!';
-      const b=document.createElement('button');b.className='green';b.textContent='광고 보고 리포트 열기 🏁';
+      pTxt.innerHTML=tr(
+        '🎉 '+NAME+'님, <b>100문항 전체 완주</b>! 정말 대단해요. 광고 한 편 보고 나면 <b>전체 리포트</b>가 무료로 열려요!',
+        '🎉 '+NAME+', <b>all 100 questions complete</b>! Amazing. After one ad, your <b>full report</b> opens for free!');
+      const b=document.createElement('button');b.className='green';
+      b.textContent=tr('광고 보고 리포트 열기 🏁','Watch ad & open report 🏁');
       b.onclick=()=>{markDone(st);showAd('reward',()=>{closePanel();showResult();sfx('win')})};
       pBtns.appendChild(b);
     }
@@ -994,55 +1057,133 @@ function autoGo(){setTimeout(()=>{if(nextStation())auto=true},350)}
 function updateHud(){
   const n=Object.keys(S.ans).length;
   document.getElementById('fill').style.width=(n/TOTAL*100)+'%';
-  document.getElementById('stage').textContent= n? '문항 '+n+' / '+TOTAL : '벚꽃 마을 탐험 중';
+  document.getElementById('stage').textContent= n? tr('문항 ','Q ')+n+' / '+TOTAL : tr('벚꽃 마을 탐험 중','Exploring the village');
 }
+
+/* ══ 영역별 심층 해석 (점수 구간별 · 한/영) ══ */
+const AREA_EMO={감정:'💗',경제:'💰',가족:'🏠',책임:'🧭',존중:'🤝',현실:'👓',대화:'💬',위험:'🚨'};
+const AREA_TX={
+감정:{hi:['갈등 후 스스로 회복하는 힘(자기진정)이 잘 작동하고, 상대의 반응에 자존감이 휘둘리지 않아요 — 안정 애착에 가까운 응답 패턴이에요. 이 힘은 결혼 후 반복될 갈등에서 당신을 "싸움을 끝낼 수 있는 사람"으로 만들어줘요.','Your self-soothing works well and your self-worth does not swing with your partner\'s reactions — a pattern close to secure attachment. In marriage, this makes you the one who can end fights.'],
+mid:['평소엔 안정적이지만 연락 공백·반응 지연 같은 "불확실한 순간"에 불안이 올라오는 패턴이 보여요. 불안 자체는 문제가 아니에요 — 그 불안을 확인·추궁으로 번역할 때 문제가 시작돼요. 불안이 올라온 순간을 메모로 남기는 것부터 시작해보세요.','Stable most days, but anxiety rises in uncertain moments (unanswered messages, delays). Anxiety itself is fine — trouble starts when it gets translated into checking and interrogating. Start by logging the moments it rises.'],
+low:['상대의 반응 하나에 하루가 좌우되고 갈등 후 혼자 진정하기 어려운 상태예요. 애착 관점으로는 불안이 활성화된 상태 — 이때의 결혼은 안전기지가 아니라 불안의 증폭기가 되기 쉬워요. 관계 밖의 안전기지(친구·운동·상담)를 먼저 만드는 것이 순서예요.','One reaction from your partner can decide your whole day, and calming down alone is hard. In attachment terms, your anxiety system is activated — marriage in this state amplifies anxiety rather than sheltering it. Build a secure base outside the relationship first.']},
+경제:{hi:['생활비·부채·분담 기준까지 계산해본, "숫자를 아는" 상태예요. 결혼 초기 1~2년 갈등 1순위인 돈 문제를 이미 절반쯤 예방했어요. 남은 과제는 "나의 계산"을 "우리의 합의"로 바꾸는 대화 한 번이에요.','You know the numbers — living costs, debt, sharing rules. You have already prevented half of the #1 early-marriage conflict. What remains: turning "my math" into "our agreement".'],
+mid:['돈 감각은 있지만 아직 "결혼의 숫자"로 옮기지 못했어요. "어떻게든 되겠지"와 "계산해봤다"의 중간 지점 — 이번 달 안에 한 달 생활비, 주거 계획, 부채 공개 중 하나만 구체화해도 점수가 바뀌는 영역이에요.','You have money sense, but it hasn\'t become "marriage numbers" yet. Pick just one this month — monthly budget, housing plan, or debt disclosure — and this score moves.'],
+low:['돈 이야기를 피하고 있는 상태예요. 돈 대화가 불편한 진짜 이유는 대개 돈이 아니라 "평가받는 느낌" 때문이에요. 결혼에서 돈은 사랑의 반대말이 아니라 생활의 언어예요 — 데이트 비용 기준 같은 작은 것부터 소리 내어 말하는 연습이 필요해요.','You are avoiding money talk. The discomfort is usually not about money but about feeling judged. In marriage, money is not the opposite of love — it is the language of daily life. Practice out loud, starting small.']},
+가족:{hi:['부모님의 기대와 배우자의 감정을 분리할 수 있는, 심리적 분화가 잘 된 상태예요. 명절·용돈·왕래 같은 단골 갈등에서 배우자를 지킬 수 있는 위치에 서 있어요.','Well-differentiated: you separate your parents\' expectations from your partner\'s feelings. You are positioned to protect your spouse in classic family conflicts.'],
+mid:['스스로 결정한다고 믿지만 중요한 순간에 부모님의 허락이 먼저 떠오르는 패턴이 남아 있어요. 이것은 효심의 문제가 아니라 "결정의 주인"이 누구인가의 문제예요. 알리기와 허락받기를 구분하는 연습부터 해보세요.','You believe you decide, yet parental approval still comes to mind first at key moments. This is not about filial love — it is about who owns the decision. Practice separating "informing" from "asking permission".'],
+low:['결혼 결정의 무게중심이 부모님 쪽에 기울어 있어요. 이 상태로 결혼하면 배우자는 "부모님과 경쟁하는 사람"이 되고 당신은 그 사이에서 소모돼요. "내 가정의 1순위는 배우자"라는 원칙을 결혼 전에 스스로 세워야 해요.','The center of gravity of your marriage decision leans toward your parents. Married like this, your spouse becomes a competitor to them and you burn out in between. Set the principle before marriage: my spouse comes first in my household.']},
+책임:{hi:['약속을 지키고 문제 앞에서 해결부터 찾는 사람이에요. 결혼이 요구하는 "지루한 성실함"을 이미 갖췄어요 — 상대에게 가장 안심이 되는 종류의 점수예요.','You keep promises and reach for solutions first. You already have the "boring diligence" marriage demands — the most reassuring score a partner can see.'],
+mid:['책임감은 있지만 귀찮은 일을 미루거나 갈등의 원인을 바깥에서 찾는 습관이 섞여 있어요. 결혼 생활은 큰 결심이 아니라 작은 실행의 반복이에요 — "오늘 내가 미룬 것 하나"를 매일 적어보면 패턴이 보여요.','Responsible, but with a mixed habit of postponing chores and locating causes outside yourself. Marriage is small executions repeated — write down "one thing I postponed today" and the pattern shows.'],
+low:['문제가 생기면 상대나 상황 탓이 먼저 나오는 상태예요. 이 패턴은 결혼 후 "내 편이 사라지는" 가장 빠른 길이에요. 인정 → 사과 → 행동 변경 3단계 중 지금은 "인정" 하나만 연습해도 관계가 달라져요.','When problems hit, blame goes outward first. This is the fastest way to lose your ally after marriage. Of the three steps — admit, apologize, change — practicing just "admit" already changes the relationship.']},
+존중:{hi:['다른 의견을 끝까지 듣고 상대의 "싫다"를 기억하는, 존중이 습관이 된 상태예요. 갈등 연구에서 이 항목이 높은 커플의 관계 안정성이 가장 높게 나타나요.','Respect is a habit for you: hearing out different opinions, remembering your partner\'s "no". Couples high on this show the strongest relationship stability in conflict research.'],
+mid:['평소엔 존중하지만 갈등 순간에 농담을 가장한 깎아내림이나 침묵 처벌이 새어 나오는 패턴이 있어요. 존중은 평화로울 때가 아니라 화났을 때 증명돼요 — 화난 순간의 첫 문장을 바꾸는 연습이 핵심이에요.','Respectful in peacetime, but joking put-downs or punishing silence leak out in conflict. Respect is proven when angry, not when calm — work on the first sentence you say while angry.'],
+low:['관계에서 이기려는 습관, 또는 간섭을 사랑으로 받아들이는 습관이 보여요. 통제와 존중은 공존할 수 없어요. 지금 필요한 질문은 하나예요 — "나는 상대를 나와 동등한 결정권자로 대하고 있는가?"','A habit of winning, or of accepting control as love, shows here. Control and respect cannot coexist. One question matters now: "Do I treat my partner as an equal decision-maker?"']},
+현실:{hi:['결혼을 환상이 아니라 생활로 상상할 수 있는 상태예요. "지금 모습 그대로 30년"을 감당하겠다고 답한 사람 — 실망에 강한 결혼을 시작할 준비가 되어 있어요.','You imagine marriage as daily life, not fantasy. You answered you could take "30 years of exactly this person" — you are ready for a disappointment-proof marriage.'],
+mid:['결혼 생활을 그려보긴 했지만 "결혼하면 달라지겠지"라는 기대가 아직 한 켠에 있어요. 이 기대는 가장 흔하고 가장 비싼 가정이에요 — 상대의 단점 목록을 쓰고 "이대로 30년" 시뮬레이션을 해보세요.','You have pictured married life, but "marriage will change them" still lingers. That is the most common and most expensive assumption — list the flaws and simulate "30 years exactly as-is".'],
+low:['결혼이 지금의 문제(외로움·불안정)를 해결해줄 거라는 기대가 커요. 결혼은 문제를 해결하지 않고 확대 복사해요. 결혼으로 풀려는 문제에 이름을 붙이고, 그 문제를 결혼 밖에서 먼저 다루는 것이 순서예요.','You expect marriage to solve current problems (loneliness, instability). Marriage does not solve problems — it photocopies them larger. Name the problem you are trying to marry away, and address it outside marriage first.']},
+대화:{hi:['불편한 주제를 먼저 꺼낼 수 있는, 관계의 정비공이에요. 갈등이 없어서가 아니라 갈등을 다룰 줄 알아서 안전한 관계를 만드는 유형이에요.','You are the relationship\'s mechanic — able to raise uncomfortable topics first. Your safety comes not from having no conflict, but from knowing how to handle it.'],
+mid:['대화 의지는 있지만 갈등이 커지면 침묵하거나 과거를 소환하는 패턴이 섞여요. 규칙 두 개면 크게 좋아져요 — ① 지금 이 일만 다루기 ② 서운함은 48시간 안에 말하기.','Willing to talk, but silence or past-dredging appears when conflict grows. Two rules help a lot: ① only today\'s issue ② say hurt feelings within 48 hours.'],
+low:['돈·가족·자녀 같은 핵심 주제가 아직 대화 테이블에 오르지 못했어요. 미뤄진 대화는 사라지지 않고 결혼 후 이자가 붙어 돌아와요. 이번 주에 "시간 내서 이야기하자"는 문장 하나만 써보세요.','Core topics — money, family, children — have not reached the table yet. Postponed talks return after marriage with interest. This week, use one sentence: "Let\'s set a time to talk."']},
+위험:{hi:['사랑과 집착을 구분하고 위험신호를 알아차리는 감각이 살아 있어요. 이 감각은 당신만이 아니라 상대까지 보호하는 능력이에요.','You can tell love from obsession and you notice red flags. This sense protects not only you but your partner too.'],
+mid:['신호를 느끼긴 하지만 "사랑하니까"로 덮은 경험이 있어요. 당신의 느낌은 예민함이 아니라 데이터예요 — 불편했던 순간을 기록으로 남기면 패턴인지 우연인지 눈에 보여요.','You feel the signals but have covered them with "because I love them." Your feelings are data, not oversensitivity — log the uncomfortable moments and patterns become visible.'],
+low:['위험신호를 느끼고도 무시해온 패턴이 뚜렷해요. 지금 필요한 건 자기비난이 아니라 관찰 도구예요 — 4주간 "불편했던 순간 일지"를 쓰고, 신뢰할 수 있는 사람 한 명과 공유해보세요.','A clear pattern of noticing red flags and overriding them. What you need is not self-blame but an observation tool — keep a 4-week "uncomfortable moments" journal and share it with one trusted person.']}};
+const TYPE_TX={
+'안정 준비형':['위험신호가 거의 없고 전 영역이 고르게 준비된 상태라 이 유형이에요. 준비된 사람의 남은 과제는 하나 — 내 기준을 상대에게 "통보"가 아니라 "합의"로 만드는 것.','This type = almost no red flags and even readiness across areas. Your remaining task: turn your standards into agreements, not announcements.'],
+'준비 양호형':['전반적으로 준비가 좋지만 소수의 신호가 특정 영역에 몰려 있어 이 유형이에요. 전체를 고치려 하지 말고, 아래 "먼저 돌봐야 할 영역" 하나에만 4주를 써보세요.','Overall well prepared, but a few signals cluster in specific areas. Don\'t fix everything — spend 4 weeks on the single "attend first" area below.'],
+'주의 보완형':['여러 영역에서 반복적으로 신호가 잡혀 이 유형이에요. 이는 성격의 문제가 아니라 패턴의 문제 — 패턴은 이름을 붙이는 순간부터 바뀌기 시작해요. 아래 신호 목록이 그 이름들이에요.','Signals repeat across several areas — that\'s why this type. This is a pattern issue, not a character issue, and patterns start changing the moment they are named. The list below is those names.'],
+'고위험 점검형':['강한 신호(경고)가 여럿 잡혀 이 유형이에요. 지금 필요한 건 결혼 진행이 아니라 멈춰서 점검할 용기예요 — 특히 존중·위험 영역의 신호는 시간이 해결해주지 않아요. 신뢰할 수 있는 사람이나 전문가와 함께 보길 권해요.','Multiple strong signals put you here. What\'s needed now is not proceeding but the courage to pause — especially respect/red-flag signals do not fade with time. Review them with someone you trust or a professional.']};
 
 /* ══ 결과 (100문항 · 전면 무료) ══ */
 function showResult(){
+  const EN=LANG==='en';
   const hits=[];
   BANK.forEach((q,i)=>{
     const v=S.ans[i]||0;if(!v)return;
-    if(q.r&&q.f&&v>=4)hits.push({name:q.f,d:q.t,sev:v===5?'경고':'주의'});
-    if(!q.r&&q.fLow&&v<=2)hits.push({name:q.fLow,d:q.t,sev:v===1?'경고':'주의'});
+    if(q.r&&q.f&&v>=4)hits.push({name:q.f,q:EN?(q.te||q.t):q.t,k:q.k,v,strong:v===5});
+    if(!q.r&&q.fLow&&v<=2)hits.push({name:q.fLow,q:EN?(q.te||q.t):q.t,k:q.k,v,strong:v===1});
   });
-  const n=hits.length;
-  const type= n<=1?'안정 준비형': n<=4?'준비 양호형': n<=8?'주의 보완형':'고위험 점검형';
-  document.getElementById('resType').textContent=type;
-  document.getElementById('resDesc').textContent= n===0
-    ?'100문항 전 영역에서 뚜렷한 위험신호가 없어요. 지금의 태도를 유지하면서, 아래 영역 점수 중 낮은 곳만 살펴보세요!'
-    :'아래 신호는 당신이 나쁜 사람이라는 뜻이 아니라, 결혼 전에 먼저 다뤄두면 훨씬 안전해지는 지점이라는 뜻이에요.';
+  hits.sort((a,b)=>(b.strong-a.strong));
+  const n=hits.length, strongN=hits.filter(h=>h.strong).length;
+  const typeKo= n<=1?'안정 준비형': n<=4?'준비 양호형': n<=8?'주의 보완형':'고위험 점검형';
+  const typeEn={'안정 준비형':'Stable & Ready','준비 양호형':'Well Prepared','주의 보완형':'Needs Attention','고위험 점검형':'High-risk Check'}[typeKo];
+  document.getElementById('resType').textContent=EN?typeEn:typeKo;
+  /* 판정 근거: 어떤 응답이 이 유형을 만들었는지 구체적으로 */
+  const perArea={};hits.forEach(h=>{perArea[h.k]=(perArea[h.k]||0)+1});
+  const topAreas=Object.entries(perArea).sort((a,b)=>b[1]-a[1]).slice(0,2).map(e=>areaName(e[0]));
+  let reason;
+  if(n===0){reason=EN
+    ?'Across all '+(TOTAL-S.skipped)+' answered questions, no response crossed the risk threshold (4-5 on risk items).'
+    :'응답한 '+(TOTAL-S.skipped)+'문항 전체에서 위험 기준(위험 문항 4~5점)을 넘은 응답이 하나도 없었어요.';}
+  else{reason=EN
+    ?'This type comes from '+n+' risk signal'+(n>1?'s':'')+' ('+strongN+' strong · '+(n-strongN)+' mild)'+(topAreas.length?', concentrated in '+topAreas.join(' & '):'')+'. The heaviest answer: "'+hits[0].q+'" — you answered '+(hits[0].v===5||hits[0].v===1?'strongly':'moderately')+'.'
+    :'위험신호 '+n+'개(경고 '+strongN+' · 주의 '+(n-strongN)+')가 '+(topAreas.length?topAreas.join('·')+' 영역에 집중되어':'여러 영역에서 나타나')+' 이 유형으로 판정됐어요. 가장 무거웠던 응답은 "'+hits[0].q+'" — 여기에 '+(hits[0].strong?'가장 강한 값으로':'뚜렷하게')+' 답하셨어요.';}
+  document.getElementById('resDesc').innerHTML=
+    (EN?TYPE_TX[typeKo][1]:TYPE_TX[typeKo][0])+'<br><br><b>'+tr('판정 근거','Why this type')+':</b> '+reason;
   document.getElementById('resMeta').textContent=
-    '정밀 판정 — '+(S.name?S.name+'님 ('+(S.age||'나이 미입력')+') · ':'')
-    +(S.gender||'성별 미선택')+' · '+(S.status||'맵 미선택')+' · '
-    +(TOTAL-S.skipped)+'문항 응답'+(S.skipped?' · '+S.skipped+'문항 건너뜀':'');
+    tr('정밀 판정 — ','Full result — ')
+    +(S.name?S.name+(EN?'':'님')+' ('+(S.age||tr('나이 미입력','age n/a'))+') · ':'')
+    +(EN?(S.gender==='여성'?'Female':'Male'):(S.gender||'성별 미선택'))+' · '
+    +(EN?(STATUS_EN[STATUS_KO.indexOf(S.status)]||'—'):(S.status||'맵 미선택'))+' · '
+    +(TOTAL-S.skipped)+tr('문항 응답',' answered')+(S.skipped?' · '+S.skipped+tr('문항 건너뜀',' skipped'):'');
   const wc=document.getElementById('resWants');wc.innerHTML='';
   if(S.skipped>0){
-    wc.insertAdjacentHTML('beforeend',
-      '<div class="want-card mismatch"><div class="t">🙈 건너뛴 질문 '+S.skipped+'개</div><p>건너뛴 영역은 판정에서 제외했어요. 그만큼 결과의 정확도도 낮아졌어요 — 사실, 어떤 질문을 건너뛰었는지가 그 자체로 신호이기도 해요. 마음이 준비되면 다시 걸어봐요.</p></div>');
+    wc.insertAdjacentHTML('beforeend','<div class="want-card mismatch"><div class="t">'
+      +tr('🙈 건너뛴 질문 '+S.skipped+'개','🙈 '+S.skipped+' skipped question'+(S.skipped>1?'s':''))+'</div><p>'
+      +tr('건너뛴 영역은 판정에서 제외했어요. 그만큼 결과의 정확도도 낮아졌어요 — 사실, 어떤 질문을 건너뛰었는지가 그 자체로 신호이기도 해요. 마음이 준비되면 다시 걸어봐요.',
+          'Skipped items were excluded from scoring, which lowers accuracy — and honestly, which questions you skipped is itself a signal. Walk again when you feel ready.')+'</p></div>');
   }
   if(S.wantMe!=null){const me=WANTS[S.wantMe];
-    wc.insertAdjacentHTML('beforeend','<div class="want-card"><div class="t">💛 내가 고른 것 — '+me.emo+' '+me.k+'</div><p>'+me.me+'</p></div>')}
+    wc.insertAdjacentHTML('beforeend','<div class="want-card"><div class="t">'
+      +tr('💛 내가 고른 것 — ','💛 What I chose — ')+me.emo+' '+(EN?me.ke:me.k)+'</div><p>'+(EN?me.mee:me.me)+'</p></div>')}
   if(S.wantPartner!=null){const pt=WANTS[S.wantPartner];
-    wc.insertAdjacentHTML('beforeend','<div class="want-card"><div class="t">💙 상대가 원한다고 믿는 것 — '+pt.emo+' '+pt.k+'</div><p>'+pt.pt+'</p></div>')}
+    wc.insertAdjacentHTML('beforeend','<div class="want-card"><div class="t">'
+      +tr('💙 상대가 원한다고 믿는 것 — ','💙 What I believe my partner wants — ')+pt.emo+' '+(EN?pt.ke:pt.k)+'</div><p>'+(EN?pt.pte:pt.pt)+'</p></div>')}
   if(S.wantMe!=null&&S.wantPartner!=null){
     wc.insertAdjacentHTML('beforeend', S.wantMe===S.wantPartner
-      ?'<div class="want-card mismatch"><div class="t">🔍 투사 점검</div><p>내가 원하는 것과 상대가 원하는 것을 <b>같은 것</b>으로 보고 있어요. 정말 같을 수도 있지만, 내 욕구를 상대에게 투사하고 있을 가능성도 있어요. 실제로 물어본 적이 있나요? — 이번 주 대화 주제로 추천해요.</p></div>'
-      :'<div class="want-card mismatch"><div class="t">🔍 비대칭 인식</div><p>나는 <b>'+WANTS[S.wantMe].k+'</b>을, 상대는 <b>'+WANTS[S.wantPartner].k+'</b>을 원한다고 보고 있어요. 이 차이는 문제라기보다 <b>번역이 필요한 지점</b>이에요. 정밀 리포트의 대화 질문에서 이 조합을 다뤄요.</p></div>');
+      ?'<div class="want-card mismatch"><div class="t">'+tr('🔍 투사 점검','🔍 Projection check')+'</div><p>'
+        +tr('내가 원하는 것과 상대가 원하는 것을 <b>같은 것</b>으로 보고 있어요. 정말 같을 수도 있지만, 내 욕구를 상대에게 투사하고 있을 가능성도 있어요. 실제로 물어본 적이 있나요? — 이번 주 대화 주제로 추천해요.',
+            'You see your wants and your partner\'s wants as <b>the same thing</b>. They might be — or you may be projecting your needs onto them. Have you actually asked? Recommended as this week\'s conversation.')+'</p></div>'
+      :'<div class="want-card mismatch"><div class="t">'+tr('🔍 비대칭 인식','🔍 Asymmetry noticed')+'</div><p>'
+        +tr('나는 <b>'+WANTS[S.wantMe].k+'</b>을, 상대는 <b>'+WANTS[S.wantPartner].k+'</b>을 원한다고 보고 있어요. 이 차이는 문제라기보다 <b>번역이 필요한 지점</b>이에요. 서로의 언어를 배우는 대화 주제로 삼아보세요.',
+            'You want <b>'+WANTS[S.wantMe].ke+'</b> while believing your partner wants <b>'+WANTS[S.wantPartner].ke+'</b>. This gap is not a problem — it is <b>a spot that needs translation</b>. Make it a topic for learning each other\'s language.')+'</p></div>');
   }
+  /* 위험신호 전체 — 실제 응답값과 함께 */
   const fl=document.getElementById('resFlags');fl.innerHTML='';
-  hits.slice(0,2).forEach(h=>fl.insertAdjacentHTML('beforeend',
-    '<div class="flag"><b>⚠ '+h.name+' · '+h.sev+'</b><span>'+h.d+'</span></div>'));
-  if(n>2)fl.insertAdjacentHTML('beforeend','<div class="flag"><b>+'+(n-2)+'</b><span>추가 신호 '+(n-2)+'개는 정밀 리포트에서 확인할 수 있어요.</span></div>');
-  /* 8개 영역 실제 점수 (100점 환산) */
-  const lk=document.getElementById('resLocked');lk.innerHTML='';
+  const ANSWORD=EN?{5:'Very much',4:'Rather yes',2:'Rather no',1:'Not at all'}:{5:'매우 그렇다',4:'그런 편이다',2:'아닌 편이다',1:'전혀 아니다'};
+  hits.forEach(h=>fl.insertAdjacentHTML('beforeend',
+    '<div class="flag"><b>⚠ '+flagName(h.name)+' · '+(h.strong?tr('경고','Alert'):tr('주의','Caution'))+'</b><span>“'+h.q+'” — '
+    +tr('내 응답: ','My answer: ')+'<b>'+ANSWORD[h.v]+'</b></span></div>'));
+  if(!n)fl.insertAdjacentHTML('beforeend','<div class="flag" style="background:#EDFBF1;border-color:#B6E8C5"><b>✅ '
+    +tr('위험신호 0개','0 red flags')+'</b><span>'+tr('축하해요! 다만 무신호가 무결점은 아니에요 — 아래 영역 해석에서 낮은 점수를 확인하세요.',
+    'Congrats! But no signals ≠ no work — check the lower scores in the area readings below.')+'</span></div>');
+  /* 8개 영역: 점수 + 구간별 심층 해석 */
+  const lk=document.getElementById('resLocked');lk.innerHTML='';lk.className='wants';
+  const scores={};
   Object.keys(AREA_NAME).forEach(k=>{
     let sum=0,cnt=0;
     BANK.forEach((q,i)=>{const v=S.ans[i]||0;
       if(q.k===k&&v>0){sum+=(q.r?6-v:v);cnt++}});
-    if(!cnt){lk.insertAdjacentHTML('beforeend','<div><span>'+AREA_NAME[k]+'</span><i>응답 없음</i></div>');return}
-    const sc=Math.round(sum/cnt*20);
-    const grade=sc>=75?'🟢 좋아요':(sc>=55?'🟡 보통':'🟠 점검 필요');
-    lk.insertAdjacentHTML('beforeend','<div><span>'+AREA_NAME[k]+'</span><i>'+sc+'점 · '+grade+'</i></div>');
+    scores[k]=cnt?Math.round(sum/cnt*20):null;
+  });
+  const ranked=Object.entries(scores).filter(e=>e[1]!=null).sort((a,b)=>b[1]-a[1]);
+  if(ranked.length){
+    const best=ranked[0],worst=ranked[ranked.length-1];
+    lk.insertAdjacentHTML('beforeend','<div class="want-card"><div class="t">'
+      +tr('🧭 한눈에 보기','🧭 At a glance')+'</div><p>'
+      +tr('가장 단단한 영역은 <b>'+areaName(best[0])+' ('+best[1]+'점)</b>, 가장 먼저 돌봐야 할 영역은 <b>'+areaName(worst[0])+' ('+worst[1]+'점)</b>이에요. 전부 고치려 하지 말고, 앞으로 4주는 '+areaName(worst[0])+' 하나에만 집중해보세요.',
+          'Your strongest area is <b>'+areaName(best[0])+' ('+best[1]+')</b>; the one to attend first is <b>'+areaName(worst[0])+' ('+worst[1]+')</b>. Don\'t fix everything — give the next 4 weeks to that one area.')+'</p></div>');
+  }
+  Object.keys(AREA_NAME).forEach(k=>{
+    const sc=scores[k];
+    if(sc==null){lk.insertAdjacentHTML('beforeend','<div class="want-card"><div class="t">'+AREA_EMO[k]+' '+areaName(k)+'</div><p>'+tr('응답이 없어 해석을 제공할 수 없어요.','No answers — no reading available.')+'</p></div>');return}
+    const band=sc>=75?'hi':(sc>=55?'mid':'low');
+    const grade=sc>=75?tr('🟢 단단해요','🟢 Solid'):(sc>=55?tr('🟡 보통','🟡 Fair'):tr('🟠 먼저 돌봐야 해요','🟠 Attend first'));
+    const areaFlags=hits.filter(h=>h.k===k).map(h=>flagName(h.name));
+    lk.insertAdjacentHTML('beforeend','<div class="want-card'+(band==='low'?' mismatch':'')+'"><div class="t">'
+      +AREA_EMO[k]+' '+areaName(k)+' — '+sc+tr('점','')+' · '+grade+'</div><p>'
+      +(EN?AREA_TX[k][band][1]:AREA_TX[k][band][0])
+      +(areaFlags.length?'<br><b>'+tr('이 영역에서 잡힌 신호: ','Signals caught here: ')+'</b>'+areaFlags.join(', '):'')
+      +'</p></div>');
   });
   document.getElementById('result').classList.add('show');
   ['stick','btnGo','btnJump','hint','mini','arrow','honest'].forEach(id=>{
@@ -1056,14 +1197,56 @@ function showAd(kind,cb){
   const m=document.getElementById('ad'),go=document.getElementById('adGo');
   m.classList.add('show');
   let t=ADSEC;go.disabled=true;
-  go.textContent=t+'초 후 계속할 수 있어요…';
+  const wait=s=>tr(s+'초 후 계속할 수 있어요…','Continue in '+s+'s…');
+  go.textContent=wait(t);
   const iv=setInterval(()=>{t--;
-    if(t>0){go.textContent=t+'초 후 계속할 수 있어요…'}
+    if(t>0){go.textContent=wait(t)}
     else{clearInterval(iv);go.disabled=false;
-      go.textContent=kind==='reward'?'리포트 열기 🏁':'다음 코스로 계속 ▶';sfx('ok')}
+      go.textContent=kind==='reward'?tr('리포트 열기 🏁','Open report 🏁'):tr('다음 코스로 계속 ▶','Continue ▶');sfx('ok')}
   },1000);
   go.onclick=()=>{if(go.disabled)return;m.classList.remove('show');cb()};
 }
+
+/* ══ 언어 전환 (KO ↔ EN) ══ */
+const UI_TX=[
+ ['#hint','🎮 방향키/WASD로 사방을 걸어요 · 분홍 화살표가 다음 목적지','🎮 Walk with arrows/WASD · pink arrow = next stop'],
+ ['#honest','🔍 솔직하지 않으면, <b>결과도 솔직하지 않아요</b>','🔍 If you aren\'t honest, <b>the result can\'t be either</b>'],
+ ['#btnGo','🚶 자동 걷기','🚶 Auto walk'],
+ ['#btnJump','⤴ 점프','⤴ Jump'],
+ ['#mini .lbl','벚꽃 마을','Blossom Village'],
+ ['#start .tt','연애·결혼 준비도 테스트 — 벚꽃 마을','Love & Marriage Readiness Test — Blossom Village'],
+ ['#start label.lb','이름 (별명)','Name (nickname)'],
+ ['#gM','🙋‍♂️ 남성','🙋‍♂️ Male'],
+ ['#gF','🙋‍♀️ 여성','🙋‍♀️ Female'],
+ ['#stGo','마을 입장하기 🌸','Enter the village 🌸'],
+ ['#start .hintline','🔍 솔직하지 않으면, 결과도 솔직하지 않아요','🔍 Honest answers make honest results'],
+ ['#result .eyebrow','🏁 FREE RESULT — 벚꽃 마을 완주!','🏁 FREE RESULT — Village complete!'],
+ ['#ad p.msg','이 게임은 광고 수익으로 <b>100문항 전체를 무료</b>로 제공해요. 잠시만요! 🙏','Ads keep <b>all 100 questions free</b>. One moment! 🙏'],
+ ['#adBox','광고 자리 (300×250)<br><small>애드센스/카카오 애드핏 승인 후<br>실제 광고가 게재됩니다</small>','Ad slot (300×250)<br><small>Real ads appear here<br>after AdSense/AdFit approval</small>'],
+ ['#result .fineprint','※ 이 검사는 <b>100문항 전체가 무료</b>예요. 광고 수익으로 운영됩니다. 💚','※ All <b>100 questions are free</b>. This service runs on ads. 💚'],
+ ['#result footer .big','사랑은 <em>감정</em>, 결혼은 <em>준비</em>입니다.','Love is a <em>feeling</em>. Marriage is <em>preparation</em>.'],
+ ['#result footer p','이 테스트는 나를 이해하기 위한 참고용 콘텐츠예요. 결과는 정답이 아니라 대화의 시작점으로 활용해 주세요.<br><br>© 반지 전에 BANJI JEONE — 연애·결혼 준비도 테스트','This test is reference content for self-understanding. Treat results as a conversation starter, not a verdict.<br><br>© BANJI JEONE — Love & Marriage Readiness Test']
+];
+function applyLang(){
+  UI_TX.forEach(([sel,ko,en])=>{const el=document.querySelector(sel);if(el)el.innerHTML=tr(ko,en)});
+  document.querySelector('#stName').placeholder=tr('예: 하늘, 민준… (12자 이내)','e.g. Sky, Minjun… (max 12)');
+  const caps=document.querySelectorAll('#pCap span');
+  if(caps.length===2){caps[0].textContent=tr('1 · 전혀 아니다','1 · Not at all');caps[1].textContent=tr('5 · 매우 그렇다','5 · Very much')}
+  const adslot=document.querySelector('.adslot .adbox');
+  if(adslot)adslot.innerHTML=tr('AD · 배너 광고 자리 (320×100)<br><small>애드센스/카카오 애드핏 승인 후 게재됩니다</small>','AD · Banner slot (320×100)<br><small>Shown after AdSense/AdFit approval</small>');
+  stations.forEach(s=>{if(!s.el)return;const tg=s.el.querySelector('.tag');
+    if(tg&&(s.tag_en||s.tag))tg.textContent=LANG==='en'?(s.tag_en||({'하란 Lv.10':'Haran Lv.10','체크포인트 🏁':'Checkpoint 🏁'}[s.tag]||s.tag)):s.tag});
+  flagSts.forEach((s,i)=>{const gi=lap*FLAGN+i;const f=s.el.querySelector('.fl');
+    if(f&&!s.done&&gi<TOTAL)f.textContent=tr('🚩 문항 ','🚩 Q ')+(gi+1)});
+  updateHud();
+}
+document.getElementById('langBtn').onclick=function(){
+  LANG=LANG==='ko'?'en':'ko';
+  this.textContent=LANG==='ko'?'EN':'한국어';
+  applyLang();sfx('pop');
+  if(panelOpen&&curSt)openStation(curSt);
+  if(document.getElementById('result').classList.contains('show'))showResult();
+};
 
 /* ══ 시작 화면: 이름 + 성별 → 마을 입장 ══ */
 (function(){
