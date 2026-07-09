@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7CD5F0">
 <title>반지 전에 — 연애·결혼 준비도 테스트</title>
 <style>
   :root{
@@ -151,18 +156,18 @@
          transition:opacity .3s ease,transform .3s cubic-bezier(.34,1.56,.64,1)}
   #panel.show{opacity:1;pointer-events:auto;transform:translateX(-50%)}
   #panel .box{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:20px 24px}
-  #panel .who{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--blue);margin-bottom:6px}
-  #panel .txt{font-size:clamp(15px,1.9vw,17px);font-weight:700;text-wrap:balance}
+  #panel .who{font-size:13px;font-weight:900;letter-spacing:.12em;color:var(--blue);margin-bottom:6px}
+  #panel .txt{font-size:clamp(17px,2.1vw,20px);font-weight:700;text-wrap:balance}
   #panel .txt b{color:var(--pink)}
-  #panel .area{font-size:11.5px;font-weight:900;letter-spacing:.1em;color:var(--blue);margin-bottom:4px;display:none}
+  #panel .area{font-size:12.5px;font-weight:900;letter-spacing:.1em;color:var(--blue);margin-bottom:4px;display:none}
   #panel .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;justify-content:center}
-  #panel .btns button{border-radius:999px;padding:12px 22px;font-weight:800;font-size:14px;
+  #panel .btns button{border-radius:999px;padding:13px 24px;font-weight:800;font-size:15.5px;
         background:#EEF2FB;transition:.15s;box-shadow:0 3px 0 rgba(40,53,106,.12)}
   #panel .btns button:hover{transform:translateY(-3px)}
   #panel .btns button.primary{background:var(--navy);color:#fff}
   #panel .btns button.green{background:var(--btn-green);color:#fff}
   #panel .scale{display:none;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
-  #panel .scale button{aspect-ratio:1/.58;border-radius:14px;font-weight:900;font-size:20px;color:#fff;
+  #panel .scale button{aspect-ratio:1/.58;border-radius:14px;font-weight:900;font-size:23px;color:#fff;
         box-shadow:0 4px 0 rgba(40,53,106,.2);transition:.15s}
   #panel .scale button:nth-child(1){background:#7FD6A4}
   #panel .scale button:nth-child(2){background:#5FCBBF}
@@ -170,10 +175,49 @@
   #panel .scale button:nth-child(4){background:var(--purple)}
   #panel .scale button:nth-child(5){background:var(--pink)}
   #panel .scale button:hover{transform:translateY(-4px)}
-  #panel .cap{display:none;justify-content:space-between;margin-top:8px;font-size:11.5px;font-weight:700;color:#8B93B8}
-  #panel .mini2{display:none;margin-top:10px;background:#F2F7FF;border-radius:12px;padding:9px 14px;
-               font-size:13px;font-weight:600;color:#5A6285}
+  #panel .cap{display:none;justify-content:space-between;margin-top:8px;font-size:12.5px;font-weight:700;color:#8B93B8}
+  #panel .mini2{display:none;margin-top:10px;background:#F2F7FF;border-radius:12px;padding:10px 14px;
+               font-size:14.5px;font-weight:600;color:#5A6285}
   #panel .mini2 b{color:var(--pink)}
+
+  /* ── 모바일 세로(포트레이트) 대응 ── */
+  @media(max-width:760px){
+    #panel{width:96vw;bottom:10px}
+    #panel .box{max-height:64svh;overflow-y:auto;padding:18px 16px}
+    #panel .txt{font-size:19px}
+    #panel .who{font-size:13.5px}
+    #panel .btns button{font-size:16px;padding:14px 20px}
+    #panel input{font-size:17px}
+    #panel .scale button{font-size:26px}
+    #panel .mini2{font-size:15px}
+    .logo{font-size:15px;padding:8px 15px}
+    #prog{font-size:12px;padding:8px 13px;gap:7px}
+    #prog .track{width:64px}
+    #honest{top:56px;font-size:12.5px;padding:8px 16px;white-space:normal;
+            text-align:center;max-width:92vw;line-height:1.45}
+    #sndBtn{top:108px}
+    #mini{left:12px;transform:none;bottom:14px;width:146px;height:98px}
+    #stick{width:106px;height:106px;bottom:16px}
+    #knob{width:48px;height:48px}
+    #btnGo{height:50px;font-size:14px;bottom:16px;right:calc(4vw + 118px);padding:0 16px}
+    #btnJump{height:46px;font-size:14px;bottom:76px;right:calc(4vw + 118px);padding:0 16px}
+    .obj .tag{font-size:12.5px}
+    .qflag .fl{font-size:12.5px}
+    .type-card h3{font-size:32px}
+    .offer .price{font-size:52px}
+  }
+  /* ── 모바일 가로(랜드스케이프) 대응 ── */
+  @media(max-height:500px){
+    #honest,#hint{display:none}
+    #hudTop{top:8px}
+    #panel{bottom:6px;width:min(600px,80vw)}
+    #panel .box{max-height:82svh;overflow-y:auto;padding:14px 18px}
+    #panel .txt{font-size:16px}
+    #panel .scale button{aspect-ratio:1/.42;font-size:20px}
+    #mini{display:none}
+    #sndBtn{top:60px}
+    #btnJump{bottom:80px}
+  }
 
   /* ── 결과 오버레이 ── */
   #result{position:fixed;inset:0;z-index:40;overflow-y:auto;display:none;
@@ -188,11 +232,11 @@
       background:repeating-linear-gradient(90deg,var(--pink) 0 24px,var(--yellow) 24px 48px,var(--blue) 48px 72px,var(--btn-green) 72px 96px)}
   .type-card .lbl{font-size:12px;font-weight:900;letter-spacing:.16em;color:var(--blue)}
   .type-card h3{font-size:clamp(28px,5vw,46px);font-weight:900;margin:12px 0;color:var(--pink)}
-  .type-card>p{color:#5A6285;font-weight:600;max-width:34em;margin:0 auto}
+  .type-card>p{color:#5A6285;font-weight:600;max-width:34em;margin:0 auto;font-size:16.5px}
   .wants{display:grid;gap:12px;margin-top:26px;text-align:left}
   .want-card{background:#EFF8FF;border:2px solid #BEE3F8;border-radius:16px;padding:16px 18px}
   .want-card .t{font-weight:900;color:var(--blue);font-size:13px}
-  .want-card p{font-size:14.5px;font-weight:600;margin-top:6px}
+  .want-card p{font-size:15.5px;font-weight:600;margin-top:6px}
   .want-card.mismatch{background:#FDF2F8;border-color:#FBCFE8}
   .want-card.mismatch .t{color:var(--pink)}
   .flags{display:grid;gap:12px;margin-top:22px;text-align:left}
@@ -230,26 +274,24 @@
   #result footer .big{color:#fff;font-size:clamp(22px,4vw,36px);font-weight:900;margin-bottom:18px}
   #result footer .big em{font-style:normal;color:var(--yellow)}
 
-  /* ── 마지막 제안 (10분) ── */
-  #last{position:fixed;inset:0;z-index:60;display:none;place-items:center;
+  /* ── 광고 모달 + 광고 자리 ── */
+  #ad{position:fixed;inset:0;z-index:60;display:none;place-items:center;
         background:rgba(40,53,106,.45);padding:5vw;backdrop-filter:blur(3px)}
-  #last.show{display:grid}
-  #last .box{background:var(--card);border-radius:30px;max-width:520px;box-shadow:var(--shadow);
-             padding:42px 6% 36px;text-align:center;animation:pop .4s cubic-bezier(.22,1.5,.36,1)}
+  #ad.show{display:grid}
+  #ad .box{background:var(--card);border-radius:30px;max-width:440px;width:100%;box-shadow:var(--shadow);
+             padding:26px 6% 30px;text-align:center;animation:pop .4s cubic-bezier(.22,1.5,.36,1)}
   @keyframes pop{from{transform:scale(.85);opacity:0}}
-  #last .peek{width:84px;margin:-84px auto 6px;display:block}
-  #last .shout{font-size:clamp(28px,5vw,40px);font-weight:900;color:var(--pink)}
-  #last p.msg{margin-top:12px;font-size:15px;font-weight:600;color:#5A6285}
-  #last p.msg b{color:var(--navy)}
-  #last .price{font-size:clamp(40px,6.6vw,60px);font-weight:900;color:var(--btn-green);
-               margin-top:14px;font-variant-numeric:tabular-nums}
-  #last .price s{color:#B9C0D9;font-size:.45em;margin-right:10px}
-  #last .cd{margin-top:10px;font-size:14px;font-weight:900;color:var(--amber);
-            font-variant-numeric:tabular-nums}
-  #last .cd span{display:inline-block;background:#FFF6E5;border-radius:10px;padding:6px 14px}
-  #last .pay{margin-top:22px;background:var(--btn-green);box-shadow:0 7px 0 #23824a,var(--shadow)}
-  #last .no{display:block;margin:14px auto 0;color:#8B93B8;font-size:13px;font-weight:700;
-            text-decoration:underline;text-underline-offset:4px}
+  .adlbl{font-size:11px;font-weight:900;letter-spacing:.2em;color:#8B93B8;margin-bottom:12px}
+  .adbox{border:3px dashed #C8D0E8;border-radius:16px;background:#F5F8FF;color:#8B93B8;
+         font-weight:800;font-size:14px;line-height:1.5;padding:26px 12px;
+         display:grid;place-items:center}
+  .adbox small{font-weight:600;font-size:11.5px;margin-top:4px}
+  .adbox.big{min-height:220px}
+  #ad p.msg{margin-top:14px;font-size:14px;font-weight:600;color:#5A6285}
+  #ad p.msg b{color:var(--navy)}
+  .adGo{margin-top:18px;background:var(--btn-green);color:#fff;font-weight:900;font-size:16px;
+        padding:15px 34px;border-radius:999px;box-shadow:0 6px 0 #23824a,var(--shadow)}
+  .adGo:disabled{background:#B9C0D9;box-shadow:0 6px 0 #9AA3C4;cursor:wait}
 
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
@@ -366,24 +408,10 @@
     <div class="wants" id="resWants"></div>
     <div class="flags" id="resFlags"></div>
     <div class="locked" id="resLocked"></div>
-    <p class="fineprint">※ 무료 15문항은 8개 영역을 1~2문항씩 살짝 훑는 약식 코스예요.
-    정밀검사는 <b>100문항</b>으로 같은 영역을 여러 각도에서 다시 물어서, 결과의 검증 신뢰도가 확 올라갑니다.</p>
+    <p class="fineprint">※ 이 검사는 <b>100문항 전체가 무료</b>예요. 광고 수익으로 운영됩니다. 💚</p>
   </div>
-  <div class="center" style="margin-top:44px"><span class="eyebrow">🛍 ITEM SHOP — 정밀검사 입장권</span></div>
-  <div class="offer">
-    <div class="badge">커피 두 잔 값 · 평생 소장</div>
-    <h3>정밀 리포트 — 100문항, 모든 맵</h3>
-    <div class="price" id="offerPrice">4,900<span style="font-size:.4em">원</span></div>
-    <ul>
-      <li><b>100문항 정밀검사</b> — 공통 + 성별 전용 + 상태별 심화까지 전 필드 통과</li>
-      <li><b>8개 영역 전체 점수</b> — 감정·경제·가족·책임·존중·현실감각·대화·위험인식</li>
-      <li><b>18개 결과 유형 전체 매칭</b> — 남성 9종 · 여성 9종</li>
-      <li>위험신호 전체 공개 + 심각도 2단계</li>
-      <li>결혼 전 대화 질문 7개 + 4주 보완 플랜</li>
-    </ul>
-    <button class="pay" id="payBtn" onclick="pay()">토스페이로 결제하기</button>
-    <button class="hesitate" onclick="hesitate()">조금 더 고민해볼게요</button>
-    <p class="toss">결제는 토스페이먼츠로 안전하게 처리됩니다. (현재는 데모 — 정식 오픈 후 연동)</p>
+  <div class="adslot" style="max-width:780px;margin:28px auto 0">
+    <div class="adbox">AD · 배너 광고 자리 (320×100)<br><small>애드센스/카카오 애드핏 승인 후 게재됩니다</small></div>
   </div>
   <footer>
     <div class="big">사랑은 <em>감정</em>, 결혼은 <em>준비</em>입니다.</div>
@@ -392,43 +420,197 @@
   </footer>
 </div>
 
-<div id="last" role="dialog" aria-modal="true" aria-label="마지막 제안">
+<!-- ── 광고 모달 (코스 사이 전면 / 리포트 보상형 — 승인 전 자리 표시) ── -->
+<div id="ad" role="dialog" aria-modal="true" aria-label="광고">
   <div class="box">
-    <svg class="peek" viewBox="0 0 100 148" aria-hidden="true"><use href="#haran"/></svg>
-    <div class="shout">잠깐만요!</div>
-    <p class="msg">이 제안은 <b>딱 한 번, 10분 동안</b>만 열려 있어요.<br>
-    시간이 지나면 정말로 사라져요 — 천천히, 하지만 놓치지 마세요.</p>
-    <div class="price"><s>4,900</s>4,410<span style="font-size:.4em">원</span></div>
-    <div class="cd">⏳ 남은 시간 <span id="cd">10:00</span></div>
-    <p class="msg" style="font-size:13px">헤어진 커플 200쌍이 말했어요. "그때 알았더라면."<br>4,410원은 그 문장을 미리 사는 값이에요.</p>
-    <button class="pay" id="lastPay">4,410원에 시작하기</button>
-    <button class="no" onclick="closeLast()">괜찮아요, 정가로 볼게요</button>
+    <div class="adlbl">AD · 광고</div>
+    <div class="adbox big" id="adBox">광고 자리 (300×250)<br><small>애드센스/카카오 애드핏 승인 후<br>실제 광고가 게재됩니다</small></div>
+    <p class="msg">이 게임은 광고 수익으로 <b>100문항 전체를 무료</b>로 제공해요. 잠시만요! 🙏</p>
+    <button class="adGo" id="adGo" disabled>5초 후 계속할 수 있어요…</button>
   </div>
 </div>
 
-<script src="./toss-config.js"></script>
-<script src="https://js.tosspayments.com/v1/payment"></script>
 <script>
-/* ══ 데이터 ══ */
-const QUESTIONS=[
- {t:'상대가 답장을 늦게 하면 불안하거나 화가 난다.',a:'감정 안정도',h:'정답을 고르지 말고, 어제의 나를 떠올려요!',flag:{dir:'hi',name:'반응 민감',d:'상대의 반응 속도가 내 안정감을 흔드는 패턴이에요.'}},
- {t:'다투고 난 뒤에도 스스로 감정을 가라앉힐 수 있다.',a:'감정 안정도',h:'회복 속도는 결혼 생활의 체력이에요.'},
- {t:'지금 결혼하면, 내 외로움이 해결될 것 같다.',a:'결혼 동기',h:'외로움은 결혼의 이유가 아니라, 먼저 돌봐야 할 신호예요.',flag:{dir:'hi',name:'외로움 결혼',d:'결혼의 동기가 "이 사람"보다 "혼자인 상태의 종료"에 가까울 때 나오는 응답이에요.'}},
- {t:'결혼 후 한 달 생활비가 얼마나 필요한지 계산해본 적이 있다.',a:'경제 현실도',h:'사랑은 숫자를 싫어하지 않아요!',flag:{dir:'lo',name:'경제 미계산',d:'결혼 생활의 숫자를 아직 세어보지 않은 상태예요.'}},
- {t:'내 소득·부채·저축 상황을 상대에게 솔직히 말할 수 있다.',a:'경제 현실도',h:'돈 이야기가 편해지는 순서가, 결혼이 안전해지는 순서예요.'},
- {t:'부모님의 기대 때문에 결혼을 서둘러야 한다는 압박을 느낀다.',a:'가족 독립도',h:'부모님의 시계와 당신의 시계는 달라도 돼요.',flag:{dir:'hi',name:'부모 압박',d:'결혼 결정의 기준이 부모님의 기대에 기울어 있다는 신호예요.'}},
- {t:'부모님의 기대와 배우자의 감정을 분리해서 판단할 수 있다.',a:'가족 독립도',h:'"알리는 것"과 "허락받는 것"은 달라요.'},
- {t:'결혼은 감정만이 아니라 책임을 나누는 일이라고 생각한다.',a:'책임감',h:'이 문장에 고개를 끄덕이는 속도가 준비도예요.'},
- {t:'문제가 생기면 상대나 상황 탓부터 하게 된다.',a:'책임감',h:'솔직하게요! 여기는 아무도 안 봐요.',flag:{dir:'hi',name:'책임 회피',d:'갈등의 원인을 바깥에서 먼저 찾는 습관이에요.'}},
- {t:'사랑한다면 어느 정도의 간섭과 통제는 참아야 한다고 생각한다.',a:'존중·안전',h:'이 질문에서 멈칫했다면, 그 멈칫이 데이터예요.',flag:{dir:'hi',name:'통제 수용',d:'간섭을 사랑으로 번역해온 관계 습관 — 가장 먼저 확인해야 할 신호예요.'}},
- {t:'상대가 싫다고 말한 행동은 하지 않으려고 노력한다.',a:'존중·안전',h:'존중은 큰 이벤트가 아니라 작은 반복이에요.'},
- {t:"상대의 단점을 알게 되어도 '결혼하면 달라지겠지'라고 생각한다.",a:'현실 감각',h:'지금 모습 그대로 30년이라면 어때요?',flag:{dir:'hi',name:'결혼 환상',d:'"결혼하면 달라지겠지"는 가장 흔하고 가장 비싼 가정이에요.'}},
- {t:'결혼식 장면보다 결혼 생활을 더 자주 상상한다.',a:'현실 감각',h:'식은 하루, 생활은 30년이니까요.'},
- {t:'돈·거주지·자녀 계획을 상대와 구체적으로 이야기해봤다.',a:'현실 대화',h:'미룬 대화에는 결혼 후에 이자가 붙어요.',flag:{dir:'lo',name:'대화 공백',d:'결혼의 핵심 주제가 아직 대화 테이블에 오르지 않았어요.'}},
- {t:'갈등이 생기면 침묵이나 잠수보다 대화를 선택한다.',a:'현실 대화',h:'마지막 질문이에요! 결승선이 보여요 🎉'}
+/* ══ 문항 은행: 총 100문항 (전부 무료 · 광고 운영) ══
+   k=영역키, r=역방향(높을수록 위험), f=위험신호 이름(★), h=하란 코멘트 */
+const AREA_NAME={감정:'감정 안정도',경제:'경제 현실도',가족:'가족 독립도',책임:'책임감',존중:'상대 존중도',현실:'현실 감각',대화:'현실 대화 능력',위험:'위험신호 인식'};
+const LAP1=[
+ {t:'상대가 답장을 늦게 하면 불안하거나 화가 난다.',k:'감정',r:1,f:'반응 민감',h:'정답을 고르지 말고, 어제의 나를 떠올려요!'},
+ {t:'다투고 난 뒤에도 스스로 감정을 가라앉힐 수 있다.',k:'감정',h:'회복 속도는 결혼 생활의 체력이에요.'},
+ {t:'지금 결혼하면, 내 외로움이 해결될 것 같다.',k:'현실',r:1,f:'외로움 결혼',h:'외로움은 결혼의 이유가 아니라, 먼저 돌봐야 할 신호예요.'},
+ {t:'결혼 후 한 달 생활비가 얼마나 필요한지 계산해본 적이 있다.',k:'경제',fLow:'경제 미계산',h:'사랑은 숫자를 싫어하지 않아요!'},
+ {t:'내 소득·부채·저축 상황을 상대에게 솔직히 말할 수 있다.',k:'경제',h:'돈 이야기가 편해지는 순서가, 결혼이 안전해지는 순서예요.'},
+ {t:'부모님의 기대 때문에 결혼을 서둘러야 한다는 압박을 느낀다.',k:'가족',r:1,f:'부모 압박',h:'부모님의 시계와 당신의 시계는 달라도 돼요.'},
+ {t:'부모님의 기대와 배우자의 감정을 분리해서 판단할 수 있다.',k:'가족',h:'"알리는 것"과 "허락받는 것"은 달라요.'},
+ {t:'결혼은 감정만이 아니라 책임을 나누는 일이라고 생각한다.',k:'책임',h:'이 문장에 고개를 끄덕이는 속도가 준비도예요.'},
+ {t:'문제가 생기면 상대나 상황 탓부터 하게 된다.',k:'책임',r:1,f:'책임 회피',h:'솔직하게요! 여기는 아무도 안 봐요.'},
+ {t:'사랑한다면 어느 정도의 간섭과 통제는 참아야 한다고 생각한다.',k:'존중',r:1,f:'통제 수용',h:'이 질문에서 멈칫했다면, 그 멈칫이 데이터예요.'},
+ {t:'상대가 싫다고 말한 행동은 하지 않으려고 노력한다.',k:'존중',h:'존중은 큰 이벤트가 아니라 작은 반복이에요.'},
+ {t:"상대의 단점을 알게 되어도 '결혼하면 달라지겠지'라고 생각한다.",k:'현실',r:1,f:'결혼 환상',h:'지금 모습 그대로 30년이라면 어때요?'},
+ {t:'결혼식 장면보다 결혼 생활을 더 자주 상상한다.',k:'현실',h:'식은 하루, 생활은 30년이니까요.'},
+ {t:'돈·거주지·자녀 계획을 상대와 구체적으로 이야기해봤다.',k:'대화',fLow:'대화 공백',h:'미룬 대화에는 결혼 후에 이자가 붙어요.'},
+ {t:'갈등이 생기면 침묵이나 잠수보다 대화를 선택한다.',k:'대화',h:'첫 코스 마지막 질문! 체크포인트가 보여요 🎉'}
 ];
-const QN=QUESTIONS.length;
-const AREAS=['감정 안정도','경제 현실도','가족 독립도','책임감','상대 존중도','현실 감각','현실 대화 능력','위험신호 인식'];
+const COMMON2=[
+ {t:'상대의 반응 하나에 하루 종일 기분이 좌우된다.',k:'감정',r:1},
+ {t:'상대와 연락이 안 되면 최악의 상황부터 상상한다.',k:'감정',r:1,f:'불안 상상'},
+ {t:'화가 나면 말이나 행동이 거칠어진다는 말을 들은 적 있다.',k:'감정',r:1,f:'분노 조절'},
+ {t:'혼자 있는 시간도 편안하게 보낼 수 있다.',k:'감정'},
+ {t:'스트레스를 받으면 상대에게 화풀이하게 된다.',k:'감정',r:1},
+ {t:'내 소득·부채·저축을 숫자로 정확히 알고 있다.',k:'경제'},
+ {t:'결혼 비용(주거·예식·혼수)의 현실적인 규모를 알고 있다.',k:'경제'},
+ {t:'돈 이야기를 꺼내는 것이 어색하고 불편하다.',k:'경제',r:1},
+ {t:'수입 관리와 지출 분담에 대한 나만의 기준이 있다.',k:'경제'},
+ {t:'충동적으로 큰돈을 쓰고 후회한 적이 많다.',k:'경제',r:1},
+ {t:'부모님이 반대하셔도 내 결혼 결정을 스스로 내릴 수 있다.',k:'가족'},
+ {t:'명절·경조사·용돈 문제를 배우자와 상의해 정할 수 있다.',k:'가족'},
+ {t:'중요한 결정을 내릴 때 부모님의 허락부터 떠올린다.',k:'가족',r:1,f:'독립 지연'},
+ {t:'부모님과 배우자가 갈등하면 중간에서 조율할 자신이 있다.',k:'가족'},
+ {t:'배우자보다 부모님의 만족이 먼저라고 느낄 때가 있다.',k:'가족',r:1},
+ {t:'힘든 일이 생기면 회피하기보다 해결 방법부터 찾는다.',k:'책임'},
+ {t:'내가 한 약속은 손해를 보더라도 지키려고 한다.',k:'책임'},
+ {t:'잘못했을 때 먼저 사과할 수 있다.',k:'책임'},
+ {t:'귀찮은 일은 미루고 상대가 하길 기다린 적이 많다.',k:'책임',r:1},
+ {t:'반려동물이나 화분도 꾸준히 돌본 경험이 있다.',k:'책임'},
+ {t:'상대의 의견이 나와 달라도 끝까지 듣는 편이다.',k:'존중'},
+ {t:'상대의 직업·가족·과거를 농담처럼 깎아내린 적이 있다.',k:'존중',r:1,f:'존중 결핍'},
+ {t:'관계에서 이기는 것보다 이해하는 것이 중요하다고 생각한다.',k:'존중'},
+ {t:'상대의 성공을 진심으로 기뻐할 수 있다.',k:'존중'},
+ {t:'상대가 내 뜻과 다르게 행동하면 벌주듯 침묵한 적 있다.',k:'존중',r:1,f:'침묵 처벌'},
+ {t:'결혼하면 지금의 문제들이 자연스럽게 해결될 것 같다.',k:'현실',r:1,f:'문제 해결 환상'},
+ {t:'결혼 생활의 지루함과 갈등도 내가 감당할 몫이라고 생각한다.',k:'현실'},
+ {t:'상대의 있는 그대로의 모습과 30년을 상상해봤다.',k:'현실'},
+ {t:'드라마 같은 사랑이 계속되지 않으면 실망할 것 같다.',k:'현실',r:1},
+ {t:'결혼 후 나의 하루 일과를 구체적으로 그려본 적 있다.',k:'현실'},
+ {t:'불편한 주제도 "시간 내서 이야기하자"고 먼저 제안할 수 있다.',k:'대화'},
+ {t:'상대가 서운함을 말하면 변명보다 이유를 먼저 듣는다.',k:'대화'},
+ {t:'다툰 뒤 먼저 화해의 말을 건넬 수 있다.',k:'대화'},
+ {t:'갈등 중에 과거 잘못까지 다시 꺼내 쌓아서 말한다.',k:'대화',r:1},
+ {t:'내 감정을 "나는 ~해서 서운했어"처럼 말로 표현할 수 있다.',k:'대화'},
+ {t:'사랑과 집착을 구분할 수 있다.',k:'위험'},
+ {t:'관계에서 위험신호를 느끼고도 무시한 적이 있다.',k:'위험',r:1,f:'신호 무시'},
+ {t:'주변에서 상대를 걱정하는 말을 들으면 화부터 난다.',k:'위험',r:1},
+ {t:'헤어져야 할 이유를 알면서도 관계를 유지한 적이 있다.',k:'위험',r:1},
+ {t:'나를 함부로 대하는 사람을 빨리 알아차리는 편이다.',k:'위험'},
+ {t:'갈등 후에 서로 배운 점을 이야기해본 적 있다.',k:'대화'},
+ {t:'결혼을 하지 않아도 행복할 수 있다고 생각한다.',k:'현실'},
+ {t:'상대의 친구·가족을 만나는 자리가 편안하다.',k:'가족'},
+ {t:'데이트 비용 분담에 대해 서로 합의된 기준이 있다.',k:'경제'},
+ {t:'상대에게 고맙다는 말을 자주 한다.',k:'존중'}
+];
+const MALE=[
+ {t:"'좋은 남편'이 어떤 역할인지 구체적으로 설명할 수 있다.",k:'책임'},
+ {t:'결혼 후 5년의 수입과 지출을 대략이라도 그려본 적 있다.',k:'경제'},
+ {t:'배우자가 아프거나 일을 쉬게 되어도 가정을 유지할 계획이 있다.',k:'책임'},
+ {t:"'어떻게든 되겠지'라는 마음으로 결혼을 생각하고 있다.",k:'책임',r:1},
+ {t:"가사와 육아는 '돕는 것'이 아니라 '함께 하는 것'이라고 생각한다.",k:'책임'},
+ {t:'결혼이 늦어지는 것이 남들 보기에 부끄럽다.',k:'가족',r:1},
+ {t:'파혼이나 이별은 부모님 앞에서의 실패처럼 느껴진다.',k:'가족',r:1,f:'체면 불안'},
+ {t:'"그 나이면 눈을 낮춰야지" 같은 말에 마음이 흔들린다.',k:'가족',r:1},
+ {t:'혼자 밥 먹는 생활을 끝내고 싶어서 결혼을 서두른다.',k:'현실',r:1,f:'외로움 조급'},
+ {t:"상대가 누구인지보다 '결혼한다는 사실'이 더 중요해진 것 같다.",k:'현실',r:1,f:'결혼 자체 목표'},
+ {t:'결혼하지 않아도 내 일상은 스스로 잘 돌아간다.',k:'감정'},
+ {t:'내가 돈을 더 쓰면 상대가 내 말을 따라야 한다고 생각한 적 있다.',k:'존중',r:1,f:'돈-권력 등식'},
+ {t:'상대의 소비·옷차림·친구 관계에 개입하고 싶을 때가 있다.',k:'존중',r:1,f:'통제 충동'},
+ {t:'상대의 휴대폰이나 SNS를 확인하고 싶은 충동이 든다.',k:'위험',r:1,f:'감시 충동'},
+ {t:'데이트 비용을 낸 만큼의 보상(태도·애정)을 기대하게 된다.',k:'존중',r:1},
+ {t:'상대의 돈과 시간은 온전히 상대의 것이라고 인정한다.',k:'존중'},
+ {t:'상대가 떠날까 봐 불안해서 무리한 약속을 한다.',k:'감정',r:1,f:'불안 과약속'},
+ {t:'이전 연애의 상처를 아직 상대에게 말하지 못했다.',k:'감정',r:1},
+ {t:'서운해도 관계가 깨질까 봐 표현하지 못한다.',k:'대화',r:1},
+ {t:'갈등이 있어도 관계는 회복될 수 있다고 믿는 편이다.',k:'감정'},
+ {t:'"이 사람 놓치면 안 된다"는 주변의 말에 마음이 급해진다.',k:'위험',r:1,f:'주변 재촉'},
+ {t:'만난 지 얼마 되지 않았지만 결혼 날짜부터 잡고 싶다.',k:'위험',r:1,f:'성급 진행'},
+ {t:'조건만 맞으면 감정은 살면서 생긴다고 생각한다.',k:'현실',r:1},
+ {t:'결혼의 최종 판단은 다른 누구도 아닌 내가 한다.',k:'책임'},
+ {t:'이 결혼을 지금 멈추면 다시는 기회가 없을 것 같다.',k:'위험',r:1,f:'마지막 기회 사고'}
+];
+const FEMALE=[
+ {t:'상대와 함께 있을 때 몸과 마음이 편안하다.',k:'감정'},
+ {t:'상대가 화낼 때 무섭다고 느낀 적이 있다.',k:'위험',r:1,f:'안전감 흔들림'},
+ {t:'상대의 기분이 상하지 않게 말을 고르느라 긴장한다.',k:'위험',r:1,f:'긴장 관계'},
+ {t:'상대에게 반대 의견을 말해도 안전하다고 느낀다.',k:'존중'},
+ {t:'상대의 술버릇·운전·화풀이 방식에 불안을 느낀 적 있다.',k:'위험',r:1,f:'행동 불안'},
+ {t:'상대는 내 일·꿈·시간을 존중해준다.',k:'존중'},
+ {t:'상대는 사람들 앞에서 나를 깎아내리는 농담을 한다.',k:'존중',r:1,f:'공개 비하'},
+ {t:'내가 싫다고 분명히 말한 행동을 상대가 반복한다.',k:'존중',r:1,f:'경계 무시'},
+ {t:'상대는 내 의견을 묻고 결정에 반영한다.',k:'존중'},
+ {t:'상대에게 "미안하다"는 말을 들어본 기억이 거의 없다.',k:'존중',r:1},
+ {t:'이 관계를 유지하는 노력을 나만 하고 있다는 생각이 든다.',k:'감정',r:1},
+ {t:'상대를 만나고 나면 충전되기보다 지친다.',k:'감정',r:1,f:'감정 소모'},
+ {t:'상대의 기분을 살피느라 내 감정은 뒤로 미룬다.',k:'감정',r:1},
+ {t:'관계 안에서 내 몫의 행복도 당당하게 요구할 수 있다.',k:'감정'},
+ {t:'상대는 내 옷차림·친구·귀가 시간에 간섭한다.',k:'위험',r:1,f:'생활 간섭'},
+ {t:'상대가 내 휴대폰·위치·SNS를 확인하려 한 적이 있다.',k:'위험',r:1,f:'감시 시도'},
+ {t:'상대와 헤어지자고 하면 무슨 일이 생길까 두렵다.',k:'위험',r:1,f:'이별 공포'},
+ {t:'내 소비와 돈 관리는 내가 결정한다.',k:'경제'},
+ {t:'결혼 후 시댁과의 관계 원칙을 상대와 이야기해봤다.',k:'가족'},
+ {t:'상대는 자기 부모님 앞에서 내 편을 들어줄 사람이다.',k:'가족'},
+ {t:'시댁 걱정을 꺼내면 상대가 회피하거나 화를 낸다.',k:'가족',r:1,f:'시댁 대화 회피'},
+ {t:'상대의 소득과 부채를 구체적으로 알고 있다.',k:'경제'},
+ {t:'상대의 경제력 때문에 불편한 행동을 참은 적이 있다.',k:'위험',r:1,f:'경제 의존 인내'},
+ {t:'결혼 후에도 내 명의의 돈과 커리어 계획이 있다.',k:'경제'},
+ {t:'지금 헤어지면 다시 시작하기 어렵다는 생각에 서두른다.',k:'현실',r:1,f:'성급 결혼'}
+];
+const ST_DEFAULT=[
+ {t:'상대와 자녀 계획(유무·시기)을 이야기해봤다.',k:'대화'},
+ {t:'종교·정치 성향 차이를 서로 확인해봤다.',k:'대화'},
+ {t:'서로의 건강 상태와 병력을 알고 있다.',k:'현실'},
+ {t:'결혼 후 거주지에 대해 이야기해봤다.',k:'현실'},
+ {t:'맞벌이·외벌이에 대한 서로의 기대를 알고 있다.',k:'경제'},
+ {t:'상대의 소비 습관을 보고 불안했던 적이 있다.',k:'경제',r:1},
+ {t:'결혼 준비 비용 분담을 이야기할 자신이 있다.',k:'경제'},
+ {t:'상대 가족의 분위기와 문화를 직접 겪어봤다.',k:'가족'},
+ {t:'갈등이 생겨도 각자 부모님께 이르지 않기로 약속할 수 있다.',k:'가족'},
+ {t:'주말과 휴가를 보내는 방식이 서로 잘 맞는다.',k:'현실'},
+ {t:'집안일 분담 기준을 구체적으로 정할 수 있다.',k:'책임'},
+ {t:'상대의 단점 3가지를 말할 수 있고, 그래도 선택할 수 있다.',k:'현실'},
+ {t:'헤어짐을 상상해도 무너지지 않을 만큼 내 삶이 단단하다.',k:'감정'},
+ {t:'상대와 나의 마음 온도 차이를 느낀 적이 있다.',k:'감정',r:1},
+ {t:'프러포즈나 결혼 시기를 상대에게 압박한 적이 있다.',k:'위험',r:1}
+];
+const ST_INTL=[
+ {t:'상대와 깊은 감정 이야기를 나눌 수 있는 공통 언어가 있다.',k:'대화'},
+ {t:'통역 앱 없이도 갈등 상황을 대화로 풀 수 있다.',k:'대화'},
+ {t:'상대 나라의 결혼·가족 문화를 구체적으로 알고 있다.',k:'현실'},
+ {t:'상대 나라의 언어를 조금이라도 배울 의지가 있다.',k:'존중'},
+ {t:"문화 차이 갈등은 '상대가 한국에 맞춰야 한다'고 생각한다.",k:'존중',r:1,f:'일방 적응 요구'},
+ {t:'상대 가족에 대한 송금 여부와 규모를 결혼 전에 합의할 수 있다.',k:'경제'},
+ {t:'송금 문제로 갈등이 생겼을 때의 조율 방법을 생각해봤다.',k:'경제'},
+ {t:'중개업체의 말보다 상대와 직접 확인한 정보를 더 신뢰한다.',k:'위험'},
+ {t:'업체가 서두르게 해도 나의 속도로 결정할 자신이 있다.',k:'위험'},
+ {t:'결혼이 빨리 진행되지 않으면 손해라는 조급함이 있다.',k:'위험',r:1,f:'진행 조급'},
+ {t:'상대의 혼인 의사와 목적을 솔직하게 대화해본 적 있다.',k:'대화'},
+ {t:'상대에게도 나를 선택하거나 거절할 권리가 있음을 받아들인다.',k:'존중'},
+ {t:'입국 후 상대의 언어 교육·일자리 등 정착 계획을 함께 세웠다.',k:'책임'},
+ {t:'한국에 온 상대가 느낄 외로움과 고립감을 상상해봤다.',k:'존중'},
+ {t:'상대의 여권·통장·휴대폰을 내가 관리해야 안심될 것 같다.',k:'위험',r:1,f:'통제 위험'}
+];
+const ST_RE=[
+ {t:'이전 결혼이 끝난 이유를 감정을 빼고 설명할 수 있다.',k:'현실'},
+ {t:'이전 결혼에서 나의 몫이 무엇이었는지 인정한다.',k:'책임'},
+ {t:'전 배우자에 대한 분노나 미련이 지금 관계에 영향을 준다.',k:'감정',r:1,f:'과거 미해결'},
+ {t:'새로운 상대를 전 배우자와 비교하는 나를 발견한다.',k:'존중',r:1},
+ {t:'이혼(사별) 이후의 상처를 회복할 시간을 충분히 가졌다.',k:'감정'},
+ {t:'이전 결혼에서 반복되던 갈등 패턴이 무엇인지 알고 있다.',k:'현실'},
+ {t:'그 패턴이 새 관계에서도 나타나는지 스스로 살피고 있다.',k:'위험'},
+ {t:"'이번에는 다를 거야'라는 기대만으로 확인을 미루는 부분이 있다.",k:'현실',r:1,f:'확인 미룸'},
+ {t:'자녀가 있다면, 재혼 이야기를 어떻게 꺼낼지 계획이 있다.',k:'가족'},
+ {t:'내 자녀와 새 상대의 관계를 서두르지 않고 기다려줄 수 있다.',k:'가족'},
+ {t:'양육비·재산 문제를 결혼 전에 이야기할 자신이 있다.',k:'경제'},
+ {t:'전혼 관계(연락·면접교섭)를 새 상대에게 투명하게 공유했다.',k:'대화'},
+ {t:'혼자 지내는 시간이 힘들어서 재혼을 서두르고 있다.',k:'현실',r:1,f:'외로움 재혼'},
+ {t:'주변의 시선 때문에 재혼을 망설이거나 서두른다.',k:'가족',r:1},
+ {t:'재혼이 깨질까 봐 하고 싶은 말을 미리 포기한다.',k:'대화',r:1,f:'침묵 인내'}
+];
+let BANK=[...LAP1,...COMMON2,...MALE,...ST_DEFAULT]; // 기본값 — 선택 후 재구성
+function buildBank(){
+  const g=S.gender==='여성'?FEMALE:MALE;
+  const st=S.status==='국제결혼 고민 중'?ST_INTL:(S.status==='재혼 고민 중'?ST_RE:ST_DEFAULT);
+  BANK=[...LAP1,...COMMON2,...g,...st];
+}
+const TOTAL=100, FLAGN=15;
+const AREAS=Object.values(AREA_NAME);
 const WANTS=[
  {k:'안정',emo:'🏡',me:'당신의 핵심 욕구는 안전기지예요. 관계가 안정 신호를 줄 때 가장 큰 힘을 내는 타입 — 다만 불안해지면 확인(연락·약속 재확인)으로 안정을 사려는 습관이 생기기 쉬워요.',pt:'상대가 안정을 원한다고 믿고 있어요. 당신의 즉흥성이 상대에겐 흔들림으로 읽힐 수 있어요. 일정과 약속을 지키는 것이 최고의 애정 표현이 됩니다.'},
  {k:'설렘',emo:'🔥',me:'자극과 생동감이 사랑의 증거인 타입이에요. 결혼 생활의 평온함을 "사랑이 식었다"로 오역하기 쉬워요. 설렘은 만들어가는 기술이기도 해요.',pt:'상대가 설렘을 원한다고 믿고 있어요. 무리한 이벤트로 애정을 증명하려 할 수 있어요. 상대가 원하는 게 이벤트인지, 일상의 관심인지 물어보세요.'},
@@ -484,19 +666,29 @@ addSt({type:'choice',x:CX-320,y:CY+80,npc:'duo',tag:'마을 입구',who:'VILLAGE
 addSt({type:'choice',x:CX+320,y:CY+80,npc:'sign',tag:'갈림길 표지판',who:'MAP',
  txt:'지금 어느 <b>맵</b>에 있나요? 선택에 따라 심화 코스가 준비돼요.',
  opts:['💗 연애 중','💍 결혼 고민 중','🌱 재혼 고민 중','🌏 국제결혼 고민 중','🧭 아직 상대는 없지만 준비 중'],
- set:(i,label)=>{S.status=label.replace(/^\S+\s/,'')}});
+ set:(i,label)=>{S.status=label.replace(/^\S+\s/,'');buildBank()}});
 addSt({type:'choice',x:CX-200,y:CY-260,npc:'market',tag:'마음 장터 🏮',who:'MARKET',
  txt:'장터 친구들이 저마다 <b>원하는 것</b>을 들고 있어요. 관계에서 <b>당신이 가장 원하는 것</b>은?',
  opts:WANTS.map(w=>w.emo+' '+w.k),set:(i)=>{S.wantMe=i}});
 addSt({type:'choice',x:CX+200,y:CY-260,npc:'market2',tag:'마음 장터 🏮',who:'MARKET',
  txt:'그렇다면 <b>상대방(또는 미래의 상대)</b>은 당신에게 무엇을 가장 원할까요? 원한다고 <b>믿는 것</b>을 골라요.',
  opts:WANTS.map(w=>w.emo+' '+w.k),set:(i)=>{S.wantPartner=i}});
-QUESTIONS.forEach((q,i)=>{
-  const ang=(90+i*(360/QN))*Math.PI/180;
-  addSt({type:'scale',qi:i,tag:'스테이지 '+(i+1),
+for(let i=0;i<FLAGN;i++){
+  const ang=(90+i*(360/FLAGN))*Math.PI/180;
+  addSt({type:'scale',qi:i,tag:'문항 '+(i+1),
     x:CX+RX*Math.cos(ang),y:CY+RY*Math.sin(ang)});
-});
-addSt({type:'finish',x:CX,y:CY-40,npc:'haran',tag:'결승선 🏁'});
+}
+addSt({type:'finish',x:CX,y:CY-40,npc:'haran',tag:'체크포인트 🏁'});
+let lap=0;
+const flagSts=stations.filter(s=>s.type==='scale');
+function resetLap(){
+  flagSts.forEach((s,i)=>{
+    const gi=lap*FLAGN+i;
+    if(gi>=TOTAL){s.done=true;s.el.style.display='none';return}
+    s.done=false;s.el.style.display='';s.el.classList.remove('done');
+    s.el.querySelector('.fl').textContent='🚩 문항 '+(gi+1);
+  });
+}
 
 /* ══ 3D 월드 렌더 ══ */
 const plane=document.getElementById('plane');
@@ -589,7 +781,7 @@ document.getElementById('btnGo').onclick=()=>{auto=true;clickT=null};
 document.getElementById('sndBtn').onclick=function(){sndOn=!sndOn;this.textContent=sndOn?'🔊':'🔇'};
 
 function nextStation(){return stations.find(s=>!s.done)}
-const SPEED=8.4;
+const SPEED=8.4;var SPD_MUL=1,ADSEC=5; /* 자동 걷기는 달리기(1.8배) */
 function tick(){
   let vx=0,vy=0;
   if(keys.has('arrowleft')||keys.has('a'))vx-=1;
@@ -610,8 +802,9 @@ function tick(){
   const m=Math.hypot(vx,vy);
   if(m>0&&!panelOpen){
     vx/=Math.max(1,m);vy/=Math.max(1,m);
-    px=Math.max(120,Math.min(W-120,px+vx*SPEED));
-    py=Math.max(160,Math.min(H-120,py+vy*SPEED));
+    const sp=SPEED*(auto?1.8:1)*SPD_MUL;
+    px=Math.max(120,Math.min(W-120,px+vx*sp));
+    py=Math.max(160,Math.min(H-120,py+vy*sp));
     playerObj.classList.add('walk');
     if(vx)facing=vx>0?1:-1;
     document.getElementById('pSvg').style.transform='scaleX('+facing+')';
@@ -725,54 +918,65 @@ function openStation(st){
       b.onclick=()=>{st.set(i,label);markDone(st);closePanel();autoGo()};
       pBtns.appendChild(b)});
   }else if(st.type==='scale'){
-    const q=QUESTIONS[st.qi];
-    pWho.textContent='STAGE '+(st.qi+1)+' / '+QN;
-    pArea.style.display='block';pArea.textContent=q.a+' 영역';
+    const gi=lap*FLAGN+st.qi, q=BANK[gi];
+    const HGEN=['천천히, 솔직하게요.','어제의 당신 기준으로요!','고민되면 3 말고, 더 가까운 쪽으로요.','좋아요, 잘 가고 있어요!','이 질문, 은근 중요해요.'];
+    pWho.textContent='문항 '+(gi+1)+' / '+TOTAL;
+    pArea.style.display='block';pArea.textContent=AREA_NAME[q.k]+' 영역';
     pTxt.textContent=q.t;
     pScale.style.display='grid';pCap.style.display='flex';
-    pMini.style.display='block';pMini.innerHTML='<b>하란:</b> '+q.h;
+    pMini.style.display='block';pMini.innerHTML='<b>하란:</b> '+(q.h||HGEN[gi%HGEN.length]);
     for(let v=1;v<=5;v++){
       const b=document.createElement('button');b.textContent=v;
-      b.onclick=()=>{S.ans[st.qi]=v;markDone(st);closePanel();autoGo()};
+      b.onclick=()=>{S.ans[gi]=v;markDone(st);closePanel();autoGo()};
       pScale.appendChild(b)}
     const sk=document.createElement('button');
     sk.textContent='🙈 이 질문은 건너뛸게요';
-    sk.onclick=()=>{S.ans[st.qi]=0;S.skipped++;markDone(st);closePanel();autoGo()};
+    sk.onclick=()=>{S.ans[gi]=0;S.skipped++;markDone(st);closePanel();autoGo()};
     pBtns.appendChild(sk);
   }else if(st.type==='finish'){
-    pWho.textContent='HARAN';
-    pTxt.innerHTML='🎉 <b>'+esc(S.name||'여행자')+'</b>님, 완주 축하해요! 마을 한 바퀴, 수고했어요. 당신의 <b>예비 결과</b>가 나왔어요!';
-    const b=document.createElement('button');b.className='green';b.textContent='결과 보기 🏁';
-    b.onclick=()=>{markDone(st);closePanel();showResult();sfx('win')};
-    pBtns.appendChild(b);
+    const answered=Object.keys(S.ans).length;
+    if(answered<TOTAL){
+      const courseN=lap+1, nextCount=Math.min(TOTAL-answered,FLAGN);
+      pWho.textContent='CHECKPOINT '+courseN+' / 7';
+      pTxt.innerHTML='🏁 <b>'+esc(S.name||'여행자')+'</b>님, '+courseN+'번째 코스 완주! 지금까지 <b>'+answered+'문항</b>을 지났어요. 잠깐 쉬면서 광고 한 편 보고, 다음 <b>'+nextCount+'문항</b> 코스로 가요!';
+      const b=document.createElement('button');b.className='green';b.textContent='광고 보고 계속하기 ▶';
+      b.onclick=()=>{showAd('inter',()=>{closePanel();lap++;resetLap();autoGo()})};
+      pBtns.appendChild(b);
+    }else{
+      pWho.textContent='HARAN';
+      pTxt.innerHTML='🎉 <b>'+esc(S.name||'여행자')+'</b>님, <b>100문항 전체 완주</b>! 정말 대단해요. 광고 한 편 보고 나면 <b>전체 리포트</b>가 무료로 열려요!';
+      const b=document.createElement('button');b.className='green';b.textContent='광고 보고 리포트 열기 🏁';
+      b.onclick=()=>{markDone(st);showAd('reward',()=>{closePanel();showResult();sfx('win')})};
+      pBtns.appendChild(b);
+    }
   }
   panel.classList.add('show');
 }
 function autoGo(){setTimeout(()=>{if(nextStation())auto=true},350)}
 function updateHud(){
   const n=Object.keys(S.ans).length;
-  document.getElementById('fill').style.width=(n/QN*100)+'%';
-  document.getElementById('stage').textContent= n? '스테이지 '+n+' / '+QN : '벚꽃 마을 탐험 중';
+  document.getElementById('fill').style.width=(n/TOTAL*100)+'%';
+  document.getElementById('stage').textContent= n? '문항 '+n+' / '+TOTAL : '벚꽃 마을 탐험 중';
 }
 
-/* ══ 결과 ══ */
+/* ══ 결과 (100문항 · 전면 무료) ══ */
 function showResult(){
   const hits=[];
-  QUESTIONS.forEach((q,i)=>{
-    if(!q.flag)return;const v=S.ans[i]||3;
-    if(q.flag.dir==='hi'&&v>=4)hits.push({...q.flag,sev:v===5?'경고':'주의'});
-    if(q.flag.dir==='lo'&&v<=2)hits.push({...q.flag,sev:v===1?'경고':'주의'});
+  BANK.forEach((q,i)=>{
+    const v=S.ans[i]||0;if(!v)return;
+    if(q.r&&q.f&&v>=4)hits.push({name:q.f,d:q.t,sev:v===5?'경고':'주의'});
+    if(!q.r&&q.fLow&&v<=2)hits.push({name:q.fLow,d:q.t,sev:v===1?'경고':'주의'});
   });
   const n=hits.length;
-  const type= n===0?'안정 준비형 (예비)': n<=2?'준비 양호형 (예비)': n<=4?'주의 보완형 (예비)':'고위험 점검형 (예비)';
+  const type= n<=1?'안정 준비형': n<=4?'준비 양호형': n<=8?'주의 보완형':'고위험 점검형';
   document.getElementById('resType').textContent=type;
   document.getElementById('resDesc').textContent= n===0
-    ?'15문항 기준으로는 큰 위험신호가 없어요! 다만 약식 코스는 영역당 1~2문항이라, 정밀검사에서 결과가 달라지는 경우가 있어요.'
+    ?'100문항 전 영역에서 뚜렷한 위험신호가 없어요. 지금의 태도를 유지하면서, 아래 영역 점수 중 낮은 곳만 살펴보세요!'
     :'아래 신호는 당신이 나쁜 사람이라는 뜻이 아니라, 결혼 전에 먼저 다뤄두면 훨씬 안전해지는 지점이라는 뜻이에요.';
   document.getElementById('resMeta').textContent=
-    '예비 판정 — '+(S.name?S.name+'님 ('+(S.age||'나이 미입력')+') · ':'')
+    '정밀 판정 — '+(S.name?S.name+'님 ('+(S.age||'나이 미입력')+') · ':'')
     +(S.gender||'성별 미선택')+' · '+(S.status||'맵 미선택')+' · '
-    +(QN-S.skipped)+'문항 응답'+(S.skipped?' · '+S.skipped+'문항 건너뜀':'');
+    +(TOTAL-S.skipped)+'문항 응답'+(S.skipped?' · '+S.skipped+'문항 건너뜀':'');
   const wc=document.getElementById('resWants');wc.innerHTML='';
   if(S.skipped>0){
     wc.insertAdjacentHTML('beforeend',
@@ -791,56 +995,37 @@ function showResult(){
   hits.slice(0,2).forEach(h=>fl.insertAdjacentHTML('beforeend',
     '<div class="flag"><b>⚠ '+h.name+' · '+h.sev+'</b><span>'+h.d+'</span></div>'));
   if(n>2)fl.insertAdjacentHTML('beforeend','<div class="flag"><b>+'+(n-2)+'</b><span>추가 신호 '+(n-2)+'개는 정밀 리포트에서 확인할 수 있어요.</span></div>');
+  /* 8개 영역 실제 점수 (100점 환산) */
   const lk=document.getElementById('resLocked');lk.innerHTML='';
-  AREAS.forEach(a=>lk.insertAdjacentHTML('beforeend','<div><span>'+a+'</span><i>🔒 100문항 정밀검사에서 점수 공개</i></div>'));
+  Object.keys(AREA_NAME).forEach(k=>{
+    let sum=0,cnt=0;
+    BANK.forEach((q,i)=>{const v=S.ans[i]||0;
+      if(q.k===k&&v>0){sum+=(q.r?6-v:v);cnt++}});
+    if(!cnt){lk.insertAdjacentHTML('beforeend','<div><span>'+AREA_NAME[k]+'</span><i>응답 없음</i></div>');return}
+    const sc=Math.round(sum/cnt*20);
+    const grade=sc>=75?'🟢 좋아요':(sc>=55?'🟡 보통':'🟠 점검 필요');
+    lk.insertAdjacentHTML('beforeend','<div><span>'+AREA_NAME[k]+'</span><i>'+sc+'점 · '+grade+'</i></div>');
+  });
   document.getElementById('result').classList.add('show');
-  ['stick','btnGo','hint','mini','arrow'].forEach(id=>{
+  ['stick','btnGo','btnJump','hint','mini','arrow','honest'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.style.display='none'});
 }
 
-/* ══ 결제: 토스페이먼츠 (키 없으면 데모) ══ */
-function pay(discount){
-  const amt=(discount||S.discounted)?4410:4900;
-  closeLast();
-  if(window.TOSS_CLIENT_KEY&&window.TossPayments){
-    const base=location.href.replace(/[^/]*$/,'');
-    TossPayments(window.TOSS_CLIENT_KEY).requestPayment('카드',{
-      amount:amt,
-      orderId:'banji_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8),
-      orderName:'연애·결혼 준비도 정밀 리포트 (100문항)',
-      successUrl:base+'pay-success.html',
-      failUrl:base+'pay-fail.html'
-    }).catch(()=>{});
-  }else{
-    alert('[데모] 토스페이먼츠 결제창이 열립니다 — 결제 금액: '+amt.toLocaleString()+'원\n(정식 배포 사이트에서 toss-config.js에 클라이언트 키를 넣으면 실제 결제창이 열립니다)');
-  }
+/* ══ 광고 (승인 전 자리 표시 · 카운트다운 후 계속) ══
+   실제 연동 시: 이 함수 안에서 애드센스 전면/보상형 또는 카카오 애드핏을 호출하고,
+   광고 종료 콜백에서 cb()를 부르면 된다. */
+function showAd(kind,cb){
+  const m=document.getElementById('ad'),go=document.getElementById('adGo');
+  m.classList.add('show');
+  let t=ADSEC;go.disabled=true;
+  go.textContent=t+'초 후 계속할 수 있어요…';
+  const iv=setInterval(()=>{t--;
+    if(t>0){go.textContent=t+'초 후 계속할 수 있어요…'}
+    else{clearInterval(iv);go.disabled=false;
+      go.textContent=kind==='reward'?'리포트 열기 🏁':'다음 코스로 계속 ▶';sfx('ok')}
+  },1000);
+  go.onclick=()=>{if(go.disabled)return;m.classList.remove('show');cb()};
 }
-
-/* ══ 마지막 제안: 딱 1회 · 10분 ══ */
-let cdTimer=null;
-function showLast(){
-  if(S.lastShown)return;S.lastShown=true;
-  document.getElementById('last').classList.add('show');
-  let t=600;const el=document.getElementById('cd');
-  const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-  el.textContent=fmt(t);
-  cdTimer=setInterval(()=>{t--;el.textContent=fmt(t);
-    if(t<=0){clearInterval(cdTimer);closeLast()}},1000);
-}
-function hesitate(){showLast()}
-function closeLast(){
-  if(cdTimer){clearInterval(cdTimer);cdTimer=null}
-  document.getElementById('last').classList.remove('show');
-}
-document.getElementById('lastPay').addEventListener('click',()=>{
-  S.discounted=true;
-  document.getElementById('offerPrice').innerHTML='<s>4,900</s>4,410<span style="font-size:.4em">원</span>';
-  document.getElementById('payBtn').textContent='토스페이로 결제하기 (4,410원)';
-  pay(true);
-});
-document.addEventListener('mouseleave',e=>{
-  if(e.clientY<=0&&document.getElementById('result').classList.contains('show')&&!S.lastShown)showLast();
-});
 
 /* ══ 프리로더 ══ */
 (function(){
