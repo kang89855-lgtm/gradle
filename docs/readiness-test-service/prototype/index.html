@@ -43,12 +43,14 @@
   #step.on{opacity:1}
 
   /* ── 공통 섹션 ── */
-  section{padding:16vh 4vw;position:relative}
+  section{padding:15vh 4vw;position:relative}
   .eyebrow{display:inline-block;font-size:12px;letter-spacing:.28em;text-transform:uppercase;
            color:var(--volt);border:1px solid var(--volt);padding:6px 14px;border-radius:999px;
            margin-bottom:28px}
   .reveal{opacity:0;transform:translateY(46px);transition:opacity .8s ease,transform .8s cubic-bezier(.22,1,.36,1)}
   .reveal.in{opacity:1;transform:none}
+  .h2{font-family:var(--disp);text-transform:uppercase;font-size:clamp(34px,5.4vw,72px);line-height:.96}
+  .h2 span{color:var(--volt)}
 
   /* ── 히어로 ── */
   #hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:18vh}
@@ -57,11 +59,10 @@
   .hero-line .hollow{color:transparent;-webkit-text-stroke:2px var(--paper)}
   .hero-line .volt{color:var(--volt)}
   #hero p.sub{max-width:34em;margin-top:34px;color:var(--mute);font-size:clamp(15px,1.4vw,18px);text-wrap:balance}
-  .start{display:flex;gap:14px;margin-top:44px;flex-wrap:wrap}
-  .start button{font-family:var(--disp);text-transform:uppercase;letter-spacing:.06em;
-    font-size:clamp(18px,2vw,26px);padding:20px 38px;border:1px solid var(--paper);
-    border-radius:999px;transition:.25s}
-  .start button:hover,.start button.picked{background:var(--volt);border-color:var(--volt);color:var(--ink)}
+  .cta{display:inline-block;font-family:var(--disp);text-transform:uppercase;letter-spacing:.06em;
+    font-size:clamp(18px,2vw,26px);padding:20px 42px;border:1px solid var(--paper);
+    border-radius:999px;transition:.25s;margin-top:44px}
+  .cta:hover{background:var(--volt);border-color:var(--volt);color:var(--ink)}
   .scroll-badge{position:absolute;right:5vw;bottom:6vh;width:110px;height:110px;opacity:.9}
   .scroll-badge svg{width:100%;height:100%;animation:spin 14s linear infinite}
   .scroll-badge text{font-size:11.5px;letter-spacing:3.5px;fill:var(--paper);text-transform:uppercase}
@@ -75,23 +76,28 @@
   .marquee .track em{font-style:normal;color:transparent;-webkit-text-stroke:1.5px var(--volt);padding:0 .35em}
   @keyframes mq{to{transform:translateX(-50%)}}
 
-  /* ── 캐릭터 ── */
-  #guide .wrap{display:grid;grid-template-columns:minmax(260px,1fr) 1.4fr;gap:6vw;align-items:center}
+  /* ── 캐릭터: 자기소개 ── */
+  #guide .wrap{display:grid;grid-template-columns:minmax(260px,1fr) 1.4fr;gap:6vw;align-items:start}
   @media(max-width:840px){#guide .wrap{grid-template-columns:1fr}}
-  .avatar{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;padding:8%}
+  .avatar{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;padding:8%;position:sticky;top:90px}
   .avatar svg{width:100%;height:auto;display:block}
-  #guide h2{font-family:var(--disp);text-transform:uppercase;font-size:clamp(40px,6vw,84px);line-height:.95;margin-bottom:10px}
+  #guide h2{font-family:var(--disp);text-transform:uppercase;font-size:clamp(40px,6vw,84px);line-height:.95;margin-bottom:6px}
   #guide h2 span{color:var(--volt)}
-  .spec{margin-top:28px;border-top:1px solid var(--line)}
+  .intro-say{display:grid;gap:14px;margin-top:30px}
+  .say{background:var(--ink-2);border:1px solid var(--line);border-radius:4px 18px 18px 18px;
+       padding:18px 22px;max-width:34em;font-size:16.5px}
+  .say b{color:var(--volt)}
+  .spec{margin-top:34px;border-top:1px solid var(--line)}
   .spec div{display:grid;grid-template-columns:130px 1fr;gap:16px;padding:13px 0;border-bottom:1px solid var(--line);font-size:15px}
   .spec dt{color:var(--mute);letter-spacing:.16em;font-size:11px;text-transform:uppercase;padding-top:3px}
-  .quote{margin-top:26px;padding-left:18px;border-left:3px solid var(--volt);color:var(--paper);font-size:17px;font-weight:600}
 
-  /* ── 상태 선택 ── */
+  /* ── 선택 칩 ── */
   .chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
   .chips button{border:1px solid var(--line);border-radius:999px;padding:14px 24px;font-size:15px;transition:.2s;color:var(--paper)}
   .chips button:hover{border-color:var(--paper)}
   .chips button.picked{background:var(--paper);color:var(--ink);border-color:var(--paper);font-weight:700}
+  .chips button.big{font-family:var(--disp);text-transform:uppercase;font-size:clamp(18px,2vw,24px);padding:18px 36px}
+  .chips button.big.picked,.chips button.big:hover{background:var(--volt);border-color:var(--volt);color:var(--ink)}
   .haran-note{display:flex;gap:12px;align-items:flex-start;margin-top:26px;max-width:36em}
   .haran-note .dot{flex:0 0 34px;height:34px;border-radius:50%;background:var(--volt);
     display:grid;place-items:center;font-family:var(--disp);color:var(--ink);font-size:15px}
@@ -99,15 +105,15 @@
   .haran-note p b{color:var(--paper)}
 
   /* ── 문항 패널 ── */
-  .q{min-height:92svh;display:flex;flex-direction:column;justify-content:center;border-top:1px solid var(--line)}
-  .q .num{font-family:var(--disp);font-size:clamp(70px,12vw,150px);line-height:1;
+  .q{min-height:88svh;display:flex;flex-direction:column;justify-content:center;border-top:1px solid var(--line);padding:10vh 4vw}
+  .q .num{font-family:var(--disp);font-size:clamp(60px,10vw,130px);line-height:1;
           color:transparent;-webkit-text-stroke:1.5px var(--line);margin-bottom:8px}
   .q.answered .num{color:var(--volt);-webkit-text-stroke:0}
-  .q h3{font-size:clamp(24px,3.6vw,44px);font-weight:900;letter-spacing:-.02em;max-width:22em;text-wrap:balance}
+  .q h3{font-size:clamp(22px,3.2vw,40px);font-weight:900;letter-spacing:-.02em;max-width:24em;text-wrap:balance}
   .q .tag{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--mute);margin-top:14px}
-  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:640px;margin-top:44px}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:640px;margin-top:40px}
   .scale button{aspect-ratio:1/.72;border:1px solid var(--line);border-radius:14px;
-    font-family:var(--disp);font-size:clamp(20px,2.4vw,30px);transition:.18s;position:relative}
+    font-family:var(--disp);font-size:clamp(20px,2.4vw,30px);transition:.18s}
   .scale button:hover{border-color:var(--volt);color:var(--volt);transform:translateY(-4px)}
   .scale button.sel{background:var(--volt);border-color:var(--volt);color:var(--ink)}
   .scale-cap{display:flex;justify-content:space-between;max-width:640px;margin-top:10px;
@@ -116,7 +122,7 @@
   /* ── 결과 ── */
   #result{display:none}
   #result.show{display:block}
-  .type-card{background:var(--ink-2);border:1px solid var(--volt);border-radius:22px;padding:6% 5%;}
+  .type-card{background:var(--ink-2);border:1px solid var(--volt);border-radius:22px;padding:6% 5%}
   .type-card .lbl{font-size:12px;letter-spacing:.26em;color:var(--volt);text-transform:uppercase}
   .type-card h3{font-family:var(--disp);text-transform:uppercase;font-size:clamp(38px,7vw,92px);line-height:.95;margin:14px 0 18px}
   .type-card p{color:var(--mute);max-width:38em}
@@ -128,26 +134,41 @@
   .locked div{display:flex;justify-content:space-between;align-items:center;padding:15px 4px;
               border-bottom:1px solid var(--line);color:var(--mute);font-size:15px}
   .locked div i{font-style:normal;letter-spacing:.2em;font-size:11px;text-transform:uppercase}
-  .locked div.open{color:var(--paper)}
-  .locked div.open i{color:var(--volt)}
   .fineprint{margin-top:22px;font-size:13px;color:var(--mute)}
 
-  /* ── 가격 ── */
-  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:44px}
-  .tier{border:1px solid var(--line);border-radius:20px;padding:30px 26px;background:var(--ink-2);
-        display:flex;flex-direction:column;gap:14px}
-  .tier.hot{border-color:var(--volt);position:relative}
-  .tier.hot::before{content:"가장 많이 선택";position:absolute;top:-13px;left:22px;background:var(--volt);
-        color:var(--ink);font-size:11px;font-weight:800;letter-spacing:.12em;padding:4px 12px;border-radius:999px}
-  .tier .name{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
-  .tier .price{font-family:var(--disp);font-size:clamp(34px,4vw,48px);line-height:1}
-  .tier.hot .price{color:var(--volt)}
-  .tier ul{list-style:none;display:grid;gap:9px;font-size:14px;color:var(--mute)}
-  .tier ul li b{color:var(--paper)}
-  .tier .depth{border-top:1px solid var(--line);padding-top:14px;font-size:13px;display:grid;gap:6px}
-  .tier .depth span{color:var(--mute)}
-  .tier .depth b{color:var(--paper);font-variant-numeric:tabular-nums}
-  .tier .depth .v{color:var(--volt)}
+  /* ── 유료 오퍼 ── */
+  .offer{max-width:760px;margin:44px auto 0;background:var(--ink-2);border:1px solid var(--volt);
+         border-radius:24px;padding:44px 5%;text-align:center;position:relative}
+  .offer .badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--volt);
+        color:var(--ink);font-size:11px;font-weight:800;letter-spacing:.14em;padding:5px 16px;border-radius:999px;white-space:nowrap}
+  .offer h3{font-family:var(--disp);text-transform:uppercase;font-size:clamp(30px,4.6vw,54px);line-height:1}
+  .offer .price{font-family:var(--disp);font-size:clamp(56px,9vw,110px);line-height:1;color:var(--volt);margin:22px 0 6px;font-variant-numeric:tabular-nums}
+  .offer .price s{color:var(--mute);font-size:.45em;-webkit-text-stroke:0;margin-right:14px}
+  .offer ul{list-style:none;display:grid;gap:10px;margin:26px auto 0;max-width:26em;text-align:left;font-size:15px;color:var(--mute)}
+  .offer ul li::before{content:"✓ ";color:var(--volt);font-weight:800}
+  .offer ul li b{color:var(--paper)}
+  .pay{display:inline-block;margin-top:34px;background:var(--volt);color:var(--ink);
+       font-family:var(--disp);text-transform:uppercase;letter-spacing:.05em;
+       font-size:clamp(20px,2.4vw,28px);padding:22px 54px;border-radius:999px;transition:.2s}
+  .pay:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,74,26,.35)}
+  .hesitate{display:block;margin:18px auto 0;color:var(--mute);font-size:14px;text-decoration:underline;text-underline-offset:4px}
+  .offer .toss{margin-top:16px;font-size:12px;color:var(--mute);letter-spacing:.04em}
+
+  /* ── 마지막 제안 모달 ── */
+  #last{position:fixed;inset:0;z-index:80;display:none;place-items:center;background:rgba(11,11,12,.86);padding:5vw}
+  #last.show{display:grid}
+  #last .box{background:var(--ink-2);border:2px solid var(--volt);border-radius:24px;max-width:560px;
+             padding:48px 6%;text-align:center;animation:pop .35s cubic-bezier(.22,1.4,.36,1)}
+  @keyframes pop{from{transform:scale(.9);opacity:0}}
+  #last .shout{font-family:var(--disp);text-transform:uppercase;color:var(--volt);
+               font-size:clamp(34px,6vw,58px);line-height:.95}
+  #last p.msg{margin-top:18px;font-size:16px;color:var(--paper)}
+  #last p.msg b{color:var(--volt)}
+  #last .price{font-family:var(--disp);font-size:clamp(48px,8vw,84px);color:var(--volt);margin-top:20px;font-variant-numeric:tabular-nums}
+  #last .price s{color:var(--mute);font-size:.45em;margin-right:12px}
+  #last .once{margin-top:8px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+  #last .pay{margin-top:26px}
+  #last .no{display:block;margin:16px auto 0;color:var(--mute);font-size:13px;text-decoration:underline;text-underline-offset:4px}
 
   /* ── 푸터 ── */
   footer{border-top:1px solid var(--line);padding:60px 4vw;color:var(--mute);font-size:13px;line-height:1.9}
@@ -167,30 +188,28 @@
   <div class="pct" id="pct">0</div>
 </div>
 
-<div id="bar"></div><div id="step">0 / 5</div>
+<div id="bar"></div><div id="step">0 / 15</div>
 
 <header>
   <a class="logo" href="#hero">반지 전에</a>
   <nav>
-    <a href="#guide">Guide</a><a href="#status">Status</a>
+    <a href="#guide">Guide</a><a href="#gender">Start</a>
     <a href="#q1">Test</a><a href="#price">Report</a>
   </nav>
 </header>
 
 <!-- ── HERO ── -->
 <section id="hero">
-  <span class="eyebrow reveal">연애·결혼 준비도 테스트 — Free 5 Questions</span>
+  <span class="eyebrow reveal">연애·결혼 준비도 테스트 — Free 15 Questions</span>
   <h1>
     <div class="hero-line reveal">결혼 전,</div>
     <div class="hero-line hollow reveal">상대 말고</div>
     <div class="hero-line reveal"><span class="volt">나부터</span> 검증한다</div>
   </h1>
   <p class="sub reveal">상대를 조사하는 테스트가 아닙니다. 내가 어떤 사랑을 반복하는 사람인지,
-  지금 결혼을 감당할 준비가 되었는지 — 스크롤을 내리며 5개의 질문에 답해 보세요.</p>
-  <div class="start reveal" role="group" aria-label="성별 선택">
-    <button data-g="남성" onclick="pickGender(this)">남성으로 시작</button>
-    <button data-g="여성" onclick="pickGender(this)">여성으로 시작</button>
-  </div>
+  지금 결혼을 감당할 준비가 되었는지 — 스크롤을 내리며 15개의 질문에 답해 보세요.
+  무료 15문항은 8개 영역을 훑고, 정밀 100문항은 모든 영역을 끝까지 걷습니다.</p>
+  <a class="cta reveal" href="#guide">가이드를 만나고 시작하기</a>
   <div class="scroll-badge" aria-hidden="true">
     <svg viewBox="0 0 100 100">
       <defs><path id="cir" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs>
@@ -200,60 +219,72 @@
   </div>
 </section>
 
-<div class="marquee" aria-hidden="true"><div class="track" id="mq">
+<div class="marquee" aria-hidden="true"><div class="track">
   준비 없는 결혼이 두려운 것이다 <em>Ready for Love</em> 연애는 감정, 결혼은 준비 <em>Ready for Life</em>
   준비 없는 결혼이 두려운 것이다 <em>Ready for Love</em> 연애는 감정, 결혼은 준비 <em>Ready for Life</em>
 </div></div>
 
-<!-- ── 캐릭터 ── -->
+<!-- ── 캐릭터 자기소개 (초반부) ── -->
 <section id="guide">
-  <span class="eyebrow reveal">Your Guide</span>
+  <span class="eyebrow reveal">Your Guide — 먼저, 제 소개부터 할게요</span>
   <div class="wrap">
     <div class="avatar reveal" aria-label="가이드 하란 일러스트">
       <svg viewBox="0 0 300 340" role="img" aria-hidden="true">
-        <rect width="300" height="340" fill="none"/>
-        <!-- 보브컷 헤어 -->
         <path d="M150 38c-52 0-84 36-84 88v58c0 10 8 18 18 18h10V128c0-14 10-24 24-24h64c14 0 24 10 24 24v74h10c10 0 18-8 18-18v-58c0-52-32-88-84-88z" fill="#1E1E21" stroke="#F4F2ED" stroke-width="3"/>
-        <!-- 얼굴 -->
         <circle cx="150" cy="150" r="52" fill="#0B0B0C" stroke="#F4F2ED" stroke-width="3"/>
-        <!-- 눈: 단정한 직선 시선 -->
         <line x1="128" y1="148" x2="142" y2="148" stroke="#F4F2ED" stroke-width="4" stroke-linecap="round"/>
         <line x1="158" y1="148" x2="172" y2="148" stroke="#F4F2ED" stroke-width="4" stroke-linecap="round"/>
-        <!-- 입: 옅은 미소 -->
         <path d="M138 172q12 10 24 0" fill="none" stroke="#FF4A1A" stroke-width="4" stroke-linecap="round"/>
-        <!-- 귀걸이 -->
         <circle cx="99" cy="160" r="5" fill="#FF4A1A"/><circle cx="201" cy="160" r="5" fill="#FF4A1A"/>
-        <!-- 자켓 -->
         <path d="M78 320v-46c0-30 24-52 54-52h36c30 0 54 22 54 52v46" fill="#1E1E21" stroke="#F4F2ED" stroke-width="3"/>
         <path d="M150 222v98" stroke="#FF4A1A" stroke-width="5"/>
-        <!-- 클립보드 -->
         <rect x="196" y="252" width="52" height="66" rx="7" fill="#0B0B0C" stroke="#FF4A1A" stroke-width="3"/>
         <line x1="206" y1="272" x2="238" y2="272" stroke="#F4F2ED" stroke-width="3"/>
         <line x1="206" y1="286" x2="238" y2="286" stroke="#F4F2ED" stroke-width="3"/>
         <line x1="206" y1="300" x2="226" y2="300" stroke="#FF4A1A" stroke-width="3"/>
       </svg>
     </div>
-    <div class="reveal">
-      <h2>하란 <span>HARAN</span></h2>
-      <p style="color:var(--mute)">이 테스트를 함께 걷는 당신의 가이드. 질문마다 옆에서 한마디를 건넵니다.</p>
-      <dl class="spec">
-        <div><dt>성별</dt><dd>여성</dd></div>
-        <div><dt>나이</dt><dd>36세</dd></div>
-        <div><dt>직업</dt><dd>관계심리 에디터 10년차 · 커플 코칭 세션 400회</dd></div>
-        <div><dt>성격</dt><dd>다정한 직진형 — 돌려 말하지 않지만, 비난하지 않는다</dd></div>
-        <div><dt>말투</dt><dd>존댓말, 짧은 문장. "괜찮아요"보다 "확인해요"가 먼저</dd></div>
-        <div><dt>습관</dt><dd>커플 인터뷰 아카이빙 — 헤어진 커플 200쌍의 "그때 알았더라면" 수집</dd></div>
+    <div>
+      <h2 class="reveal">하란 <span>HARAN</span></h2>
+      <div class="intro-say">
+        <p class="say reveal">안녕하세요, <b>하란</b>이에요. 올해 <b>서른여섯</b>이고,
+        10년째 관계심리 에디터로 일하고 있어요. 커플 코칭 세션은 400회를 넘겼습니다.</p>
+        <p class="say reveal">성격은요 — 주변에서는 <b>"다정한 직진형"</b>이라고 불러요.
+        돌려 말하지 않지만, 비난은 하지 않아요. "괜찮아요"보다 "확인해요"가 먼저인 사람이에요.</p>
+        <p class="say reveal">저에게는 이상한 습관이 하나 있어요. 헤어진 커플 200쌍을 인터뷰하면서
+        <b>"그때 알았더라면"</b>이라는 문장을 수집해왔거든요. 그 기록에서 알게 된 사실 —
+        위험신호는 언제나 있었어요. 우리가 못 본 척했을 뿐.</p>
+        <p class="say reveal">그래서 이 테스트를 만들었어요. <b>상대가 아니라 당신부터</b> 보려고요.
+        지금부터 15개의 질문을 드릴 거예요. 정답을 고르지 말고, 어제의 당신을 떠올리면서 골라주세요.</p>
+        <p class="say reveal">준비됐나요? 제가 옆에서 끝까지 같이 걸을게요.</p>
+      </div>
+      <dl class="spec reveal">
+        <div><dt>성별 / 나이</dt><dd>여성 / 36세</dd></div>
+        <div><dt>직업</dt><dd>관계심리 에디터 10년차 · 커플 코칭 400회</dd></div>
+        <div><dt>성격</dt><dd>다정한 직진형 — 팩트는 정확하게, 말투는 따뜻하게</dd></div>
+        <div><dt>신조</dt><dd>"당신의 느낌은 예민한 게 아니라, 데이터예요."</dd></div>
       </dl>
-      <p class="quote">"당신의 느낌은 예민한 게 아니라, 데이터예요."</p>
     </div>
+  </div>
+</section>
+
+<!-- ── 성별 선택 ── -->
+<section id="gender">
+  <span class="eyebrow reveal">Step 01 — 문항 구성을 위한 선택</span>
+  <h2 class="h2 reveal">당신으로 <span>시작</span>할게요</h2>
+  <div class="chips reveal" role="group" aria-label="성별 선택">
+    <button class="big" data-g="남성" onclick="pickGender(this)">남성으로 시작</button>
+    <button class="big" data-g="여성" onclick="pickGender(this)">여성으로 시작</button>
+  </div>
+  <div class="haran-note reveal"><div class="dot">H</div>
+    <p><b>하란:</b> 선택에 따라 정밀검사의 문항 구성이 달라져요. 무료 15문항은 공통이에요.</p>
   </div>
 </section>
 
 <!-- ── 상태 선택 ── -->
 <section id="status">
-  <span class="eyebrow reveal">Step 01 — 지금 어디에 있나요</span>
-  <h2 class="reveal" style="font-family:var(--disp);text-transform:uppercase;font-size:clamp(34px,5.4vw,72px);line-height:.96">
-    지금 당신의 <span style="color:var(--volt)">단계</span>를 고르세요</h2>
+  <span class="eyebrow reveal">Step 02 — 지금 어디에 있나요</span>
+  <h2 class="h2 reveal">지금 당신의 <span>단계</span>를 고르세요</h2>
   <div class="chips reveal" role="group" aria-label="현재 상태 선택">
     <button onclick="pickStatus(this)">연애 중</button>
     <button onclick="pickStatus(this)">결혼 고민 중</button>
@@ -266,51 +297,8 @@
   </div>
 </section>
 
-<!-- ── 문항 5개: 지나가면서 답하기 ── -->
-<section class="q" id="q1">
-  <div class="num">01</div>
-  <h3>상대가 답장을 늦게 하면 불안하거나 화가 난다.</h3>
-  <div class="tag">감정 안정도 영역</div>
-  <div class="scale" role="group" aria-label="문항 1 응답"></div>
-  <div class="scale-cap"><span>1 · 전혀 아니다</span><span>5 · 매우 그렇다</span></div>
-  <div class="haran-note"><div class="dot">H</div><p><b>하란:</b> 정답을 고르지 말고, 어제의 나를 떠올려요.</p></div>
-</section>
-
-<section class="q" id="q2">
-  <div class="num">02</div>
-  <h3>지금 결혼하면, 내 외로움이 해결될 것 같다.</h3>
-  <div class="tag">결혼 동기 영역</div>
-  <div class="scale" role="group" aria-label="문항 2 응답"></div>
-  <div class="scale-cap"><span>1 · 전혀 아니다</span><span>5 · 매우 그렇다</span></div>
-  <div class="haran-note"><div class="dot">H</div><p><b>하란:</b> 외로움은 결혼의 이유가 아니라, 먼저 돌봐야 할 신호예요.</p></div>
-</section>
-
-<section class="q" id="q3">
-  <div class="num">03</div>
-  <h3>사랑한다면 어느 정도의 간섭과 통제는 참아야 한다고 생각한다.</h3>
-  <div class="tag">존중·안전 영역</div>
-  <div class="scale" role="group" aria-label="문항 3 응답"></div>
-  <div class="scale-cap"><span>1 · 전혀 아니다</span><span>5 · 매우 그렇다</span></div>
-  <div class="haran-note"><div class="dot">H</div><p><b>하란:</b> 이 질문에서 멈칫했다면, 그 멈칫이 데이터예요.</p></div>
-</section>
-
-<section class="q" id="q4">
-  <div class="num">04</div>
-  <h3>상대의 단점을 알게 되어도 '결혼하면 달라지겠지'라고 생각한다.</h3>
-  <div class="tag">현실 감각 영역</div>
-  <div class="scale" role="group" aria-label="문항 4 응답"></div>
-  <div class="scale-cap"><span>1 · 전혀 아니다</span><span>5 · 매우 그렇다</span></div>
-  <div class="haran-note"><div class="dot">H</div><p><b>하란:</b> 결혼은 사람을 바꾸는 장치가 아니에요. 지금 모습 그대로 30년이라면?</p></div>
-</section>
-
-<section class="q" id="q5">
-  <div class="num">05</div>
-  <h3>결혼 후 한 달 생활비가 얼마나 필요한지 계산해본 적이 있다.</h3>
-  <div class="tag">경제 현실도 영역</div>
-  <div class="scale" role="group" aria-label="문항 5 응답"></div>
-  <div class="scale-cap"><span>1 · 전혀 아니다</span><span>5 · 매우 그렇다</span></div>
-  <div class="haran-note"><div class="dot">H</div><p><b>하란:</b> 사랑은 숫자를 싫어하지 않아요. 준비 안 된 쪽이 숫자를 피할 뿐.</p></div>
-</section>
+<!-- ── 문항 15개: 스크롤하며 답하기 (JS가 생성) ── -->
+<div id="questions"></div>
 
 <!-- ── 결과 ── -->
 <section id="result">
@@ -321,53 +309,57 @@
     <p id="resDesc">—</p>
     <div class="flags" id="resFlags"></div>
     <div class="locked" id="resLocked"></div>
-    <p class="fineprint">※ 5문항 기준의 예비 결과입니다. 문항 수가 늘수록(20 → 60 → 80문항) 측정 영역이 열리고
-    결과의 검증 신뢰도가 올라갑니다. 아래에서 원하는 깊이를 고르세요.</p>
+    <p class="fineprint">※ 무료 15문항은 8개 영역을 1~2문항씩 훑는 약식 측정입니다.
+    정밀검사는 <b style="color:var(--paper)">100문항</b>으로 같은 영역을 여러 각도에서 다시 물어, 결과의 검증 신뢰도를 끌어올립니다.</p>
   </div>
 </section>
 
 <div class="marquee" aria-hidden="true"><div class="track">
-  문항이 늘수록 정확해진다 <em>5 → 20 → 60 → 80</em> 영역이 열릴수록 선명해진다 <em>2 → 4 → 8 → 8+</em>
-  문항이 늘수록 정확해진다 <em>5 → 20 → 60 → 80</em> 영역이 열릴수록 선명해진다 <em>2 → 4 → 8 → 8+</em>
+  15문항은 훑고, 100문항은 걷는다 <em>15 → 100</em> 모든 영역, 모든 유형을 끝까지 <em>All Fields</em>
+  15문항은 훑고, 100문항은 걷는다 <em>15 → 100</em> 모든 영역, 모든 유형을 끝까지 <em>All Fields</em>
 </div></div>
 
-<!-- ── 가격: 결제할수록 영역·검증성이 실제로 증가 ── -->
+<!-- ── 유료 오퍼: 4,900원 정밀 100문항 ── -->
 <section id="price">
-  <span class="eyebrow reveal">Report — 깊이를 고르세요</span>
-  <h2 class="reveal" style="font-family:var(--disp);text-transform:uppercase;font-size:clamp(34px,5.4vw,72px);line-height:.96">
-    결제할수록, <span style="color:var(--volt)">측정이 깊어진다</span></h2>
-  <p class="reveal" style="color:var(--mute);margin-top:18px;max-width:36em">
-    가격이 올리는 것은 화려함이 아니라 <b style="color:var(--paper)">문항 수와 측정 영역</b>입니다.
-    문항이 많아질수록 같은 영역을 여러 각도로 다시 묻기 때문에, 결과의 검증 신뢰도가 실제로 올라갑니다.</p>
-  <div class="tiers reveal">
-    <div class="tier">
-      <div class="name">Free</div><div class="price">0원</div>
-      <ul><li><b>예비 유형</b> 판정</li><li>위험신호 최대 2개 공개</li></ul>
-      <div class="depth"><span>문항 <b>5개</b></span><span>측정 영역 <b>2개 힌트</b></span><span>검증 신뢰도 <b class="v">●○○○</b></span></div>
-    </div>
-    <div class="tier">
-      <div class="name">Basic</div><div class="price">4,900원</div>
-      <ul><li><b>유형 확정</b> + 해설</li><li>위험신호 <b>3개</b> 전체 해설</li><li>등급(S~D) 공개</li></ul>
-      <div class="depth"><span>문항 <b>20개</b></span><span>측정 영역 <b>4개</b> (감정·경제·존중·현실감각)</span><span>검증 신뢰도 <b class="v">●●○○</b></span></div>
-    </div>
-    <div class="tier hot">
-      <div class="name">Deep Report</div><div class="price">9,900원</div>
-      <ul><li>항목별 점수 + <b>맞춤 해설</b></li><li>위험신호 전체 공개</li><li>결혼 전 대화 질문 <b>7개</b></li><li>4주 보완 플랜</li></ul>
-      <div class="depth"><span>문항 <b>60개</b></span><span>측정 영역 <b>8개 전체</b> (+가족·책임·대화·위험인식)</span><span>검증 신뢰도 <b class="v">●●●○</b></span></div>
-    </div>
-    <div class="tier">
-      <div class="name">Master Pack</div><div class="price">19,900원</div>
-      <ul><li>PDF 리포트 소장본</li><li>현실 체크리스트 40</li><li>대화 질문 <b>50개</b></li><li>재혼·국제결혼·부모동거 심화 부록</li></ul>
-      <div class="depth"><span>문항 <b>80개</b> (상태별 심화 +20)</span><span>측정 영역 <b>8개 + 상태 심화</b></span><span>검증 신뢰도 <b class="v">●●●●</b></span></div>
-    </div>
+  <span class="eyebrow reveal">Deep Report — 정밀검사</span>
+  <h2 class="h2 reveal" style="text-align:center">100문항, <span>모든 영역</span>을 끝까지</h2>
+  <div class="offer reveal">
+    <div class="badge">커피 두 잔 값 · 평생 소장</div>
+    <h3>정밀 리포트</h3>
+    <div class="price" id="offerPrice">4,900<span style="font-size:.35em">원</span></div>
+    <ul>
+      <li><b>100문항 정밀검사</b> — 공통 + 성별 전용 + 상태별 심화까지 전 필드 통과</li>
+      <li><b>8개 영역 전체 점수</b> — 감정·경제·가족·책임·존중·현실감각·대화·위험인식</li>
+      <li><b>18개 결과 유형 전체 매칭</b> — 남성 9종 · 여성 9종 어디든 도달 가능</li>
+      <li>위험신호 전체 공개 + 심각도 2단계</li>
+      <li>결혼 전 반드시 나눠야 할 대화 질문 7개</li>
+      <li>4주 보완 플랜</li>
+    </ul>
+    <button class="pay" id="payBtn" onclick="pay()">토스페이로 결제하기</button>
+    <button class="hesitate" onclick="hesitate()">조금 더 고민해볼게요</button>
+    <p class="toss">결제는 토스페이먼츠로 안전하게 처리됩니다. (현재는 데모 — 홈페이지 정식 오픈 후 연동)</p>
   </div>
 </section>
+
+<!-- ── 마지막 제안 모달 (딱 1회) ── -->
+<div id="last" role="dialog" aria-modal="true" aria-label="마지막 제안">
+  <div class="box">
+    <div class="shout">잠깐만요.</div>
+    <p class="msg">이 제안은 <b>지금, 딱 한 번</b>만 보여드려요.<br>
+    이 창을 닫으면 다시 열리지 않아요 — <b>마지막이에요.</b></p>
+    <div class="price"><s>4,900</s>4,410<span style="font-size:.35em">원</span></div>
+    <div class="once">10% OFF — LAST CALL · ONE TIME ONLY</div>
+    <p class="msg" style="font-size:14px;color:var(--mute)">헤어진 커플 200쌍이 말했어요. "그때 알았더라면."<br>4,410원은 그 문장을 미리 사는 값이에요.</p>
+    <button class="pay" onclick="pay(true)">4,410원에 시작하기</button>
+    <button class="no" onclick="closeLast()">괜찮아요, 정가로 볼게요</button>
+  </div>
+</div>
 
 <footer>
   <div class="big">Love is a feeling.<br><em>Marriage is a skill.</em></div>
   <p>본 서비스는 자기이해를 돕는 자기점검 콘텐츠이며, 의료적 심리진단·법률상담이 아닙니다.
   특정 상대방에 대한 검증·조사·신원확인을 수행하지 않습니다. 결과는 결혼 가능 여부의 판정이 아니라
-  준비도와 점검 요소를 보여주는 참고자료입니다.<br>
+  준비도와 점검 요소를 보여주는 참고자료입니다. 할인은 1인 1회 제공되는 실제 최종 제안입니다.<br>
   관계에서 위협·감시·통제를 겪고 있다면 결과와 무관하게 도움을 요청하세요 —
   여성긴급전화 1366 (24시간) · 다누리콜센터 1577-1366 · 정신건강위기상담 1577-0199.<br><br>
   © 반지 전에 BANJI JEONE — 연애·결혼 준비도 테스트</p>
@@ -384,6 +376,52 @@
     p.textContent=n},36);
 })();
 
+/* ── 무료 15문항: 8개 영역을 훑는 구성 ── */
+const QUESTIONS=[
+ {t:'상대가 답장을 늦게 하면 불안하거나 화가 난다.',a:'감정 안정도',h:'정답을 고르지 말고, 어제의 나를 떠올려요.',flag:{dir:'hi',name:'반응 민감',d:'상대의 반응 속도가 내 안정감을 흔드는 패턴이에요.'}},
+ {t:'다투고 난 뒤에도 스스로 감정을 가라앉힐 수 있다.',a:'감정 안정도',h:'회복 속도는 결혼 생활의 체력이에요.'},
+ {t:'지금 결혼하면, 내 외로움이 해결될 것 같다.',a:'결혼 동기',h:'외로움은 결혼의 이유가 아니라, 먼저 돌봐야 할 신호예요.',flag:{dir:'hi',name:'외로움 결혼',d:'결혼의 동기가 "이 사람"보다 "혼자인 상태의 종료"에 가까울 때 나오는 응답이에요.'}},
+ {t:'결혼 후 한 달 생활비가 얼마나 필요한지 계산해본 적이 있다.',a:'경제 현실도',h:'사랑은 숫자를 싫어하지 않아요. 준비 안 된 쪽이 숫자를 피할 뿐.',flag:{dir:'lo',name:'경제 미계산',d:'결혼 생활의 숫자를 아직 세어보지 않은 상태예요.'}},
+ {t:'내 소득·부채·저축 상황을 상대에게 솔직히 말할 수 있다.',a:'경제 현실도',h:'돈 이야기가 편해지는 순서가, 결혼이 안전해지는 순서예요.'},
+ {t:'부모님의 기대 때문에 결혼을 서둘러야 한다는 압박을 느낀다.',a:'가족 독립도',h:'부모님의 시계와 당신의 시계는 달라도 돼요.',flag:{dir:'hi',name:'부모 압박',d:'결혼 결정의 기준이 부모님의 기대에 기울어 있다는 신호예요.'}},
+ {t:'부모님의 기대와 배우자의 감정을 분리해서 판단할 수 있다.',a:'가족 독립도',h:'"알리는 것"과 "허락받는 것"은 달라요.'},
+ {t:'결혼은 감정만이 아니라 책임을 나누는 일이라고 생각한다.',a:'책임감',h:'이 문장에 고개를 끄덕이는 속도가 준비도예요.'},
+ {t:'문제가 생기면 상대나 상황 탓부터 하게 된다.',a:'책임감',h:'솔직하게요. 여기는 아무도 안 봐요.',flag:{dir:'hi',name:'책임 회피',d:'갈등의 원인을 바깥에서 먼저 찾는 습관 — 결혼에서는 비용이 큰 패턴이에요.'}},
+ {t:'사랑한다면 어느 정도의 간섭과 통제는 참아야 한다고 생각한다.',a:'존중·안전',h:'이 질문에서 멈칫했다면, 그 멈칫이 데이터예요.',flag:{dir:'hi',name:'통제 수용',d:'간섭을 사랑으로 번역해온 관계 습관 — 가장 먼저 확인해야 할 신호예요.'}},
+ {t:'상대가 싫다고 말한 행동은 하지 않으려고 노력한다.',a:'존중·안전',h:'존중은 큰 이벤트가 아니라 이런 작은 반복이에요.'},
+ {t:"상대의 단점을 알게 되어도 '결혼하면 달라지겠지'라고 생각한다.",a:'현실 감각',h:'결혼은 사람을 바꾸는 장치가 아니에요. 지금 모습 그대로 30년이라면?',flag:{dir:'hi',name:'결혼 환상',d:'"결혼하면 달라지겠지"는 가장 흔하고 가장 비싼 가정이에요.'}},
+ {t:'결혼식 장면보다 결혼 생활을 더 자주 상상한다.',a:'현실 감각',h:'식은 하루, 생활은 30년이니까요.'},
+ {t:'돈·거주지·자녀 계획을 상대와 구체적으로 이야기해봤다.',a:'현실 대화',h:'불편한 대화를 미루는 만큼, 결혼 후에 이자가 붙어요.',flag:{dir:'lo',name:'대화 공백',d:'결혼의 핵심 주제가 아직 대화 테이블에 오르지 않았어요.'}},
+ {t:'갈등이 생기면 침묵이나 잠수보다 대화를 선택한다.',a:'현실 대화',h:'마지막 질문이에요. 끝까지 와줘서 고마워요.'}
+];
+const QN=QUESTIONS.length;
+const AREAS=['감정 안정도','경제 현실도','가족 독립도','책임감','상대 존중도','현실 감각','현실 대화 능력','위험신호 인식'];
+
+/* ── 문항 렌더링 ── */
+const holder=document.getElementById('questions');
+QUESTIONS.forEach((q,i)=>{
+  const s=document.createElement('section');s.className='q';s.id='q'+(i+1);
+  s.innerHTML=
+    '<div class="num">'+String(i+1).padStart(2,'0')+'</div>'+
+    '<h3>'+q.t+'</h3><div class="tag">'+q.a+' 영역</div>'+
+    '<div class="scale" role="group" aria-label="문항 '+(i+1)+' 응답"></div>'+
+    '<div class="scale-cap"><span>1 · 전혀 아니다</span><span>5 · 매우 그렇다</span></div>'+
+    '<div class="haran-note"><div class="dot">H</div><p><b>하란:</b> '+q.h+'</p></div>';
+  holder.appendChild(s);
+  const grid=s.querySelector('.scale');
+  for(let v=1;v<=5;v++){
+    const b=document.createElement('button');b.textContent=v;b.setAttribute('aria-label',v+'점');
+    b.onclick=()=>{
+      S.ans[i]=v;
+      grid.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b));
+      s.classList.add('answered');updateBar();
+      const next=document.getElementById('q'+(i+2));
+      setTimeout(()=>{next?next.scrollIntoView({behavior:'smooth'}):showResult()},420);
+    };
+    grid.appendChild(b);
+  }
+});
+
 /* ── 스크롤 리빌 ── */
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
@@ -391,12 +429,11 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
 /* ── 상태값 ── */
-const S={gender:null,status:null,ans:{}};
-const QN=5;
+const S={gender:null,status:null,ans:{},discounted:false,lastShown:false};
 
 function pickGender(btn){
   S.gender=btn.dataset.g;
-  document.querySelectorAll('.start button').forEach(b=>b.classList.toggle('picked',b===btn));
+  document.querySelectorAll('#gender .chips button').forEach(b=>b.classList.toggle('picked',b===btn));
   document.getElementById('status').scrollIntoView({behavior:'smooth'});
 }
 function pickStatus(btn){
@@ -406,33 +443,12 @@ function pickStatus(btn){
     '연애 중':'좋아요. 지금이 가장 정확하게 보이는 시기예요.',
     '결혼 고민 중':'고민된다는 건 이미 점검이 시작됐다는 뜻이에요.',
     '재혼 고민 중':'지난 결혼은 실패가 아니라 데이터예요. 이번엔 그 데이터를 쓰죠.',
-    '국제결혼 고민 중':'언어·문화·가족까지, 확인할 영역이 넓어요. 심화 문항이 준비되어 있어요.',
+    '국제결혼 고민 중':'언어·문화·가족까지, 확인할 영역이 넓어요. 정밀검사에 심화 문항이 준비되어 있어요.',
     '아직 상대는 없지만 준비 중':'가장 현명한 순서예요. 좋은 사람을 만나기 전에 나부터.'
   };
   document.getElementById('statusNote').innerHTML='<b>하란:</b> '+notes[S.status];
   setTimeout(()=>document.getElementById('q1').scrollIntoView({behavior:'smooth'}),450);
 }
-
-/* ── 5점 척도 버튼 생성 + 지나가며 답하기 ── */
-document.querySelectorAll('.q').forEach((sec,qi)=>{
-  const grid=sec.querySelector('.scale');
-  for(let v=1;v<=5;v++){
-    const b=document.createElement('button');b.textContent=v;
-    b.setAttribute('aria-label',v+'점');
-    b.onclick=()=>{
-      S.ans[qi]=v;
-      grid.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b));
-      sec.classList.add('answered');
-      updateBar();
-      const next=document.getElementById('q'+(qi+2));
-      setTimeout(()=>{
-        if(next) next.scrollIntoView({behavior:'smooth'});
-        else showResult();
-      },420);
-    };
-    grid.appendChild(b);
-  }
-});
 
 function updateBar(){
   const n=Object.keys(S.ans).length;
@@ -441,31 +457,27 @@ function updateBar(){
   st.textContent=n+' / '+QN; st.classList.add('on');
 }
 
-/* ── 결과 계산: 실제 응답 기준으로만 위험신호 노출 ── */
-const FLAGS=[
-  {q:0,when:v=>v>=4,name:'반응 민감',desc:'상대의 반응 속도가 내 안정감을 흔드는 패턴 — 감정 안정도 영역의 점검 신호예요.'},
-  {q:1,when:v=>v>=4,name:'외로움 결혼',desc:'결혼의 동기가 "이 사람"보다 "혼자인 상태의 종료"에 가까울 때 나타나는 응답이에요.'},
-  {q:2,when:v=>v>=4,name:'통제 수용',desc:'간섭을 사랑으로 번역해온 관계 습관 — 존중·안전 영역에서 가장 먼저 확인해야 할 신호예요.'},
-  {q:3,when:v=>v>=4,name:'결혼 환상',desc:'"결혼하면 달라지겠지"는 가장 흔하고 가장 비싼 가정이에요.'},
-  {q:4,when:v=>v<=2,name:'경제 미계산',desc:'결혼 생활의 숫자를 아직 세어보지 않은 상태 — 경제 현실도 영역의 점검 신호예요.'}
-];
-const AREAS=['감정 안정도','경제 현실도','가족 독립도','책임감','상대 존중도','현실 감각','현실 대화 능력','위험신호 인식'];
-
+/* ── 결과: 실제 응답 기준으로만 위험신호 노출 ── */
 function showResult(){
-  const hits=FLAGS.filter(f=>f.when(S.ans[f.q]||3));
+  const hits=[];
+  QUESTIONS.forEach((q,i)=>{
+    if(!q.flag)return;const v=S.ans[i]||3;
+    if(q.flag.dir==='hi'&&v>=4)hits.push({...q.flag,sev:v===5?'경고':'주의'});
+    if(q.flag.dir==='lo'&&v<=2)hits.push({...q.flag,sev:v===1?'경고':'주의'});
+  });
   const n=hits.length;
-  const type= n===0?'안정 준비형 (예비)': n===1?'준비 양호형 (예비)': n===2?'주의 보완형 (예비)':'고위험 점검형 (예비)';
+  const type= n===0?'안정 준비형 (예비)': n<=2?'준비 양호형 (예비)': n<=4?'주의 보완형 (예비)':'고위험 점검형 (예비)';
   const desc= n===0
-    ?'5문항 기준으로는 큰 위험신호가 없습니다. 다만 이 5문항은 감정·경제 두 영역만 스치듯 봅니다 — 가족·책임·대화 영역은 아직 측정되지 않았어요.'
+    ?'15문항 기준으로는 큰 위험신호가 없습니다. 다만 약식 측정은 영역당 1~2문항이라, 정밀검사에서 결과가 달라지는 경우가 있어요.'
     :'아래 신호는 당신이 나쁜 사람이라는 뜻이 아니라, 결혼 전에 먼저 다뤄두면 훨씬 안전해지는 지점이라는 뜻이에요.';
   document.getElementById('resType').textContent=type;
   document.getElementById('resDesc').textContent=desc;
   document.getElementById('resMeta').textContent=
-    '예비 판정 — '+(S.gender||'미선택')+' · '+(S.status||'상태 미선택')+' · 5문항 기준';
+    '예비 판정 — '+(S.gender||'성별 미선택')+' · '+(S.status||'상태 미선택')+' · 15문항 기준';
   const fl=document.getElementById('resFlags');fl.innerHTML='';
   hits.slice(0,2).forEach(h=>{
     const d=document.createElement('div');d.className='flag';
-    d.innerHTML='<b>⚠ '+h.name+'</b><span>'+h.desc+'</span>';fl.appendChild(d);
+    d.innerHTML='<b>⚠ '+h.name+' · '+h.sev+'</b><span>'+h.d+'</span>';fl.appendChild(d);
   });
   if(n>2){
     const d=document.createElement('div');d.className='flag';
@@ -473,13 +485,45 @@ function showResult(){
     fl.appendChild(d);
   }
   const lk=document.getElementById('resLocked');lk.innerHTML='';
-  AREAS.forEach((a,i)=>{
-    const open=i<2;
-    const d=document.createElement('div');if(open)d.className='open';
-    d.innerHTML='<span>'+a+'</span><i>'+(open?'힌트 공개':'🔒 정밀검사에서 열림')+'</i>';
+  AREAS.forEach(a=>{
+    const d=document.createElement('div');
+    d.innerHTML='<span>'+a+'</span><i>🔒 100문항 정밀검사에서 점수 공개</i>';
     lk.appendChild(d);
   });
   const r=document.getElementById('result');r.classList.add('show');
   setTimeout(()=>r.scrollIntoView({behavior:'smooth'}),120);
 }
+
+/* ── 결제 (토스페이먼츠 자리) ──
+   정식 오픈 후: loadTossPayments(clientKey).requestPayment('카드',{amount, orderId, orderName:'정밀 리포트'…})
+   현재는 데모 알림만 표시한다. */
+function pay(discount){
+  const amt=discount||S.discounted?4410:4900;
+  closeLast();
+  alert('[데모] 토스페이먼츠 결제창이 열립니다 — 결제 금액: '+amt.toLocaleString()+'원\n(홈페이지 정식 오픈 후 연동됩니다)');
+}
+
+/* ── 망설임 → 마지막 제안 (정확히 1회) ── */
+function showLast(){
+  if(S.lastShown)return; S.lastShown=true;
+  document.getElementById('last').classList.add('show');
+}
+function hesitate(){showLast()}
+function closeLast(){
+  const m=document.getElementById('last');
+  if(m.classList.contains('show')){m.classList.remove('show')}
+}
+/* 결제 섹션을 봤다가 위로 이탈하려는 순간(데스크톱 exit-intent)에도 1회 발동 */
+let sawOffer=false;
+new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)sawOffer=true}),{threshold:.4})
+  .observe(document.getElementById('price'));
+document.addEventListener('mouseleave',e=>{
+  if(e.clientY<=0&&sawOffer&&!S.lastShown)showLast();
+});
+/* 모달에서 할인 결제 선택 시 가격 반영 */
+document.querySelector('#last .pay').addEventListener('click',()=>{
+  S.discounted=true;
+  document.getElementById('offerPrice').innerHTML='<s>4,900</s>4,410<span style="font-size:.35em">원</span>';
+  document.getElementById('payBtn').textContent='토스페이로 결제하기 (4,410원)';
+});
 </script>
