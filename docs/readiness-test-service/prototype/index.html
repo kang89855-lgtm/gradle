@@ -274,6 +274,36 @@
   #result footer .big{color:#fff;font-size:clamp(22px,4vw,36px);font-weight:900;margin-bottom:18px}
   #result footer .big em{font-style:normal;color:var(--yellow)}
 
+  /* ── 시작 화면 ── */
+  #start{position:fixed;inset:0;z-index:70;display:grid;place-items:center;
+         background:linear-gradient(var(--sky),#8FDCF3);padding:5vw;overflow-y:auto}
+  #start.hide{display:none}
+  #start .card{background:var(--card);border-radius:30px;box-shadow:var(--shadow);
+         max-width:420px;width:100%;padding:30px 7% 34px;text-align:center}
+  #start .mascot{width:86px;margin:-72px auto 4px;display:block;
+         filter:drop-shadow(0 10px 12px rgba(40,53,106,.25))}
+  #start h1{font-size:34px;font-weight:900}
+  #start h1 span{color:var(--pink)}
+  #start .tt{font-size:14px;font-weight:700;color:#8B93B8;margin-top:2px}
+  #start .lb{display:block;text-align:left;font-size:13px;font-weight:900;color:var(--blue);
+         letter-spacing:.06em;margin:20px 0 8px}
+  #start input{width:100%;border:2px solid #E4EAF5;border-radius:16px;padding:14px 16px;
+         font-size:17px;font-weight:700;font-family:inherit;color:var(--navy)}
+  #start input:focus{outline:3px solid var(--blue);border-color:var(--blue)}
+  #start .gsel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  #start .gsel button{border:2px solid #E4EAF5;border-radius:16px;padding:15px 8px;
+         font-size:17px;font-weight:800;transition:.15s}
+  #start .gsel button:hover{transform:translateY(-2px)}
+  #start .gsel button.on{border-color:var(--navy);background:var(--navy);color:#fff}
+  #start #gM.on{background:var(--blue);border-color:var(--blue)}
+  #start #gF.on{background:var(--pink);border-color:var(--pink)}
+  #start #stGo{width:100%;margin-top:24px;background:var(--btn-green);color:#fff;
+         font-weight:900;font-size:18px;padding:17px;border-radius:999px;
+         box-shadow:0 7px 0 #23824a,var(--shadow);transition:.15s}
+  #start #stGo:hover:not(:disabled){transform:translateY(-2px)}
+  #start #stGo:disabled{background:#B9C0D9;box-shadow:0 7px 0 #9AA3C4;cursor:not-allowed}
+  #start .hintline{margin-top:16px;font-size:12.5px;font-weight:700;color:#8B93B8}
+
   /* ── 광고 모달 + 광고 자리 ── */
   #ad{position:fixed;inset:0;z-index:60;display:none;place-items:center;
         background:rgba(40,53,106,.45);padding:5vw;backdrop-filter:blur(3px)}
@@ -363,6 +393,24 @@
     <svg class="bean" viewBox="0 0 100 148"><use href="#haran"/></svg>
     <div class="pct" id="pct">0%</div>
     <div class="tip">하란이 벚꽃 마을을 준비하고 있어요…</div>
+  </div>
+</div>
+
+<!-- ── 시작 화면: 이름 + 성별 설정 ── -->
+<div id="start" role="dialog" aria-label="시작 설정">
+  <div class="card">
+    <svg viewBox="0 0 100 148" class="mascot" aria-hidden="true"><use href="#haran"/></svg>
+    <h1>반지 <span>전에</span></h1>
+    <p class="tt">연애·결혼 준비도 테스트 — 벚꽃 마을</p>
+    <label class="lb" for="stName">이름 (별명)</label>
+    <input id="stName" maxlength="12" placeholder="예: 하늘, 민준…" autocomplete="off">
+    <div class="lb">성별</div>
+    <div class="gsel">
+      <button id="gM" data-g="남성">🙋‍♂️ 남성</button>
+      <button id="gF" data-g="여성">🙋‍♀️ 여성</button>
+    </div>
+    <button id="stGo" disabled>마을 입장하기 🌸</button>
+    <p class="hintline">🔍 솔직하지 않으면, 결과도 솔직하지 않아요</p>
   </div>
 </div>
 
@@ -653,16 +701,12 @@ const stations=[];
 function addSt(st){stations.push(st);return st}
 addSt({type:'talk',x:CX,y:CY+300,npc:'haran',tag:'하란 Lv.10',
  pages:[
-  '안녕하세요, 여행자님! 벚꽃 마을에 온 걸 환영해요. 저는 <b>하란</b> — 올해 <b>서른여섯</b>, 10년째 관계심리 에디터로 일하고 있어요.',
+  '{NAME}님, 어서 와요! 벚꽃 마을에 온 걸 환영해요. 저는 <b>하란</b> — 올해 <b>서른여섯</b>, 10년째 관계심리 에디터로 일하고 있어요.',
   '성격이요? 친구들은 <b>"다정한 직진형"</b>이라고 불러요. 돌려 말하지 않지만 비난은 안 해요. "괜찮아요"보다 <b>"확인해요"</b>가 먼저인 타입!',
   '저에겐 수집품이 있어요 — 헤어진 커플 200쌍의 <b>"그때 알았더라면"</b>이라는 문장들. 위험신호는 언제나 있었어요. 못 본 척했을 뿐이죠.',
   '한 가지 약속만 해요 — <b>솔직하게</b> 답하기. 솔직하지 않으면 결과도 솔직하지 않거든요. 부담스러운 질문은 <b>건너뛰어도</b> 괜찮아요.',
   '이 마을 곳곳에 친구들이 있어요. <b>분홍 화살표</b>를 따라 자유롭게 걸어다니면서 만나보세요. 자, 출발!'
  ]});
-addSt({type:'choice',x:CX-320,y:CY+80,npc:'duo',tag:'마을 입구',who:'VILLAGE',
- txt:'어서 와요! 문항 구성을 맞춰드릴게요. <b>누구로 시작</b>할까요?',
- opts:['🙋‍♂️ 남성으로 시작','🙋‍♀️ 여성으로 시작'],
- set:(i)=>{S.gender=i===0?'남성':'여성'}});
 addSt({type:'choice',x:CX+320,y:CY+80,npc:'sign',tag:'갈림길 표지판',who:'MAP',
  txt:'지금 어느 <b>맵</b>에 있나요? 선택에 따라 심화 코스가 준비돼요.',
  opts:['💗 연애 중','💍 결혼 고민 중','🌱 재혼 고민 중','🌏 국제결혼 고민 중','🧭 아직 상대는 없지만 준비 중'],
@@ -866,17 +910,11 @@ function markDone(st){st.done=true;st.el.classList.add('done');st.el.classList.r
   sfx('ok');updateHud()}
 function esc(s){return s.replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
 
-/* 이름 → 나이 → 색상 → 액세서리 커스텀 시퀀스 */
+/* 나이 → 색상 → 액세서리 커스텀 시퀀스 (이름·성별은 시작 화면에서) */
 function setupFlow(st){
-  resetPanel();pWho.textContent='HARAN';
-  pTxt.innerHTML='먼저, 뭐라고 불러드릴까요? <b>이름(별명)</b>을 알려주세요!';
-  const inp=document.createElement('input');inp.maxLength=12;inp.placeholder='예: 하늘, 민준… (12자 이내)';
-  const nb=document.createElement('button');nb.className='primary';nb.textContent='다음 →';
-  nb.onclick=()=>{S.name=(inp.value.trim()||'여행자');sfx('ok');stepAge()};
-  inp.addEventListener('keydown',e=>{if(e.key==='Enter')nb.click();e.stopPropagation()});
-  pBtns.appendChild(inp);pBtns.appendChild(nb);setTimeout(()=>inp.focus(),100);
+  stepAge();
   function stepAge(){resetPanel();pWho.textContent='HARAN';
-    pTxt.innerHTML='반가워요, <b>'+esc(S.name)+'</b>님! 나이대는 어떻게 되세요?';
+    pTxt.innerHTML='<b>'+esc(S.name)+'</b>님, 나이대는 어떻게 되세요?';
     ['20대','30대 초반','30대 후반','40대','50대 이상'].forEach(a=>{
       const c=document.createElement('button');c.textContent=a;
       c.onclick=()=>{S.age=a;sfx('ok');stepColor()};pBtns.appendChild(c)});
@@ -904,7 +942,7 @@ function openStation(st){
   panelOpen=true;resetPanel();sfx('pop');
   if(st.type==='talk'){
     pWho.textContent='HARAN';let p=0;
-    const show=()=>{pTxt.innerHTML=st.pages[p];pBtns.innerHTML='';
+    const show=()=>{pTxt.innerHTML=st.pages[p].replace('{NAME}','<b>'+esc(S.name||'여행자')+'</b>');pBtns.innerHTML='';
       const b=document.createElement('button');
       b.className=p<st.pages.length-1?'primary':'green';
       b.textContent=p<st.pages.length-1?'다음 →':'계속 →';
@@ -1027,13 +1065,31 @@ function showAd(kind,cb){
   go.onclick=()=>{if(go.disabled)return;m.classList.remove('show');cb()};
 }
 
+/* ══ 시작 화면: 이름 + 성별 → 마을 입장 ══ */
+(function(){
+  const nameI=document.getElementById('stName'),
+        gM=document.getElementById('gM'),gF=document.getElementById('gF'),
+        go=document.getElementById('stGo');
+  let g=null;
+  const check=()=>{go.disabled=!(nameI.value.trim()&&g)};
+  nameI.addEventListener('input',check);
+  nameI.addEventListener('keydown',e=>{if(e.key==='Enter'&&!go.disabled)go.click();e.stopPropagation()});
+  [gM,gF].forEach(b=>b.onclick=()=>{g=b.dataset.g;
+    gM.classList.toggle('on',b===gM);gF.classList.toggle('on',b===gF);sfx('pop');check()});
+  go.onclick=()=>{
+    S.name=nameI.value.trim()||'여행자';S.gender=g;
+    document.getElementById('start').classList.add('hide');
+    sfx('win');auto=true;
+  };
+})();
+
 /* ══ 프리로더 ══ */
 (function(){
   const l=document.getElementById('loader'),p=document.getElementById('pct');
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){l.remove();auto=true;return}
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){l.remove();return}
   let n=0;const t=setInterval(()=>{n+=Math.ceil(Math.random()*9);
     if(n>=100){n=100;clearInterval(t);setTimeout(()=>l.classList.add('done'),200);
-      setTimeout(()=>{l.remove();auto=true},900)}
+      setTimeout(()=>l.remove(),900)}
     p.textContent=n+'%'},34);
 })();
 </script>
