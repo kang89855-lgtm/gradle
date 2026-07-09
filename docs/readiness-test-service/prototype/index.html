@@ -1,302 +1,234 @@
 <title>반지 전에 — 연애·결혼 준비도 테스트</title>
 <style>
-  /* ── 토큰: kodeclubs 감성 — 밝고 기분 좋은 게임 월드 (의도적 싱글 라이트 테마) ── */
+  /* ── 토큰: 밝은 게임 월드 (의도적 싱글 라이트 테마) ── */
   :root{
-    --sky:#7CD5F0; --sky-2:#B5EAF9;      /* 하늘 */
-    --grass:#63C95B; --grass-2:#4FB04C;  /* 잔디 */
-    --sand:#F6ECD9; --sand-2:#EFDFC2;    /* 모래길 */
-    --mint:#9EDFBB;                      /* 야자수 잎 */
-    --trunk:#B98A6A;
-    --card:#FFFFFF;
-    --navy:#28356A;                      /* 본문/버튼 남색 */
+    --sky:#7CD5F0; --sky-2:#B5EAF9;
+    --grass:#63C95B; --grass-2:#4FB04C;
+    --sand:#F6ECD9; --sand-2:#EFDFC2;
+    --card:#FFFFFF; --navy:#28356A;
     --pink:#F97BB1; --yellow:#FFD84D; --blue:#43C3F0; --purple:#9B7FD4;
-    --btn-green:#2FA45C;
-    --amber:#F59E0B;
+    --btn-green:#2FA45C; --amber:#F59E0B;
     --shadow:0 10px 24px rgba(40,53,106,.16);
     --kr:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;
+    --ground:24vh;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
   body{background:linear-gradient(var(--sky),var(--sky-2));color:var(--navy);
-       font-family:var(--kr);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  ::selection{background:var(--yellow)}
-  a{color:inherit;text-decoration:none}
+       font-family:var(--kr);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+       overflow:hidden;height:100svh;touch-action:none}
   button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
-  button:focus-visible,a:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:999px}
+  button:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:999px}
+  a{color:inherit}
 
   /* ── 프리로더 ── */
   #loader{position:fixed;inset:0;background:linear-gradient(var(--sky),#8FDCF3);z-index:99;
-          display:grid;place-items:center;transition:opacity .6s ease}
+          display:grid;place-items:center;transition:opacity .6s ease;text-align:center}
   #loader.done{opacity:0;pointer-events:none}
-  #loader .bean{width:90px;height:120px;animation:hop 1s ease-in-out infinite}
+  #loader .bean{width:90px;animation:hop 1s ease-in-out infinite}
   @keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
-  #loader .pct{margin-top:18px;font-weight:900;font-size:34px;color:#fff;text-align:center;
+  #loader .pct{margin-top:16px;font-weight:900;font-size:32px;color:#fff;
                font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgba(40,53,106,.25)}
-  #loader .tip{color:#fff;font-size:14px;text-align:center;margin-top:6px;opacity:.9}
+  #loader .tip{color:#fff;font-size:14px;margin-top:6px;opacity:.95;font-weight:600}
 
-  /* ── 헤더 + 진행 ── */
-  header{position:fixed;top:14px;left:0;right:0;z-index:50;display:flex;align-items:center;
-         justify-content:space-between;padding:0 4vw;pointer-events:none}
-  header>*{pointer-events:auto}
-  .logo{background:var(--card);border-radius:999px;padding:10px 22px;font-weight:900;
-        font-size:18px;box-shadow:var(--shadow)}
-  .logo span{color:var(--pink)}
-  .join{background:var(--card);border-radius:999px;padding:12px 24px;font-weight:800;
-        font-size:14px;box-shadow:var(--shadow);transition:.2s;color:var(--pink)}
-  .join:hover{transform:translateY(-2px)}
-  #hud{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:50;
-       background:var(--card);border-radius:999px;padding:10px 22px;box-shadow:var(--shadow);
-       font-weight:800;font-size:14px;display:none;align-items:center;gap:12px}
-  #hud.on{display:flex}
-  #hud .track{width:140px;height:10px;background:#E4EAF5;border-radius:999px;overflow:hidden}
-  #hud .fill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--btn-green));
-             border-radius:999px;transition:width .4s ease}
-
-  /* ── 공통 ── */
-  section{padding:12vh 4vw;position:relative}
-  .eyebrow{display:inline-block;background:var(--card);color:var(--pink);font-size:13px;
-           font-weight:800;letter-spacing:.08em;padding:8px 18px;border-radius:999px;
-           box-shadow:var(--shadow);margin-bottom:24px}
-  .reveal{opacity:0;transform:translateY(34px) scale(.97);
-          transition:opacity .7s ease,transform .7s cubic-bezier(.34,1.56,.64,1)}
-  .reveal.in{opacity:1;transform:none}
-  .h2{font-size:clamp(30px,5vw,54px);font-weight:900;letter-spacing:-.02em;line-height:1.15;text-wrap:balance}
-  .h2 em{font-style:normal;color:var(--pink)}
-
-  /* 장식: 구름·해·야자수 */
-  .cloud{position:absolute;background:#fff;border-radius:999px;opacity:.9;animation:drift 40s linear infinite}
+  /* ── 하늘 장식 (뷰포트 고정) ── */
+  .sun{position:fixed;top:7%;right:7%;width:80px;height:80px;border-radius:50%;z-index:1;
+       background:#FFE27A;box-shadow:0 0 0 16px rgba(255,226,122,.35),0 0 0 32px rgba(255,226,122,.15)}
+  .cloud{position:fixed;background:#fff;border-radius:999px;opacity:.92;z-index:1;animation:drift 46s linear infinite}
   .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
-  .cloud.c1{width:120px;height:38px;top:12%;left:-140px}
+  .cloud.c1{width:120px;height:38px;top:10%;left:-140px}
   .cloud.c1::before{width:50px;height:50px;top:-24px;left:20px}
   .cloud.c1::after{width:36px;height:36px;top:-16px;left:62px}
-  .cloud.c2{width:90px;height:30px;top:26%;left:-100px;animation-duration:55s;animation-delay:-20s}
+  .cloud.c2{width:90px;height:30px;top:22%;left:-100px;animation-duration:60s;animation-delay:-24s}
   .cloud.c2::before{width:40px;height:40px;top:-18px;left:16px}
   .cloud.c2::after{width:28px;height:28px;top:-12px;left:48px}
   @keyframes drift{to{transform:translateX(120vw)}}
-  .sun{position:absolute;top:8%;right:8%;width:84px;height:84px;border-radius:50%;
-       background:#FFE27A;box-shadow:0 0 0 18px rgba(255,226,122,.35),0 0 0 36px rgba(255,226,122,.15)}
-  .palms{position:absolute;bottom:-6px;left:0;right:0;display:flex;justify-content:space-between;
-         align-items:flex-end;padding:0 2vw;pointer-events:none}
-  .palms svg{width:clamp(70px,10vw,130px);height:auto}
-  /* 흩날리는 벚꽃잎 */
+  .petals{position:fixed;inset:0;pointer-events:none;z-index:3}
   .petals i{position:absolute;top:-24px;width:12px;height:10px;background:#FBC0DA;
-            border-radius:60% 0 60% 60%;opacity:.85;animation:fall 9s linear infinite}
-  .petals i:nth-child(1){left:8%;animation-delay:0s}
-  .petals i:nth-child(2){left:22%;animation-delay:-2.5s;transform:scale(.8)}
-  .petals i:nth-child(3){left:35%;animation-delay:-5s}
-  .petals i:nth-child(4){left:48%;animation-delay:-1.2s;transform:scale(1.2)}
-  .petals i:nth-child(5){left:60%;animation-delay:-6.6s}
-  .petals i:nth-child(6){left:72%;animation-delay:-3.8s;transform:scale(.7)}
-  .petals i:nth-child(7){left:84%;animation-delay:-7.7s}
-  .petals i:nth-child(8){left:93%;animation-delay:-4.4s;transform:scale(.9)}
-  @keyframes fall{
-    0%{transform:translateY(-4vh) rotate(0deg)}
-    100%{transform:translateY(104vh) rotate(420deg)}
-  }
-  /* 청사초롱 장식 */
-  .lanterns{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-around;pointer-events:none}
-  .lanterns svg{width:40px;height:auto;animation:sway 4s ease-in-out infinite;transform-origin:top center}
-  .lanterns svg:nth-child(even){animation-delay:-2s}
-  @keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-  /* 마음 장터 NPC */
-  .npc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;
-            max-width:940px;margin:32px auto 0}
-  .npc{background:var(--card);border-radius:22px;padding:20px 12px 16px;box-shadow:var(--shadow);
-       transition:.18s;text-align:center}
-  .npc:hover{transform:translateY(-5px) rotate(-1deg)}
-  .npc.picked{outline:4px solid var(--navy);transform:scale(1.05)}
-  .npc svg{width:56px;height:auto}
-  .npc .want{font-weight:900;font-size:15px;margin-top:8px}
-  .npc .say{font-size:12px;font-weight:600;color:#8B93B8;margin-top:4px;line-height:1.5}
-  /* 결과: 욕구 프로필 */
-  .wants{display:grid;gap:12px;margin-top:28px;text-align:left}
+            border-radius:60% 0 60% 60%;opacity:.85;animation:fall 10s linear infinite}
+  .petals i:nth-child(1){left:8%}
+  .petals i:nth-child(2){left:24%;animation-delay:-3s;transform:scale(.8)}
+  .petals i:nth-child(3){left:40%;animation-delay:-6s}
+  .petals i:nth-child(4){left:55%;animation-delay:-1.5s;transform:scale(1.2)}
+  .petals i:nth-child(5){left:70%;animation-delay:-7.5s}
+  .petals i:nth-child(6){left:86%;animation-delay:-4.5s;transform:scale(.7)}
+  @keyframes fall{0%{transform:translateY(-4vh) rotate(0)}100%{transform:translateY(108vh) rotate(420deg)}}
+
+  /* ── 월드 ── */
+  #view{position:fixed;inset:0;overflow:hidden;z-index:2}
+  #world{position:absolute;top:0;bottom:0;left:0;will-change:transform}
+  #ground{position:absolute;bottom:0;height:var(--ground);width:100%;
+    background:linear-gradient(var(--grass),var(--grass-2))}
+  #ground::before{content:"";position:absolute;top:38%;left:0;right:0;height:26%;
+    background:repeating-linear-gradient(90deg,var(--sand) 0 220px,var(--sand-2) 220px 260px);
+    border-radius:999px}
+  .deco{position:absolute;bottom:calc(var(--ground) - 10px)}
+  .deco svg{display:block}
+  .npc{position:absolute;bottom:calc(var(--ground) - 6px);text-align:center;width:120px;margin-left:-60px}
+  .npc svg{width:74px;height:auto;filter:drop-shadow(0 8px 8px rgba(40,53,106,.18))}
+  .npc .tag{display:inline-block;background:var(--card);border-radius:999px;padding:4px 12px;
+            font-size:12px;font-weight:900;box-shadow:var(--shadow);margin-top:6px;white-space:nowrap}
+  .npc .over{position:absolute;left:50%;transform:translateX(-50%);bottom:105%;font-size:22px;
+             animation:bob2 2.4s ease-in-out infinite;white-space:nowrap}
+  @keyframes bob2{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-8px)}}
+  .npc.done{opacity:.55}
+  .qflag{position:absolute;bottom:calc(var(--ground) - 4px);width:90px;margin-left:-45px;text-align:center}
+  .qflag .pole{width:8px;height:74px;background:#B98A6A;border-radius:4px;margin:0 auto}
+  .qflag .fl{position:absolute;top:-2px;left:50%;background:var(--yellow);color:var(--navy);
+      font-weight:900;font-size:13px;padding:5px 12px;border-radius:10px 999px 999px 10px;
+      box-shadow:var(--shadow);white-space:nowrap}
+  .qflag.done .fl{background:var(--btn-green);color:#fff}
+
+  /* 아바타 */
+  #avatar{position:fixed;bottom:calc(var(--ground) - 6px);width:78px;margin-left:-39px;z-index:4;
+          transition:transform .15s}
+  #avatar svg{width:100%;height:auto;filter:drop-shadow(0 8px 8px rgba(40,53,106,.2))}
+  #avatar.walk svg{animation:step .34s ease-in-out infinite}
+  @keyframes step{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+  #avatar.flip svg{transform:scaleX(-1)}
+  #avatar.flip.walk svg{animation:stepf .34s ease-in-out infinite}
+  @keyframes stepf{0%,100%{transform:scaleX(-1) translateY(0) rotate(2deg)}50%{transform:scaleX(-1) translateY(-9px) rotate(-2deg)}}
+
+  /* ── HUD ── */
+  #hudTop{position:fixed;top:14px;left:0;right:0;z-index:20;display:flex;justify-content:space-between;
+          align-items:center;padding:0 3vw;pointer-events:none}
+  #hudTop>*{pointer-events:auto}
+  .logo{background:var(--card);border-radius:999px;padding:10px 20px;font-weight:900;font-size:17px;box-shadow:var(--shadow)}
+  .logo span{color:var(--pink)}
+  #prog{background:var(--card);border-radius:999px;padding:10px 18px;font-weight:900;font-size:13px;
+        box-shadow:var(--shadow);display:flex;align-items:center;gap:10px}
+  #prog .track{width:110px;height:9px;background:#E4EAF5;border-radius:999px;overflow:hidden}
+  #prog .fill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--btn-green));transition:width .4s}
+  #ctrl{position:fixed;bottom:18px;right:3vw;z-index:20;display:flex;gap:10px;align-items:center}
+  #ctrl button{background:var(--card);box-shadow:var(--shadow);border-radius:999px;font-weight:900;transition:.15s}
+  #ctrl button:active{transform:scale(.94)}
+  #ctrl .arrow{width:60px;height:60px;font-size:24px}
+  #ctrl .go{padding:0 26px;height:60px;background:var(--btn-green);color:#fff;font-size:16px;
+            box-shadow:0 6px 0 #23824a,var(--shadow)}
+  #hint{position:fixed;bottom:22px;left:3vw;z-index:20;background:rgba(255,255,255,.9);
+        border-radius:999px;padding:10px 18px;font-size:12.5px;font-weight:700;color:#5A6285;box-shadow:var(--shadow)}
+  @media(max-width:720px){#hint{display:none}}
+
+  /* ── 대화 패널 (게임 NPC 대화) ── */
+  #panel{position:fixed;left:50%;bottom:calc(var(--ground) + 3vh);transform:translateX(-50%) translateY(20px);
+         z-index:30;width:min(680px,92vw);opacity:0;pointer-events:none;
+         transition:opacity .3s ease,transform .3s cubic-bezier(.34,1.56,.64,1)}
+  #panel.show{opacity:1;pointer-events:auto;transform:translateX(-50%)}
+  #panel .box{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:22px 26px}
+  #panel .who{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--blue);margin-bottom:6px}
+  #panel .txt{font-size:clamp(15px,1.9vw,17.5px);font-weight:700;text-wrap:balance}
+  #panel .txt b{color:var(--pink)}
+  #panel .area{font-size:11.5px;font-weight:900;letter-spacing:.1em;color:var(--blue);margin-bottom:4px}
+  #panel .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;justify-content:center}
+  #panel .btns button{border-radius:999px;padding:13px 24px;font-weight:800;font-size:14.5px;
+        background:#EEF2FB;transition:.15s;box-shadow:0 3px 0 rgba(40,53,106,.12)}
+  #panel .btns button:hover{transform:translateY(-3px)}
+  #panel .btns button.primary{background:var(--navy);color:#fff}
+  #panel .btns button.green{background:var(--btn-green);color:#fff}
+  #panel .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}
+  #panel .scale button{aspect-ratio:1/.62;border-radius:14px;font-weight:900;font-size:20px;color:#fff;
+        box-shadow:0 4px 0 rgba(40,53,106,.2);transition:.15s}
+  #panel .scale button:nth-child(1){background:#7FD6A4}
+  #panel .scale button:nth-child(2){background:#5FCBBF}
+  #panel .scale button:nth-child(3){background:var(--blue)}
+  #panel .scale button:nth-child(4){background:var(--purple)}
+  #panel .scale button:nth-child(5){background:var(--pink)}
+  #panel .scale button:hover{transform:translateY(-4px)}
+  #panel .cap{display:flex;justify-content:space-between;margin-top:8px;font-size:11.5px;font-weight:700;color:#8B93B8}
+  #panel .mini{margin-top:12px;background:#F2F7FF;border-radius:12px;padding:10px 14px;
+               font-size:13px;font-weight:600;color:#5A6285}
+  #panel .mini b{color:var(--pink)}
+
+  /* ── 결과 오버레이 ── */
+  #result{position:fixed;inset:0;z-index:40;overflow-y:auto;display:none;
+          background:linear-gradient(var(--sand),var(--sand-2));padding:8vh 4vw 0}
+  #result.show{display:block}
+  .center{text-align:center}
+  .eyebrow{display:inline-block;background:var(--card);color:var(--pink);font-size:13px;font-weight:800;
+           letter-spacing:.08em;padding:8px 18px;border-radius:999px;box-shadow:var(--shadow);margin-bottom:22px}
+  .type-card{background:var(--card);border-radius:30px;box-shadow:var(--shadow);max-width:780px;
+             margin:0 auto;padding:clamp(26px,5vw,48px);text-align:center;position:relative;overflow:hidden}
+  .type-card .conf{position:absolute;top:0;left:0;right:0;height:10px;
+      background:repeating-linear-gradient(90deg,var(--pink) 0 24px,var(--yellow) 24px 48px,var(--blue) 48px 72px,var(--btn-green) 72px 96px)}
+  .type-card .lbl{font-size:12px;font-weight:900;letter-spacing:.16em;color:var(--blue)}
+  .type-card h3{font-size:clamp(28px,5vw,46px);font-weight:900;margin:12px 0 12px;color:var(--pink)}
+  .type-card>p{color:#5A6285;font-weight:600;max-width:34em;margin:0 auto}
+  .wants{display:grid;gap:12px;margin-top:26px;text-align:left}
   .want-card{background:#EFF8FF;border:2px solid #BEE3F8;border-radius:16px;padding:16px 18px}
-  .want-card .t{font-weight:900;color:var(--blue);font-size:13px;letter-spacing:.06em}
-  .want-card p{font-size:14.5px;font-weight:600;color:var(--navy);margin-top:6px}
+  .want-card .t{font-weight:900;color:var(--blue);font-size:13px;letter-spacing:.04em}
+  .want-card p{font-size:14.5px;font-weight:600;margin-top:6px}
   .want-card.mismatch{background:#FDF2F8;border-color:#FBCFE8}
   .want-card.mismatch .t{color:var(--pink)}
-
-  /* 잔디/모래 밴드 */
-  .grass{background:linear-gradient(var(--grass),var(--grass-2));border-radius:48px 48px 0 0}
-  .grass+.grass{border-radius:0}
-  .sand{background:linear-gradient(var(--sand),var(--sand-2))}
-  .on-grass .eyebrow{color:var(--btn-green)}
-  .on-grass .h2,.on-grass p{color:#fff}
-  .on-grass .h2 em{color:var(--yellow)}
-
-  /* ── 히어로 ── */
-  #hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
-        align-items:center;text-align:center;padding-top:16vh;overflow:hidden}
-  #hero h1{font-size:clamp(40px,8.4vw,96px);font-weight:900;letter-spacing:-.03em;line-height:1.05;
-           color:#fff;text-shadow:0 4px 0 rgba(40,53,106,.18)}
-  #hero h1 .pop{color:var(--yellow)}
-  #hero h1 .pop2{color:var(--pink)}
-  #hero p.sub{max-width:32em;margin-top:22px;color:#fff;font-size:clamp(15px,1.6vw,18px);
-              font-weight:600;text-shadow:0 2px 0 rgba(40,53,106,.12);text-wrap:balance}
-  .cta{display:inline-block;background:var(--btn-green);color:#fff;font-weight:900;
-       font-size:clamp(17px,2vw,21px);padding:18px 44px;border-radius:999px;margin-top:34px;
-       box-shadow:0 8px 0 #23824a,var(--shadow);transition:.15s}
-  .cta:hover{transform:translateY(-3px)}
-  .cta:active{transform:translateY(2px);box-shadow:0 4px 0 #23824a}
-  .hero-beans{display:flex;gap:clamp(10px,3vw,30px);margin-top:44px;align-items:flex-end}
-  .hero-beans svg{width:clamp(54px,7vw,92px);height:auto;animation:bob 3s ease-in-out infinite}
-  .hero-beans svg:nth-child(2){animation-delay:-.6s}
-  .hero-beans svg:nth-child(3){animation-delay:-1.2s}
-  .hero-beans svg:nth-child(4){animation-delay:-1.8s}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-
-  /* ── 말풍선 (게임 NPC 대화) ── */
-  .bubble{position:relative;background:var(--card);border-radius:22px;box-shadow:var(--shadow);
-          padding:20px 24px;max-width:34em;font-size:16px;font-weight:600}
-  .bubble::before{content:"";position:absolute;top:-14px;left:44px;border:10px solid transparent;
-                  border-bottom-color:var(--card);border-top:0}
-  .bubble b{color:var(--pink)}
-  .bubble .who{display:block;font-size:12px;font-weight:900;letter-spacing:.1em;color:var(--blue);margin-bottom:4px}
-
-  /* ── 캐릭터 소개 ── */
-  #guide .wrap{display:grid;grid-template-columns:minmax(240px,.8fr) 1.3fr;gap:5vw;align-items:start;max-width:1100px;margin:0 auto}
-  @media(max-width:840px){#guide .wrap{grid-template-columns:1fr;justify-items:center}}
-  .stage-haran{position:sticky;top:100px;text-align:center}
-  .stage-haran svg{width:min(260px,60vw);height:auto;filter:drop-shadow(0 14px 16px rgba(40,53,106,.2))}
-  .nametag{display:inline-block;background:var(--card);border-radius:999px;padding:8px 20px;
-           font-weight:900;box-shadow:var(--shadow);margin-top:14px}
-  .nametag span{color:var(--pink)}
-  .intro-say{display:grid;gap:16px}
-  .spec{background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:22px 26px;margin-top:8px}
-  .spec div{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:9px 0;
-            border-bottom:2px dashed #EAEEF7;font-size:14.5px}
-  .spec div:last-child{border-bottom:0}
-  .spec dt{color:var(--blue);font-weight:900;font-size:12px;letter-spacing:.08em;padding-top:2px}
-
-  /* ── 선택 칩 ── */
-  .chips{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px;justify-content:center}
-  .chips button{background:var(--card);color:var(--navy);border-radius:999px;padding:16px 28px;
-                font-size:16px;font-weight:800;box-shadow:var(--shadow);transition:.18s}
-  .chips button:hover{transform:translateY(-4px) rotate(-1deg)}
-  .chips button.picked{background:var(--navy);color:#fff}
-  .chips button.big{font-size:clamp(18px,2.2vw,24px);padding:20px 40px}
-  .chips button.big.b-m.picked{background:var(--blue)}
-  .chips button.big.b-f.picked{background:var(--pink)}
-  .center{text-align:center}
-  .note{display:flex;gap:12px;align-items:flex-start;margin:28px auto 0;max-width:36em}
-  .note .face{flex:0 0 44px}
-  .note .face svg{width:44px;height:auto}
-  .note .bubble{flex:1}
-  .note .bubble::before{left:-16px;top:14px;transform:rotate(-90deg)}
-
-  /* ── 문항 스테이지 ── */
-  .q{min-height:86svh;display:flex;align-items:center;justify-content:center;padding:9vh 4vw}
-  .q .card{background:var(--card);border-radius:28px;box-shadow:var(--shadow);
-           padding:clamp(26px,4vw,48px);max-width:760px;width:100%;position:relative}
-  .q .flagpole{position:absolute;top:-26px;left:30px;background:var(--yellow);color:var(--navy);
-        font-weight:900;font-size:14px;padding:8px 18px;border-radius:999px;box-shadow:var(--shadow)}
-  .q.answered .flagpole{background:var(--btn-green);color:#fff}
-  .q .area{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--blue);margin-bottom:10px}
-  .q h3{font-size:clamp(20px,2.8vw,30px);font-weight:900;letter-spacing:-.02em;line-height:1.35;text-wrap:balance}
-  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:30px}
-  .scale button{aspect-ratio:1/.8;border-radius:18px;font-weight:900;font-size:clamp(18px,2.2vw,26px);
-                color:#fff;transition:.15s;box-shadow:0 5px 0 rgba(40,53,106,.22)}
-  .scale button:nth-child(1){background:#7FD6A4}
-  .scale button:nth-child(2){background:#5FCBBF}
-  .scale button:nth-child(3){background:var(--blue)}
-  .scale button:nth-child(4){background:var(--purple)}
-  .scale button:nth-child(5){background:var(--pink)}
-  .scale button:hover{transform:translateY(-5px)}
-  .scale button.sel{outline:4px solid var(--navy);transform:scale(1.06)}
-  .scale-cap{display:flex;justify-content:space-between;margin-top:10px;font-size:12.5px;
-             font-weight:700;color:#8B93B8}
-  .q .haran-mini{display:flex;gap:10px;align-items:center;margin-top:22px;
-                 background:#F2F7FF;border-radius:16px;padding:12px 16px;font-size:14px;font-weight:600}
-  .q .haran-mini svg{width:34px;flex:0 0 34px}
-  .q .haran-mini b{color:var(--pink)}
-
-  /* ── 결과 ── */
-  #result{display:none}
-  #result.show{display:block}
-  .type-card{background:var(--card);border-radius:30px;box-shadow:var(--shadow);max-width:800px;
-             margin:0 auto;padding:clamp(28px,5vw,52px);text-align:center;position:relative;overflow:hidden}
-  .type-card .conf{position:absolute;top:0;left:0;right:0;height:10px;
-        background:repeating-linear-gradient(90deg,var(--pink) 0 24px,var(--yellow) 24px 48px,var(--blue) 48px 72px,var(--btn-green) 72px 96px)}
-  .type-card .lbl{font-size:12px;font-weight:900;letter-spacing:.16em;color:var(--blue)}
-  .type-card h3{font-size:clamp(30px,5.4vw,52px);font-weight:900;margin:12px 0 14px;color:var(--pink)}
-  .type-card p{color:#5A6285;font-weight:600;max-width:34em;margin:0 auto}
-  .flags{display:grid;gap:12px;margin-top:28px;text-align:left}
-  .flag{background:#FFF6E5;border:2px solid #FFD9A0;border-radius:16px;padding:16px 18px;
+  .flags{display:grid;gap:12px;margin-top:22px;text-align:left}
+  .flag{background:#FFF6E5;border:2px solid #FFD9A0;border-radius:16px;padding:15px 18px;
         display:flex;gap:12px;align-items:baseline}
   .flag b{color:var(--amber);white-space:nowrap;font-weight:900}
-  .flag span{font-size:14.5px;font-weight:600;color:var(--navy)}
-  .locked{margin-top:30px;display:grid;gap:8px;text-align:left}
+  .flag span{font-size:14.5px;font-weight:600}
+  .locked{margin-top:24px;display:grid;gap:8px;text-align:left}
   .locked div{display:flex;justify-content:space-between;align-items:center;background:#F2F5FC;
-              border-radius:14px;padding:12px 18px;font-weight:700;font-size:14.5px;color:#7C86AE}
-  .locked div i{font-style:normal;font-size:12px;font-weight:900;letter-spacing:.06em}
-  .fineprint{margin-top:20px;font-size:13px;color:#8B93B8;font-weight:600}
-
-  /* ── 상점(오퍼) ── */
-  .offer{max-width:640px;margin:40px auto 0;background:var(--card);border-radius:30px;
-         box-shadow:var(--shadow);padding:clamp(30px,5vw,50px);text-align:center;position:relative}
-  .offer .badge{position:absolute;top:-16px;left:50%;transform:translateX(-50%);
-        background:var(--yellow);color:var(--navy);font-size:13px;font-weight:900;
-        padding:8px 20px;border-radius:999px;box-shadow:var(--shadow);white-space:nowrap}
-  .offer h3{font-size:clamp(24px,3.6vw,34px);font-weight:900}
-  .offer .price{font-size:clamp(48px,8vw,76px);font-weight:900;color:var(--btn-green);
-                margin:14px 0 4px;font-variant-numeric:tabular-nums}
+              border-radius:14px;padding:11px 18px;font-weight:700;font-size:14px;color:#7C86AE}
+  .locked div i{font-style:normal;font-size:11.5px;font-weight:900}
+  .fineprint{margin-top:18px;font-size:12.5px;color:#8B93B8;font-weight:600}
+  .offer{max-width:620px;margin:44px auto 0;background:var(--card);border-radius:30px;
+         box-shadow:var(--shadow);padding:clamp(28px,5vw,46px);text-align:center;position:relative}
+  .offer .badge{position:absolute;top:-16px;left:50%;transform:translateX(-50%);background:var(--yellow);
+        color:var(--navy);font-size:13px;font-weight:900;padding:8px 20px;border-radius:999px;
+        box-shadow:var(--shadow);white-space:nowrap}
+  .offer h3{font-size:clamp(22px,3.4vw,32px);font-weight:900}
+  .offer .price{font-size:clamp(44px,7vw,68px);font-weight:900;color:var(--btn-green);
+                margin:12px 0 2px;font-variant-numeric:tabular-nums}
   .offer .price s{color:#B9C0D9;font-size:.45em;margin-right:10px}
-  .offer ul{list-style:none;display:grid;gap:10px;margin:22px auto 0;max-width:24em;text-align:left;
-            font-size:15px;font-weight:600;color:#5A6285}
+  .offer ul{list-style:none;display:grid;gap:9px;margin:20px auto 0;max-width:24em;text-align:left;
+            font-size:14.5px;font-weight:600;color:#5A6285}
   .offer ul li::before{content:"⭐ "}
   .offer ul li b{color:var(--navy)}
-  .pay{display:inline-block;margin-top:30px;background:var(--blue);color:#fff;font-weight:900;
-       font-size:clamp(18px,2.2vw,22px);padding:20px 52px;border-radius:999px;
-       box-shadow:0 8px 0 #2C9CC4,var(--shadow);transition:.15s}
+  .pay{display:inline-block;margin-top:26px;background:var(--blue);color:#fff;font-weight:900;
+       font-size:clamp(17px,2vw,20px);padding:18px 46px;border-radius:999px;
+       box-shadow:0 7px 0 #2C9CC4,var(--shadow);transition:.15s}
   .pay:hover{transform:translateY(-3px)}
-  .pay:active{transform:translateY(2px);box-shadow:0 4px 0 #2C9CC4}
-  .hesitate{display:block;margin:18px auto 0;color:#8B93B8;font-size:14px;font-weight:700;
+  .hesitate{display:block;margin:16px auto 0;color:#8B93B8;font-size:13.5px;font-weight:700;
             text-decoration:underline;text-underline-offset:4px}
-  .offer .toss{margin-top:14px;font-size:12px;color:#A6ADCB;font-weight:600}
+  .toss{margin-top:12px;font-size:12px;color:#A6ADCB;font-weight:600}
+  #result footer{margin:56px -4vw 0;background:var(--navy);color:#B9C2E8;padding:44px 6vw 60px;
+                 font-size:12.5px;line-height:1.9;border-radius:44px 44px 0 0}
+  #result footer .big{color:#fff;font-size:clamp(22px,4vw,36px);font-weight:900;margin-bottom:18px}
+  #result footer .big em{font-style:normal;color:var(--yellow)}
 
-  /* ── 마지막 제안 모달 ── */
-  #last{position:fixed;inset:0;z-index:80;display:none;place-items:center;
+  /* ── 마지막 제안 모달 (10분 카운트다운) ── */
+  #last{position:fixed;inset:0;z-index:60;display:none;place-items:center;
         background:rgba(40,53,106,.45);padding:5vw;backdrop-filter:blur(3px)}
   #last.show{display:grid}
   #last .box{background:var(--card);border-radius:30px;max-width:520px;box-shadow:var(--shadow);
-             padding:44px 6%;text-align:center;animation:pop .4s cubic-bezier(.22,1.5,.36,1)}
+             padding:42px 6% 36px;text-align:center;animation:pop .4s cubic-bezier(.22,1.5,.36,1)}
   @keyframes pop{from{transform:scale(.85);opacity:0}}
-  #last .peek{width:88px;margin:-88px auto 8px;display:block}
-  #last .shout{font-size:clamp(30px,5vw,44px);font-weight:900;color:var(--pink)}
-  #last p.msg{margin-top:14px;font-size:15.5px;font-weight:600;color:#5A6285}
+  #last .peek{width:84px;margin:-84px auto 6px;display:block}
+  #last .shout{font-size:clamp(28px,5vw,40px);font-weight:900;color:var(--pink)}
+  #last p.msg{margin-top:12px;font-size:15px;font-weight:600;color:#5A6285}
   #last p.msg b{color:var(--navy)}
-  #last .price{font-size:clamp(44px,7vw,66px);font-weight:900;color:var(--btn-green);
-               margin-top:16px;font-variant-numeric:tabular-nums}
+  #last .price{font-size:clamp(40px,6.6vw,60px);font-weight:900;color:var(--btn-green);
+               margin-top:14px;font-variant-numeric:tabular-nums}
   #last .price s{color:#B9C0D9;font-size:.45em;margin-right:10px}
-  #last .once{margin-top:4px;font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--amber)}
-  #last .pay{margin-top:24px;background:var(--btn-green);box-shadow:0 8px 0 #23824a,var(--shadow)}
-  #last .no{display:block;margin:16px auto 0;color:#8B93B8;font-size:13px;font-weight:700;
+  #last .cd{margin-top:10px;font-size:14px;font-weight:900;color:var(--amber);
+            font-variant-numeric:tabular-nums;letter-spacing:.06em}
+  #last .cd span{display:inline-block;background:#FFF6E5;border-radius:10px;padding:6px 14px}
+  #last .pay{margin-top:22px;background:var(--btn-green);box-shadow:0 7px 0 #23824a,var(--shadow)}
+  #last .no{display:block;margin:14px auto 0;color:#8B93B8;font-size:13px;font-weight:700;
             text-decoration:underline;text-underline-offset:4px}
 
-  /* ── 푸터 ── */
-  footer{background:var(--navy);color:#B9C2E8;padding:60px 4vw 80px;font-size:13px;line-height:1.9;
-         border-radius:48px 48px 0 0}
-  footer .big{color:#fff;font-size:clamp(26px,5vw,48px);font-weight:900;margin-bottom:26px;line-height:1.2}
-  footer .big em{font-style:normal;color:var(--yellow)}
-
   @media(prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-    .reveal{opacity:1;transform:none}
+    *{animation:none!important;transition:none!important}
     #loader{display:none}
   }
 </style>
 
-<!-- 젤리빈 캐릭터 정의 -->
+<!-- 캐릭터·소품 SVG 정의 -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <!-- 기본 빈 몸통 -->
     <g id="bean-base">
       <path d="M50 8 C76 8 90 32 90 66 L90 108 C90 128 74 140 50 140 C26 140 10 128 10 108 L10 66 C10 32 24 8 50 8Z"/>
       <circle cx="38" cy="52" r="4.5" fill="#28356A"/>
       <circle cx="62" cy="52" r="4.5" fill="#28356A"/>
       <path d="M42 66 q8 7 16 0" fill="none" stroke="#28356A" stroke-width="4" stroke-linecap="round"/>
     </g>
-    <!-- 하란: 노란 빈 + 포니테일 -->
     <g id="haran">
       <path d="M62 14 C84 6 96 18 92 34 C104 44 100 66 88 70 L80 44 Z" fill="#2B2B33"/>
       <path d="M86 66 C98 76 96 100 86 108 C82 96 82 78 80 70 Z" fill="#2B2B33"/>
@@ -305,18 +237,21 @@
       <path d="M30 100 h40 v10 a8 8 0 0 1 -8 8 h-24 a8 8 0 0 1 -8 -8 Z" fill="#43C3F0" opacity=".9"/>
       <circle cx="26" cy="86" r="6" fill="#F97BB1"/>
     </g>
+    <g id="player">
+      <use href="#bean-base" fill="#43C3F0"/>
+      <path d="M28 76 L72 96 L72 108 L28 88 Z" fill="#28356A" opacity=".85"/>
+      <rect x="64" y="96" width="18" height="22" rx="6" fill="#F97BB1"/>
+    </g>
     <g id="bean-blue"><use href="#bean-base" fill="#43C3F0"/></g>
     <g id="bean-pink"><use href="#bean-base" fill="#F97BB1"/></g>
     <g id="bean-green"><use href="#bean-base" fill="#7FD6A4"/></g>
     <g id="bean-purple"><use href="#bean-base" fill="#9B7FD4"/></g>
-    <!-- 야자수 -->
     <g id="palm">
       <rect x="46" y="60" width="12" height="70" rx="6" fill="#B98A6A"/>
       <ellipse cx="30" cy="52" rx="30" ry="14" fill="#9EDFBB" transform="rotate(-18 30 52)"/>
       <ellipse cx="74" cy="52" rx="30" ry="14" fill="#8ED4AE" transform="rotate(18 74 52)"/>
       <ellipse cx="52" cy="38" rx="30" ry="14" fill="#A9E6C6" transform="rotate(-2 52 38)"/>
     </g>
-    <!-- 벚꽃 나무 -->
     <g id="blossom">
       <rect x="47" y="62" width="10" height="68" rx="5" fill="#8A6A52"/>
       <ellipse cx="34" cy="48" rx="26" ry="18" fill="#FBC0DA"/>
@@ -325,7 +260,6 @@
       <circle cx="40" cy="38" r="3" fill="#fff" opacity=".8"/>
       <circle cx="64" cy="44" r="3" fill="#fff" opacity=".8"/>
     </g>
-    <!-- 한옥 (기와지붕) -->
     <g id="hanok">
       <path d="M10 58 Q80 22 150 58 L138 70 Q80 44 22 70 Z" fill="#5A6B8C"/>
       <path d="M22 70 Q80 46 138 70 L132 78 Q80 58 28 78 Z" fill="#7789AC"/>
@@ -335,18 +269,22 @@
       <line x1="100" y1="88" x2="100" y2="114" stroke="#FBF4E4" stroke-width="2"/>
       <line x1="90" y1="101" x2="110" y2="101" stroke="#FBF4E4" stroke-width="2"/>
     </g>
-    <!-- 청사초롱 -->
     <g id="lantern">
       <line x1="20" y1="0" x2="20" y2="12" stroke="#28356A" stroke-width="2"/>
       <ellipse cx="20" cy="30" rx="14" ry="18" fill="#F87171"/>
-      <ellipse cx="20" cy="30" rx="14" ry="18" fill="url(#lg)" opacity=".4"/>
       <rect x="12" y="10" width="16" height="5" rx="2" fill="#28356A"/>
       <rect x="12" y="45" width="16" height="5" rx="2" fill="#28356A"/>
       <line x1="20" y1="50" x2="20" y2="60" stroke="#FFD84D" stroke-width="3" stroke-linecap="round"/>
     </g>
-    <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#43C3F0"/><stop offset="1" stop-color="#F87171"/>
-    </linearGradient>
+    <g id="lampost">
+      <rect x="18" y="0" width="8" height="120" rx="4" fill="#4A5A85"/>
+      <use href="#lantern" transform="translate(2,-4)"/>
+    </g>
+    <g id="signpost">
+      <rect x="44" y="30" width="10" height="90" rx="5" fill="#8A6A52"/>
+      <rect x="10" y="18" width="80" height="26" rx="8" fill="#FFD84D"/>
+      <rect x="16" y="52" width="66" height="22" rx="8" fill="#7FD6A4"/>
+    </g>
   </defs>
 </svg>
 
@@ -354,140 +292,47 @@
   <div>
     <svg class="bean" viewBox="0 0 100 148"><use href="#haran"/></svg>
     <div class="pct" id="pct">0%</div>
-    <div class="tip">하란이 코스를 준비하고 있어요…</div>
+    <div class="tip">하란이 벚꽃 마을을 준비하고 있어요…</div>
   </div>
 </div>
 
-<header>
-  <a class="logo" href="#hero">반지 <span>전에</span></a>
-  <a class="join" href="#gender">테스트 시작하기</a>
-</header>
+<div class="sun" aria-hidden="true"></div>
+<div class="cloud c1" aria-hidden="true"></div><div class="cloud c2" aria-hidden="true"></div>
+<div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
-<div id="hud"><span id="stage">스테이지 0 / 15</span><div class="track"><div class="fill" id="fill"></div></div></div>
+<div id="view"><div id="world">
+  <div id="ground"></div>
+  <!-- 소품·NPC·깃발은 JS가 배치 -->
+</div></div>
 
-<!-- ── 히어로: 하늘 위 ── -->
-<section id="hero">
-  <div class="cloud c1"></div><div class="cloud c2"></div><div class="sun"></div>
-  <h1 class="reveal">결혼 전,<br><span class="pop">상대 말고</span> <span class="pop2">나부터!</span></h1>
-  <p class="sub reveal">상대를 조사하는 테스트가 아니에요. 내가 어떤 사랑을 반복하는 사람인지,
-  15개의 스테이지를 통과하며 확인하는 <b>연애·결혼 준비도 테스트</b>입니다. 🎮</p>
-  <a class="cta reveal" href="#guide">모험 시작하기</a>
-  <div class="hero-beans reveal" aria-hidden="true">
-    <svg viewBox="0 0 100 148"><use href="#bean-blue"/></svg>
-    <svg viewBox="0 0 100 148"><use href="#haran"/></svg>
-    <svg viewBox="0 0 100 148"><use href="#bean-pink"/></svg>
-    <svg viewBox="0 0 100 148"><use href="#bean-purple"/></svg>
-  </div>
-  <div class="palms" aria-hidden="true">
-    <svg viewBox="0 0 104 132"><use href="#blossom"/></svg>
-    <svg viewBox="0 0 160 130" style="width:clamp(140px,22vw,260px)"><use href="#hanok"/></svg>
-    <svg viewBox="0 0 104 132"><use href="#palm"/></svg>
-    <svg viewBox="0 0 104 132" style="transform:scaleX(-1)"><use href="#blossom"/></svg>
-  </div>
-  <div class="petals" aria-hidden="true">
-    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-  </div>
-</section>
+<div id="avatar" aria-label="내 캐릭터"><svg viewBox="0 0 100 148"><use href="#player"/></svg></div>
 
-<!-- ── 캐릭터 소개: 잔디 광장 ── -->
-<section id="guide" class="grass on-grass">
-  <div class="center"><span class="eyebrow reveal">YOUR GUIDE — 광장에서 하란을 만났다!</span></div>
-  <div class="wrap">
-    <div class="stage-haran reveal">
-      <svg viewBox="0 0 100 148" role="img" aria-label="가이드 하란 — 노란 젤리빈 캐릭터"><use href="#haran"/></svg>
-      <div class="nametag">하란 <span>HARAN</span> · Lv.10</div>
-    </div>
-    <div class="intro-say">
-      <div class="bubble reveal"><span class="who">HARAN</span>
-        안녕하세요, 여행자님! 저는 <b>하란</b>이에요. 올해 <b>서른여섯</b>이고,
-        10년째 관계심리 에디터로 일하고 있어요. 커플 코칭 세션은 400회를 넘겼답니다. 🌴</div>
-      <div class="bubble reveal"><span class="who">HARAN</span>
-        성격이요? 친구들은 <b>"다정한 직진형"</b>이라고 불러요.
-        돌려 말하지 않지만 비난은 안 해요. "괜찮아요"보다 <b>"확인해요"</b>가 먼저인 타입!</div>
-      <div class="bubble reveal"><span class="who">HARAN</span>
-        저에겐 특별한 수집품이 있어요 — 헤어진 커플 200쌍의 <b>"그때 알았더라면"</b>이라는 문장들.
-        그 기록이 알려준 사실 하나: 위험신호는 언제나 있었어요. 못 본 척했을 뿐이에요.</div>
-      <div class="bubble reveal"><span class="who">HARAN</span>
-        그래서 이 코스를 만들었어요. <b>상대가 아니라 당신부터</b> 보려고요.
-        지금부터 15개의 스테이지가 펼쳐져요. 정답 말고, <b>어제의 당신</b>을 골라주세요!</div>
-      <dl class="spec reveal">
-        <div><dt>성별 / 나이</dt><dd>여성 / 36세</dd></div>
-        <div><dt>직업</dt><dd>관계심리 에디터 10년차 · 커플 코칭 400회</dd></div>
-        <div><dt>성격</dt><dd>다정한 직진형 — 팩트는 정확하게, 말투는 따뜻하게</dd></div>
-        <div><dt>한마디</dt><dd>"당신의 느낌은 예민한 게 아니라, 데이터예요."</dd></div>
-      </dl>
-    </div>
-  </div>
-</section>
+<div id="hudTop">
+  <div class="logo">반지 <span>전에</span></div>
+  <div id="prog"><span id="stage">벚꽃 마을 산책 중</span><div class="track"><div class="fill" id="fill"></div></div></div>
+</div>
 
-<!-- ── 성별 선택: 잔디 ── -->
-<section id="gender" class="grass on-grass center">
-  <span class="eyebrow reveal">STEP 01 — 캐릭터 선택</span>
-  <h2 class="h2 reveal">누구로 <em>플레이</em>할까요?</h2>
-  <div class="chips reveal" role="group" aria-label="성별 선택">
-    <button class="big b-m" data-g="남성" onclick="pickGender(this)">🙋‍♂️ 남성으로 시작</button>
-    <button class="big b-f" data-g="여성" onclick="pickGender(this)">🙋‍♀️ 여성으로 시작</button>
-  </div>
-  <div class="note reveal">
-    <div class="face"><svg viewBox="0 0 100 148"><use href="#haran"/></svg></div>
-    <div class="bubble"><span class="who">HARAN</span>선택에 따라 정밀검사의 문항 구성이 달라져요. 무료 15문항은 공통이에요!</div>
-  </div>
-</section>
+<div id="hint">← → 방향키로 걷기 · 또는 오른쪽 아래 <b>걷기</b> 버튼</div>
 
-<!-- ── 상태 선택: 모래길 ── -->
-<section id="status" class="sand center">
-  <span class="eyebrow reveal">STEP 02 — 맵 선택</span>
-  <h2 class="h2 reveal">지금 어느 <em>맵</em>에 있나요?</h2>
-  <div class="chips reveal" role="group" aria-label="현재 상태 선택">
-    <button onclick="pickStatus(this)">💗 연애 중</button>
-    <button onclick="pickStatus(this)">💍 결혼 고민 중</button>
-    <button onclick="pickStatus(this)">🌱 재혼 고민 중</button>
-    <button onclick="pickStatus(this)">🌏 국제결혼 고민 중</button>
-    <button onclick="pickStatus(this)">🧭 아직 상대는 없지만 준비 중</button>
-  </div>
-  <div class="note reveal">
-    <div class="face"><svg viewBox="0 0 100 148"><use href="#haran"/></svg></div>
-    <div class="bubble"><span class="who">HARAN</span><span id="statusNote">어떤 맵이든 결과는 '상대 평가'가 아니라 '나의 준비도'예요. 편하게 골라요!</span></div>
-  </div>
-</section>
+<div id="ctrl">
+  <button class="arrow" id="btnL" aria-label="왼쪽으로">◀</button>
+  <button class="arrow" id="btnR" aria-label="오른쪽으로">▶</button>
+  <button class="go" id="btnGo">🚶 걷기</button>
+</div>
 
-<!-- ── 마음 장터 ①: 내가 원하는 것 ── -->
-<section id="want-me" class="grass on-grass center">
-  <div class="lanterns" aria-hidden="true">
-    <svg viewBox="0 0 40 62"><use href="#lantern"/></svg>
-    <svg viewBox="0 0 40 62"><use href="#lantern"/></svg>
-    <svg viewBox="0 0 40 62"><use href="#lantern"/></svg>
-    <svg viewBox="0 0 40 62"><use href="#lantern"/></svg>
-    <svg viewBox="0 0 40 62"><use href="#lantern"/></svg>
-  </div>
-  <span class="eyebrow reveal">BONUS — 마음 장터 🏮</span>
-  <h2 class="h2 reveal">캐릭터들이 저마다 원하는 걸 들고 있어요.<br><em>당신의 마음</em>은 누구와 같나요?</h2>
-  <p class="reveal" style="margin-top:14px;font-weight:600">관계에서 <b>내가 가장 원하는 것</b> 하나를 클릭하세요.</p>
-  <div class="npc-grid reveal" id="npcMe" role="group" aria-label="내가 가장 원하는 것 선택"></div>
-  <div class="note reveal">
-    <div class="face"><svg viewBox="0 0 100 148"><use href="#haran"/></svg></div>
-    <div class="bubble"><span class="who">HARAN</span>고르기 어렵죠? 그 망설임까지가 데이터예요. 가장 먼저 눈이 간 것을 골라요!</div>
-  </div>
-</section>
+<div id="panel" role="dialog" aria-live="polite"><div class="box">
+  <div class="who" id="pWho">HARAN</div>
+  <div class="area" id="pArea" style="display:none"></div>
+  <div class="txt" id="pTxt"></div>
+  <div class="scale" id="pScale" style="display:none"></div>
+  <div class="cap" id="pCap" style="display:none"><span>1 · 전혀 아니다</span><span>5 · 매우 그렇다</span></div>
+  <div class="btns" id="pBtns"></div>
+  <div class="mini" id="pMini" style="display:none"></div>
+</div></div>
 
-<!-- ── 마음 장터 ②: 상대가 원하는 것 ── -->
-<section id="want-partner" class="grass on-grass center">
-  <span class="eyebrow reveal">BONUS — 마음 장터 🏮</span>
-  <h2 class="h2 reveal">그렇다면, <em>상대방</em>은<br>당신에게 무엇을 가장 원할까요?</h2>
-  <p class="reveal" style="margin-top:14px;font-weight:600">상대(또는 미래의 상대)가 원한다고 <b>믿는 것</b> 하나를 클릭하세요.</p>
-  <div class="npc-grid reveal" id="npcPartner" role="group" aria-label="상대가 원한다고 믿는 것 선택"></div>
-  <div class="note reveal">
-    <div class="face"><svg viewBox="0 0 100 148"><use href="#haran"/></svg></div>
-    <div class="bubble"><span class="who">HARAN</span>중요한 건 정답이 아니라, <b>내가 상대의 마음을 어떻게 읽고 있는지</b>예요. 결과에서 심리 해석을 보여드릴게요.</div>
-  </div>
-</section>
-
-<!-- ── 문항 15 스테이지 (JS 생성): 잔디 코스 ── -->
-<div id="questions" class="grass"></div>
-
-<!-- ── 결과: 모래 광장 ── -->
-<section id="result" class="sand">
-  <div class="center"><span class="eyebrow">🏁 FREE RESULT — 코스 완주!</span></div>
+<!-- ── 결과 오버레이 ── -->
+<div id="result">
+  <div class="center"><span class="eyebrow">🏁 FREE RESULT — 벚꽃 마을 완주!</span></div>
   <div class="type-card">
     <div class="conf"></div>
     <div class="lbl" id="resMeta">예비 판정</div>
@@ -499,193 +344,276 @@
     <p class="fineprint">※ 무료 15문항은 8개 영역을 1~2문항씩 살짝 훑는 약식 코스예요.
     정밀검사는 <b>100문항</b>으로 같은 영역을 여러 각도에서 다시 물어서, 결과의 검증 신뢰도가 확 올라갑니다.</p>
   </div>
-</section>
-
-<!-- ── 상점: 정밀 리포트 4,900원 ── -->
-<section id="price" class="sand center">
-  <span class="eyebrow reveal">🛍 ITEM SHOP — 정밀검사 입장권</span>
-  <h2 class="h2 reveal">100문항, <em>모든 맵</em>을 끝까지!</h2>
-  <div class="offer reveal">
+  <div class="center" style="margin-top:44px"><span class="eyebrow">🛍 ITEM SHOP — 정밀검사 입장권</span></div>
+  <div class="offer">
     <div class="badge">커피 두 잔 값 · 평생 소장</div>
-    <h3>정밀 리포트</h3>
+    <h3>정밀 리포트 — 100문항, 모든 맵</h3>
     <div class="price" id="offerPrice">4,900<span style="font-size:.4em">원</span></div>
     <ul>
       <li><b>100문항 정밀검사</b> — 공통 + 성별 전용 + 상태별 심화까지 전 필드 통과</li>
       <li><b>8개 영역 전체 점수</b> — 감정·경제·가족·책임·존중·현실감각·대화·위험인식</li>
-      <li><b>18개 결과 유형 전체 매칭</b> — 남성 9종 · 여성 9종 어디든 도달 가능</li>
+      <li><b>18개 결과 유형 전체 매칭</b> — 남성 9종 · 여성 9종</li>
       <li>위험신호 전체 공개 + 심각도 2단계</li>
-      <li>결혼 전 반드시 나눠야 할 대화 질문 7개</li>
-      <li>4주 보완 플랜</li>
+      <li>결혼 전 대화 질문 7개 + 4주 보완 플랜</li>
     </ul>
     <button class="pay" id="payBtn" onclick="pay()">토스페이로 결제하기</button>
     <button class="hesitate" onclick="hesitate()">조금 더 고민해볼게요</button>
     <p class="toss">결제는 토스페이먼츠로 안전하게 처리됩니다. (현재는 데모 — 정식 오픈 후 연동)</p>
   </div>
-</section>
+  <footer>
+    <div class="big">사랑은 <em>감정</em>, 결혼은 <em>준비</em>입니다.</div>
+    <p>본 서비스는 자기이해를 돕는 자기점검 콘텐츠이며, 의료적 심리진단·법률상담이 아닙니다.
+    특정 상대방에 대한 검증·조사·신원확인을 수행하지 않습니다. 결과는 결혼 가능 여부의 판정이 아니라
+    준비도와 점검 요소를 보여주는 참고자료입니다. 할인은 1인 1회, 제한 시간 내에만 제공되는 실제 최종 제안입니다.<br>
+    관계에서 위협·감시·통제를 겪고 있다면 결과와 무관하게 도움을 요청하세요 —
+    여성긴급전화 1366 (24시간) · 다누리콜센터 1577-1366 · 정신건강위기상담 1577-0199.<br><br>
+    © 반지 전에 BANJI JEONE — 연애·결혼 준비도 테스트</p>
+  </footer>
+</div>
 
-<!-- ── 마지막 제안 모달 (딱 1회) ── -->
+<!-- ── 마지막 제안 (딱 1회 · 10분) ── -->
 <div id="last" role="dialog" aria-modal="true" aria-label="마지막 제안">
   <div class="box">
     <svg class="peek" viewBox="0 0 100 148" aria-hidden="true"><use href="#haran"/></svg>
     <div class="shout">잠깐만요!</div>
-    <p class="msg">이 제안은 <b>지금, 딱 한 번</b>만 보여드려요.<br>
-    이 창을 닫으면 다시 열리지 않아요 — <b>마지막이에요!</b></p>
+    <p class="msg">이 제안은 <b>딱 한 번, 10분 동안</b>만 열려 있어요.<br>
+    시간이 지나면 정말로 사라져요 — 천천히, 하지만 놓치지 마세요.</p>
     <div class="price"><s>4,900</s>4,410<span style="font-size:.4em">원</span></div>
-    <div class="once">10% OFF · LAST CALL · ONE TIME ONLY</div>
-    <p class="msg" style="font-size:13.5px">헤어진 커플 200쌍이 말했어요. "그때 알았더라면."<br>4,410원은 그 문장을 미리 사는 값이에요.</p>
-    <button class="pay" onclick="pay(true)">4,410원에 시작하기</button>
+    <div class="cd">⏳ 남은 시간 <span id="cd">10:00</span></div>
+    <p class="msg" style="font-size:13px">헤어진 커플 200쌍이 말했어요. "그때 알았더라면."<br>4,410원은 그 문장을 미리 사는 값이에요.</p>
+    <button class="pay" id="lastPay">4,410원에 시작하기</button>
     <button class="no" onclick="closeLast()">괜찮아요, 정가로 볼게요</button>
   </div>
 </div>
 
-<footer>
-  <div class="big">사랑은 <em>감정</em>,<br>결혼은 <em>준비</em>입니다.</div>
-  <p>본 서비스는 자기이해를 돕는 자기점검 콘텐츠이며, 의료적 심리진단·법률상담이 아닙니다.
-  특정 상대방에 대한 검증·조사·신원확인을 수행하지 않습니다. 결과는 결혼 가능 여부의 판정이 아니라
-  준비도와 점검 요소를 보여주는 참고자료입니다. 할인은 1인 1회 제공되는 실제 최종 제안입니다.<br>
-  관계에서 위협·감시·통제를 겪고 있다면 결과와 무관하게 도움을 요청하세요 —
-  여성긴급전화 1366 (24시간) · 다누리콜센터 1577-1366 · 정신건강위기상담 1577-0199.<br><br>
-  © 반지 전에 BANJI JEONE — 연애·결혼 준비도 테스트</p>
-</footer>
-
 <script src="./toss-config.js"></script>
 <script src="https://js.tosspayments.com/v1/payment"></script>
 <script>
-/* ── 프리로더 ── */
-(function(){
-  const l=document.getElementById('loader'),p=document.getElementById('pct');
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){l.remove();return}
-  let n=0;const t=setInterval(()=>{n+=Math.ceil(Math.random()*9);
-    if(n>=100){n=100;clearInterval(t);setTimeout(()=>l.classList.add('done'),200);
-      setTimeout(()=>l.remove(),900)}
-    p.textContent=n+'%'},34);
-})();
-
-/* ── 무료 15문항: 8개 영역을 훑는 스테이지 ── */
+/* ══ 데이터 ══ */
 const QUESTIONS=[
  {t:'상대가 답장을 늦게 하면 불안하거나 화가 난다.',a:'감정 안정도',h:'정답을 고르지 말고, 어제의 나를 떠올려요!',flag:{dir:'hi',name:'반응 민감',d:'상대의 반응 속도가 내 안정감을 흔드는 패턴이에요.'}},
  {t:'다투고 난 뒤에도 스스로 감정을 가라앉힐 수 있다.',a:'감정 안정도',h:'회복 속도는 결혼 생활의 체력이에요.'},
  {t:'지금 결혼하면, 내 외로움이 해결될 것 같다.',a:'결혼 동기',h:'외로움은 결혼의 이유가 아니라, 먼저 돌봐야 할 신호예요.',flag:{dir:'hi',name:'외로움 결혼',d:'결혼의 동기가 "이 사람"보다 "혼자인 상태의 종료"에 가까울 때 나오는 응답이에요.'}},
- {t:'결혼 후 한 달 생활비가 얼마나 필요한지 계산해본 적이 있다.',a:'경제 현실도',h:'사랑은 숫자를 싫어하지 않아요. 준비 안 된 쪽이 숫자를 피할 뿐!',flag:{dir:'lo',name:'경제 미계산',d:'결혼 생활의 숫자를 아직 세어보지 않은 상태예요.'}},
+ {t:'결혼 후 한 달 생활비가 얼마나 필요한지 계산해본 적이 있다.',a:'경제 현실도',h:'사랑은 숫자를 싫어하지 않아요!',flag:{dir:'lo',name:'경제 미계산',d:'결혼 생활의 숫자를 아직 세어보지 않은 상태예요.'}},
  {t:'내 소득·부채·저축 상황을 상대에게 솔직히 말할 수 있다.',a:'경제 현실도',h:'돈 이야기가 편해지는 순서가, 결혼이 안전해지는 순서예요.'},
  {t:'부모님의 기대 때문에 결혼을 서둘러야 한다는 압박을 느낀다.',a:'가족 독립도',h:'부모님의 시계와 당신의 시계는 달라도 돼요.',flag:{dir:'hi',name:'부모 압박',d:'결혼 결정의 기준이 부모님의 기대에 기울어 있다는 신호예요.'}},
  {t:'부모님의 기대와 배우자의 감정을 분리해서 판단할 수 있다.',a:'가족 독립도',h:'"알리는 것"과 "허락받는 것"은 달라요.'},
  {t:'결혼은 감정만이 아니라 책임을 나누는 일이라고 생각한다.',a:'책임감',h:'이 문장에 고개를 끄덕이는 속도가 준비도예요.'},
- {t:'문제가 생기면 상대나 상황 탓부터 하게 된다.',a:'책임감',h:'솔직하게요! 여기는 아무도 안 봐요.',flag:{dir:'hi',name:'책임 회피',d:'갈등의 원인을 바깥에서 먼저 찾는 습관 — 결혼에서는 비용이 큰 패턴이에요.'}},
+ {t:'문제가 생기면 상대나 상황 탓부터 하게 된다.',a:'책임감',h:'솔직하게요! 여기는 아무도 안 봐요.',flag:{dir:'hi',name:'책임 회피',d:'갈등의 원인을 바깥에서 먼저 찾는 습관이에요.'}},
  {t:'사랑한다면 어느 정도의 간섭과 통제는 참아야 한다고 생각한다.',a:'존중·안전',h:'이 질문에서 멈칫했다면, 그 멈칫이 데이터예요.',flag:{dir:'hi',name:'통제 수용',d:'간섭을 사랑으로 번역해온 관계 습관 — 가장 먼저 확인해야 할 신호예요.'}},
- {t:'상대가 싫다고 말한 행동은 하지 않으려고 노력한다.',a:'존중·안전',h:'존중은 큰 이벤트가 아니라 이런 작은 반복이에요.'},
- {t:"상대의 단점을 알게 되어도 '결혼하면 달라지겠지'라고 생각한다.",a:'현실 감각',h:'결혼은 사람을 바꾸는 장치가 아니에요. 지금 모습 그대로 30년이라면?',flag:{dir:'hi',name:'결혼 환상',d:'"결혼하면 달라지겠지"는 가장 흔하고 가장 비싼 가정이에요.'}},
+ {t:'상대가 싫다고 말한 행동은 하지 않으려고 노력한다.',a:'존중·안전',h:'존중은 큰 이벤트가 아니라 작은 반복이에요.'},
+ {t:"상대의 단점을 알게 되어도 '결혼하면 달라지겠지'라고 생각한다.",a:'현실 감각',h:'지금 모습 그대로 30년이라면 어때요?',flag:{dir:'hi',name:'결혼 환상',d:'"결혼하면 달라지겠지"는 가장 흔하고 가장 비싼 가정이에요.'}},
  {t:'결혼식 장면보다 결혼 생활을 더 자주 상상한다.',a:'현실 감각',h:'식은 하루, 생활은 30년이니까요.'},
- {t:'돈·거주지·자녀 계획을 상대와 구체적으로 이야기해봤다.',a:'현실 대화',h:'불편한 대화를 미루는 만큼, 결혼 후에 이자가 붙어요.',flag:{dir:'lo',name:'대화 공백',d:'결혼의 핵심 주제가 아직 대화 테이블에 오르지 않았어요.'}},
- {t:'갈등이 생기면 침묵이나 잠수보다 대화를 선택한다.',a:'현실 대화',h:'마지막 스테이지예요! 끝까지 와줘서 고마워요. 🎉'}
+ {t:'돈·거주지·자녀 계획을 상대와 구체적으로 이야기해봤다.',a:'현실 대화',h:'미룬 대화에는 결혼 후에 이자가 붙어요.',flag:{dir:'lo',name:'대화 공백',d:'결혼의 핵심 주제가 아직 대화 테이블에 오르지 않았어요.'}},
+ {t:'갈등이 생기면 침묵이나 잠수보다 대화를 선택한다.',a:'현실 대화',h:'마지막 질문이에요! 결승선이 보여요 🎉'}
 ];
 const QN=QUESTIONS.length;
 const AREAS=['감정 안정도','경제 현실도','가족 독립도','책임감','상대 존중도','현실 감각','현실 대화 능력','위험신호 인식'];
-
-/* ── 문항 렌더링 ── */
-const holder=document.getElementById('questions');
-QUESTIONS.forEach((q,i)=>{
-  const s=document.createElement('section');s.className='q';s.id='q'+(i+1);
-  s.innerHTML=
-    '<div class="card">'+
-    '<div class="flagpole">🚩 스테이지 '+(i+1)+' / '+QN+'</div>'+
-    '<div class="area">'+q.a+' 영역</div>'+
-    '<h3>'+q.t+'</h3>'+
-    '<div class="scale" role="group" aria-label="문항 '+(i+1)+' 응답"></div>'+
-    '<div class="scale-cap"><span>1 · 전혀 아니다</span><span>5 · 매우 그렇다</span></div>'+
-    '<div class="haran-mini"><svg viewBox="0 0 100 148"><use href="#haran"/></svg><span><b>하란:</b> '+q.h+'</span></div>'+
-    '</div>';
-  holder.appendChild(s);
-  const grid=s.querySelector('.scale');
-  for(let v=1;v<=5;v++){
-    const b=document.createElement('button');b.textContent=v;b.setAttribute('aria-label',v+'점');
-    b.onclick=()=>{
-      S.ans[i]=v;
-      grid.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b));
-      s.classList.add('answered');
-      s.querySelector('.flagpole').textContent='✅ 스테이지 '+(i+1)+' 클리어!';
-      updateHud();
-      const next=document.getElementById('q'+(i+2));
-      setTimeout(()=>{next?next.scrollIntoView({behavior:'smooth'}):showResult()},420);
-    };
-    grid.appendChild(b);
-  }
-});
-
-/* ── 스크롤 리빌 ── */
-const io=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
-}),{threshold:.16});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-/* ── 상태값 ── */
-const S={gender:null,status:null,ans:{},discounted:false,lastShown:false};
-
-function pickGender(btn){
-  S.gender=btn.dataset.g;
-  document.querySelectorAll('#gender .chips button').forEach(b=>b.classList.toggle('picked',b===btn));
-  document.getElementById('status').scrollIntoView({behavior:'smooth'});
-}
-function pickStatus(btn){
-  S.status=btn.textContent.replace(/^\S+\s/,'');
-  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('picked',b===btn));
-  const notes={
-    '연애 중':'좋아요! 지금이 가장 정확하게 보이는 시기예요.',
-    '결혼 고민 중':'고민된다는 건 이미 점검이 시작됐다는 뜻이에요.',
-    '재혼 고민 중':'지난 결혼은 실패가 아니라 데이터예요. 이번엔 그 데이터를 써요!',
-    '국제결혼 고민 중':'언어·문화·가족까지, 확인할 영역이 넓어요. 정밀검사에 심화 문항이 준비되어 있어요.',
-    '아직 상대는 없지만 준비 중':'가장 현명한 순서예요. 좋은 사람을 만나기 전에 나부터!'
-  };
-  document.getElementById('statusNote').textContent=notes[S.status]||notes['연애 중'];
-  setTimeout(()=>document.getElementById('want-me').scrollIntoView({behavior:'smooth'}),450);
-}
-
-/* ── 마음 장터: 캐릭터가 든 '원하는 것' 클릭 → 심리 반영 ── */
 const WANTS=[
- {k:'안정',emo:'🏡',bean:'bean-green',say:'"나는 예측할 수 있는 내일이 좋아."',
+ {k:'안정',emo:'🏡',bean:'bean-green',
   me:'당신의 핵심 욕구는 안전기지예요. 관계가 안정 신호를 줄 때 가장 큰 힘을 내는 타입 — 다만 불안해지면 확인(연락·약속 재확인)으로 안정을 사려는 습관이 생기기 쉬워요.',
   pt:'상대가 안정을 원한다고 믿고 있어요. 그렇다면 당신의 즉흥성이나 변덕이 상대에겐 흔들림으로 읽힐 수 있어요. 일정과 약속을 지키는 것이 최고의 애정 표현이 됩니다.'},
- {k:'설렘',emo:'🔥',bean:'bean-pink',say:'"심장이 뛰지 않으면 사랑이 아니야!"',
-  me:'자극과 생동감이 사랑의 증거인 타입이에요. 주의할 점 하나 — 결혼 생활의 평온함을 "사랑이 식었다"로 오역하기 쉬워요. 설렘은 만들어가는 기술이기도 해요.',
+ {k:'설렘',emo:'🔥',bean:'bean-pink',
+  me:'자극과 생동감이 사랑의 증거인 타입이에요. 주의할 점 — 결혼 생활의 평온함을 "사랑이 식었다"로 오역하기 쉬워요. 설렘은 만들어가는 기술이기도 해요.',
   pt:'상대가 설렘을 원한다고 믿고 있어요. 그 믿음 때문에 무리한 이벤트로 애정을 증명하려 할 수 있어요. 상대가 정말 원하는 게 이벤트인지, 일상의 관심인지 물어보세요.'},
- {k:'존중',emo:'🙌',bean:'bean-blue',say:'"내 의견이 존중받는 게 제일 중요해."',
-  me:'인정과 존중이 연료인 타입이에요. 강점은 공정함 — 약점은 비판과 무시에 크게 흔들린다는 것. 서운함을 쌓지 말고 "방금 그 말이 아팠어"라고 즉시 말하는 연습이 필요해요.',
-  pt:'상대가 존중을 원한다고 믿고 있어요. 좋은 신호예요 — 다만 존중은 마음이 아니라 행동(끝까지 듣기, 결정에 반영하기)으로만 전달된다는 걸 기억하세요.'},
- {k:'자유',emo:'🕊',bean:'bean-purple',say:'"함께 있어도 나만의 시간은 필요해."',
-  me:'독립과 거리 조절이 필요한 타입이에요. 건강한 욕구지만, 갈등 상황에서 "혼자 정리할 시간"이 상대에겐 회피나 잠수로 읽힐 수 있어요. 돌아올 시간을 예고하는 게 열쇠예요.',
-  pt:'상대가 자유를 원한다고 믿고 있어요. 그 믿음이 맞다면 간섭을 줄이는 게 답이지만 — 혹시 상대의 거리두기를 합리화하고 있는 건 아닌지도 한번 점검해보세요.'},
- {k:'돌봄',emo:'🤲',bean:'bean-pink',say:'"아껴주고 아낌받는 게 사랑이지."',
-  me:'주고받는 돌봄이 사랑의 언어인 타입이에요. 따뜻한 강점 — 다만 "내가 이만큼 주니까"가 쌓이면 청구서가 돼요. 주기 전에, 받고 싶은 것을 말로 요청하는 연습이 필요해요.',
+ {k:'존중',emo:'🙌',bean:'bean-blue',
+  me:'인정과 존중이 연료인 타입이에요. 강점은 공정함 — 약점은 비판과 무시에 크게 흔들린다는 것. "방금 그 말이 아팠어"라고 즉시 말하는 연습이 필요해요.',
+  pt:'상대가 존중을 원한다고 믿고 있어요. 좋은 신호예요 — 다만 존중은 마음이 아니라 행동(끝까지 듣기, 결정에 반영하기)으로만 전달돼요.'},
+ {k:'자유',emo:'🕊',bean:'bean-purple',
+  me:'독립과 거리 조절이 필요한 타입이에요. 건강한 욕구지만, 갈등 때 "혼자 정리할 시간"이 상대에겐 회피나 잠수로 읽힐 수 있어요. 돌아올 시간을 예고하는 게 열쇠예요.',
+  pt:'상대가 자유를 원한다고 믿고 있어요. 맞다면 간섭을 줄이는 게 답이지만 — 혹시 상대의 거리두기를 합리화하고 있는 건 아닌지도 점검해보세요.'},
+ {k:'돌봄',emo:'🤲',bean:'bean-pink',
+  me:'주고받는 돌봄이 사랑의 언어인 타입이에요. 다만 "내가 이만큼 주니까"가 쌓이면 청구서가 돼요. 주기 전에, 받고 싶은 것을 말로 요청하는 연습이 필요해요.',
   pt:'상대가 돌봄을 원한다고 믿고 있어요. 혹시 상대를 돌봐야 할 사람으로 보고 있진 않나요? 돌봄이 한 방향으로만 흐르면 구원자 패턴이 됩니다.'},
- {k:'경제적 안전',emo:'💰',bean:'bean-green',say:'"현실이 튼튼해야 마음도 편해."',
-  me:'현실 감각이 뛰어난 타입이에요. 결혼 준비에 큰 강점 — 다만 경제적 안전과 정서적 안전은 별개 계좌예요. 조건이 채워줄 수 없는 것을 조건으로 채우려 하지 않는지 점검해보세요.',
-  pt:'상대가 경제적 안전을 원한다고 믿고 있어요. 그 믿음이 부담(더 벌어야 해)이나 권력(내가 쓰니까)으로 변하기 쉬워요. 돈 이야기를 숫자로 투명하게 나누는 것이 해독제예요.'}
+ {k:'경제적 안전',emo:'💰',bean:'bean-green',
+  me:'현실 감각이 뛰어난 타입이에요. 다만 경제적 안전과 정서적 안전은 별개 계좌예요. 조건이 채워줄 수 없는 것을 조건으로 채우려 하지 않는지 점검해보세요.',
+  pt:'상대가 경제적 안전을 원한다고 믿고 있어요. 그 믿음이 부담이나 권력("내가 쓰니까")으로 변하기 쉬워요. 돈 이야기를 숫자로 투명하게 나누는 것이 해독제예요.'}
 ];
-function renderWants(el,side){
-  WANTS.forEach((w,i)=>{
-    const b=document.createElement('button');b.className='npc';
-    b.innerHTML='<svg viewBox="0 0 100 148"><use href="#'+w.bean+'"/></svg>'+
-      '<div class="want">'+w.emo+' '+w.k+'</div><div class="say">'+w.say+'</div>';
-    b.onclick=()=>{
-      S[side]=i;
-      el.querySelectorAll('.npc').forEach(x=>x.classList.toggle('picked',x===b));
-      const nextId= side==='wantMe'?'want-partner':'q1';
-      setTimeout(()=>document.getElementById(nextId).scrollIntoView({behavior:'smooth'}),420);
-    };
-    el.appendChild(b);
-  });
+
+/* ══ 상태 ══ */
+const S={gender:null,status:null,wantMe:null,wantPartner:null,ans:{},discounted:false,lastShown:false};
+
+/* ══ 월드 구성 ══ */
+const GAP=760, START=520;
+const stations=[];
+function addSt(st){st.x=START+stations.length*GAP;stations.push(st);return st}
+
+/* 하란 인사 (자기소개를 대화로) */
+addSt({type:'talk',npc:'haran',tag:'하란 Lv.10',over:'💬',
+ pages:[
+  '안녕하세요, 여행자님! 벚꽃 마을에 온 걸 환영해요. 저는 <b>하란</b> — 올해 <b>서른여섯</b>, 10년째 관계심리 에디터로 일하고 있어요.',
+  '성격이요? 친구들은 <b>"다정한 직진형"</b>이라고 불러요. 돌려 말하지 않지만 비난은 안 해요. "괜찮아요"보다 <b>"확인해요"</b>가 먼저인 타입!',
+  '저에겐 수집품이 있어요 — 헤어진 커플 200쌍의 <b>"그때 알았더라면"</b>이라는 문장들. 위험신호는 언제나 있었어요. 못 본 척했을 뿐이죠.',
+  '그래서 이 마을을 만들었어요. <b>상대가 아니라 당신부터</b> 보려고요. 길을 따라 걸으면서, 만나는 친구들과 이야기하면 돼요. 자, 출발!'
+ ]});
+/* 성별 선택 */
+addSt({type:'choice',npc:'duo',tag:'마을 입구',over:'🙋',who:'VILLAGE',
+ txt:'어서 와요! 문항 구성을 맞춰드릴게요. <b>누구로 시작</b>할까요?',
+ opts:['🙋‍♂️ 남성으로 시작','🙋‍♀️ 여성으로 시작'],
+ set:(i,label)=>{S.gender=i===0?'남성':'여성'}});
+/* 상태 선택 */
+addSt({type:'choice',npc:'sign',tag:'갈림길 표지판',over:'🧭',who:'MAP',
+ txt:'지금 어느 <b>맵</b>에 있나요? 선택에 따라 심화 코스가 준비돼요.',
+ opts:['💗 연애 중','💍 결혼 고민 중','🌱 재혼 고민 중','🌏 국제결혼 고민 중','🧭 아직 상대는 없지만 준비 중'],
+ set:(i,label)=>{S.status=label.replace(/^\S+\s/,'')}});
+/* 마음 장터: 내가 원하는 것 */
+addSt({type:'choice',npc:'market',tag:'마음 장터 🏮',over:'🏮',who:'MARKET',
+ txt:'장터 친구들이 저마다 <b>원하는 것</b>을 들고 있어요. 관계에서 <b>당신이 가장 원하는 것</b>은 무엇인가요?',
+ opts:WANTS.map(w=>w.emo+' '+w.k),
+ set:(i)=>{S.wantMe=i}});
+/* 마음 장터: 상대가 원하는 것 */
+addSt({type:'choice',npc:'market2',tag:'마음 장터 🏮',over:'💭',who:'MARKET',
+ txt:'그렇다면 <b>상대방(또는 미래의 상대)</b>은 당신에게 무엇을 가장 원할까요? 원한다고 <b>믿는 것</b>을 골라요.',
+ opts:WANTS.map(w=>w.emo+' '+w.k),
+ set:(i)=>{S.wantPartner=i}});
+/* 15문항 */
+QUESTIONS.forEach((q,i)=>addSt({type:'scale',qi:i,tag:'스테이지 '+(i+1)+'/'+QN,over:'🚩'}));
+/* 결승선 */
+addSt({type:'finish',npc:'haran',tag:'결승선 🏁',over:'🎉'});
+
+const WORLD_W=START+stations.length*GAP+900;
+
+/* ══ 월드 렌더링 ══ */
+const world=document.getElementById('world');
+world.style.width=WORLD_W+'px';
+document.getElementById('ground').style.width=WORLD_W+'px';
+/* 배경 소품 */
+const DECOS=['palm','blossom','blossom','lampost','hanok','palm','blossom','lampost'];
+for(let x=240;x<WORLD_W;x+=430){
+  const kind=DECOS[Math.floor(x/430)%DECOS.length];
+  const near=stations.some(st=>Math.abs(st.x-x)<170);
+  if(near)continue;
+  const d=document.createElement('div');d.className='deco';d.style.left=x+'px';
+  const w=kind==='hanok'?190:(kind==='lampost'?44:110);
+  d.innerHTML='<svg viewBox="0 0 '+(kind==='hanok'?160:(kind==='lampost'?44:104))+' '+(kind==='hanok'?130:(kind==='lampost'?124:132))+'" style="width:'+w+'px"><use href="#'+kind+'"/></svg>';
+  world.appendChild(d);
 }
-renderWants(document.getElementById('npcMe'),'wantMe');
-renderWants(document.getElementById('npcPartner'),'wantPartner');
+/* 스테이션 비주얼 */
+stations.forEach((st,idx)=>{
+  if(st.type==='scale'){
+    const f=document.createElement('div');f.className='qflag';f.style.left=st.x+'px';f.id='stv'+idx;
+    f.innerHTML='<div class="fl">🚩 '+st.tag+'</div><div class="pole"></div>';
+    world.appendChild(f);return;
+  }
+  const n=document.createElement('div');n.className='npc';n.style.left=st.x+'px';n.id='stv'+idx;
+  let svg='';
+  if(st.npc==='haran')svg='<svg viewBox="0 0 100 148"><use href="#haran"/></svg>';
+  else if(st.npc==='duo')svg='<svg viewBox="0 0 100 148" style="width:56px"><use href="#bean-blue"/></svg><svg viewBox="0 0 100 148" style="width:56px"><use href="#bean-pink"/></svg>';
+  else if(st.npc==='sign')svg='<svg viewBox="0 0 100 130" style="width:84px"><use href="#signpost"/></svg>';
+  else if(st.npc==='market')svg='<svg viewBox="0 0 100 148" style="width:44px"><use href="#bean-green"/></svg><svg viewBox="0 0 100 148" style="width:44px"><use href="#bean-purple"/></svg><svg viewBox="0 0 100 148" style="width:44px"><use href="#bean-pink"/></svg>';
+  else if(st.npc==='market2')svg='<svg viewBox="0 0 100 148" style="width:44px"><use href="#bean-blue"/></svg><svg viewBox="0 0 100 148" style="width:44px"><use href="#bean-green"/></svg><svg viewBox="0 0 100 148" style="width:44px"><use href="#bean-purple"/></svg>';
+  n.innerHTML='<div class="over">'+st.over+'</div>'+svg+'<div class="tag">'+st.tag+'</div>';
+  world.appendChild(n);
+});
+
+/* ══ 이동/카메라 ══ */
+let px=140, dir=1, walking=false, auto=false, panelOpen=false;
+const ANCHOR=()=>Math.min(innerWidth*.38,420);
+const avatar=document.getElementById('avatar');
+function nextStation(){return stations.find(s=>!s.done)}
+function camera(){
+  const cx=Math.max(0,Math.min(px-ANCHOR(),WORLD_W-innerWidth));
+  world.style.transform='translateX('+(-cx)+'px)';
+  avatar.style.left=Math.min(px,Math.max(px-cx,60))+'px';
+  avatar.style.left=(px-cx)+'px';
+}
+function tick(){
+  const ns=nextStation();
+  if(walking&&!panelOpen){
+    px+=6*dir;
+    px=Math.max(80,Math.min(px,WORLD_W-120));
+    avatar.classList.add('walk');
+    avatar.classList.toggle('flip',dir<0);
+  }else avatar.classList.remove('walk');
+  if(ns&&Math.abs(px-ns.x)<26&&!panelOpen){auto=false;walking=false;openStation(ns)}
+  if(auto&&ns&&px<ns.x)walking=true;
+  camera();
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+addEventListener('resize',camera);
+
+/* 컨트롤 */
+const hold=(el,d)=>{
+  const on=e=>{e.preventDefault();dir=d;walking=true;auto=false};
+  const off=()=>{walking=auto};
+  el.addEventListener('pointerdown',on);
+  addEventListener('pointerup',off);el.addEventListener('pointerleave',off);
+};
+hold(document.getElementById('btnR'),1);
+hold(document.getElementById('btnL'),-1);
+document.getElementById('btnGo').onclick=()=>{const ns=nextStation();if(!ns)return;dir=1;auto=true;walking=true};
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'){dir=1;walking=true;auto=false}
+  if(e.key==='ArrowLeft'){dir=-1;walking=true;auto=false}
+});
+addEventListener('keyup',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft')walking=false});
+
+/* ══ 대화 패널 ══ */
+const panel=document.getElementById('panel');
+const pWho=document.getElementById('pWho'),pTxt=document.getElementById('pTxt'),
+      pBtns=document.getElementById('pBtns'),pScale=document.getElementById('pScale'),
+      pCap=document.getElementById('pCap'),pMini=document.getElementById('pMini'),
+      pArea=document.getElementById('pArea');
+function resetPanel(){pBtns.innerHTML='';pScale.innerHTML='';pScale.style.display='none';
+  pCap.style.display='none';pMini.style.display='none';pArea.style.display='none'}
+function closePanel(){panel.classList.remove('show');panelOpen=false}
+function markDone(st){st.done=true;const v=document.getElementById('stv'+stations.indexOf(st));
+  if(v)v.classList.add('done');
+  if(st.type==='scale'){const f=v.querySelector('.fl');if(f)f.textContent='✅ 클리어!'}
+  updateHud()}
+
+function openStation(st){
+  panelOpen=true;resetPanel();
+  if(st.type==='talk'){
+    pWho.textContent='HARAN';let p=0;
+    const show=()=>{pTxt.innerHTML=st.pages[p];pBtns.innerHTML='';
+      const b=document.createElement('button');
+      b.className=p<st.pages.length-1?'primary':'green';
+      b.textContent=p<st.pages.length-1?'다음 →':'출발! 🚶';
+      b.onclick=()=>{p++;p<st.pages.length?show():(markDone(st),closePanel(),autoGo())};
+      pBtns.appendChild(b)};
+    show();
+  }
+  else if(st.type==='choice'){
+    pWho.textContent=st.who;pTxt.innerHTML=st.txt;
+    st.opts.forEach((label,i)=>{
+      const b=document.createElement('button');b.textContent=label;
+      b.onclick=()=>{st.set(i,label);markDone(st);closePanel();autoGo()};
+      pBtns.appendChild(b);
+    });
+  }
+  else if(st.type==='scale'){
+    const q=QUESTIONS[st.qi];
+    pWho.textContent='STAGE '+(st.qi+1)+' / '+QN;
+    pArea.style.display='block';pArea.textContent=q.a+' 영역';
+    pTxt.textContent=q.t;
+    pScale.style.display='grid';pCap.style.display='flex';
+    pMini.style.display='block';pMini.innerHTML='<b>하란:</b> '+q.h;
+    for(let v=1;v<=5;v++){
+      const b=document.createElement('button');b.textContent=v;
+      b.onclick=()=>{S.ans[st.qi]=v;markDone(st);closePanel();autoGo()};
+      pScale.appendChild(b);
+    }
+  }
+  else if(st.type==='finish'){
+    pWho.textContent='HARAN';
+    pTxt.innerHTML='🎉 완주 축하해요! 당신의 <b>예비 결과</b>가 나왔어요. 같이 볼까요?';
+    const b=document.createElement('button');b.className='green';b.textContent='결과 보기 🏁';
+    b.onclick=()=>{markDone(st);closePanel();showResult()};
+    pBtns.appendChild(b);
+  }
+  panel.classList.add('show');
+}
+function autoGo(){setTimeout(()=>{const ns=nextStation();if(ns){dir=1;auto=true;walking=true}},350)}
 
 function updateHud(){
   const n=Object.keys(S.ans).length;
   document.getElementById('fill').style.width=(n/QN*100)+'%';
-  document.getElementById('stage').textContent='스테이지 '+n+' / '+QN;
-  document.getElementById('hud').classList.add('on');
+  document.getElementById('stage').textContent= n? '스테이지 '+n+' / '+QN : '벚꽃 마을 산책 중';
 }
 
-/* ── 결과: 실제 응답 기준으로만 위험신호 노출 ── */
+/* ══ 결과 ══ */
 function showResult(){
   const hits=[];
   QUESTIONS.forEach((q,i)=>{
@@ -702,49 +630,28 @@ function showResult(){
   document.getElementById('resDesc').textContent=desc;
   document.getElementById('resMeta').textContent=
     '예비 판정 — '+(S.gender||'성별 미선택')+' · '+(S.status||'맵 미선택')+' · 15문항 기준';
-  /* 마음 장터 선택의 심리 해석 */
   const wc=document.getElementById('resWants');wc.innerHTML='';
-  if(S.wantMe!=null){
-    const me=WANTS[S.wantMe];
-    wc.insertAdjacentHTML('beforeend',
-      '<div class="want-card"><div class="t">💛 내가 고른 것 — '+me.emo+' '+me.k+'</div><p>'+me.me+'</p></div>');
-  }
-  if(S.wantPartner!=null){
-    const pt=WANTS[S.wantPartner];
-    wc.insertAdjacentHTML('beforeend',
-      '<div class="want-card"><div class="t">💙 상대가 원한다고 믿는 것 — '+pt.emo+' '+pt.k+'</div><p>'+pt.pt+'</p></div>');
-  }
+  if(S.wantMe!=null){const me=WANTS[S.wantMe];
+    wc.insertAdjacentHTML('beforeend','<div class="want-card"><div class="t">💛 내가 고른 것 — '+me.emo+' '+me.k+'</div><p>'+me.me+'</p></div>')}
+  if(S.wantPartner!=null){const pt=WANTS[S.wantPartner];
+    wc.insertAdjacentHTML('beforeend','<div class="want-card"><div class="t">💙 상대가 원한다고 믿는 것 — '+pt.emo+' '+pt.k+'</div><p>'+pt.pt+'</p></div>')}
   if(S.wantMe!=null&&S.wantPartner!=null){
-    const same=S.wantMe===S.wantPartner;
-    wc.insertAdjacentHTML('beforeend',
-      same
+    wc.insertAdjacentHTML('beforeend', S.wantMe===S.wantPartner
       ?'<div class="want-card mismatch"><div class="t">🔍 투사 점검</div><p>내가 원하는 것과 상대가 원하는 것을 <b>같은 것</b>으로 보고 있어요. 정말 같을 수도 있지만, 내 욕구를 상대에게 투사하고 있을 가능성도 있어요. 실제로 물어본 적이 있나요? — 이번 주 대화 주제로 추천해요.</p></div>'
-      :'<div class="want-card mismatch"><div class="t">🔍 비대칭 인식</div><p>나는 <b>'+WANTS[S.wantMe].k+'</b>을, 상대는 <b>'+WANTS[S.wantPartner].k+'</b>을 원한다고 보고 있어요. 서로의 사랑의 언어가 다르다고 느끼는 상태 — 이 차이는 문제라기보다 <b>번역이 필요한 지점</b>이에요. 정밀 리포트의 대화 질문에서 이 조합을 다뤄요.</p></div>');
+      :'<div class="want-card mismatch"><div class="t">🔍 비대칭 인식</div><p>나는 <b>'+WANTS[S.wantMe].k+'</b>을, 상대는 <b>'+WANTS[S.wantPartner].k+'</b>을 원한다고 보고 있어요. 이 차이는 문제라기보다 <b>번역이 필요한 지점</b>이에요. 정밀 리포트의 대화 질문에서 이 조합을 다뤄요.</p></div>');
   }
   const fl=document.getElementById('resFlags');fl.innerHTML='';
   hits.slice(0,2).forEach(h=>{
-    const d=document.createElement('div');d.className='flag';
-    d.innerHTML='<b>⚠ '+h.name+' · '+h.sev+'</b><span>'+h.d+'</span>';fl.appendChild(d);
-  });
-  if(n>2){
-    const d=document.createElement('div');d.className='flag';
-    d.innerHTML='<b>+'+(n-2)+'</b><span>추가 신호 '+(n-2)+'개는 정밀 리포트에서 확인할 수 있어요.</span>';
-    fl.appendChild(d);
-  }
+    fl.insertAdjacentHTML('beforeend','<div class="flag"><b>⚠ '+h.name+' · '+h.sev+'</b><span>'+h.d+'</span></div>')});
+  if(n>2)fl.insertAdjacentHTML('beforeend','<div class="flag"><b>+'+(n-2)+'</b><span>추가 신호 '+(n-2)+'개는 정밀 리포트에서 확인할 수 있어요.</span></div>');
   const lk=document.getElementById('resLocked');lk.innerHTML='';
-  AREAS.forEach(a=>{
-    const d=document.createElement('div');
-    d.innerHTML='<span>'+a+'</span><i>🔒 100문항 정밀검사에서 점수 공개</i>';
-    lk.appendChild(d);
-  });
-  const r=document.getElementById('result');r.classList.add('show');
-  setTimeout(()=>r.scrollIntoView({behavior:'smooth'}),120);
+  AREAS.forEach(a=>lk.insertAdjacentHTML('beforeend','<div><span>'+a+'</span><i>🔒 100문항 정밀검사에서 점수 공개</i></div>'));
+  document.getElementById('result').classList.add('show');
+  document.getElementById('ctrl').style.display='none';
+  document.getElementById('hint').style.display='none';
 }
 
-/* ── 결제: 토스페이먼츠 ──
-   toss-config.js 에 클라이언트 키를 넣으면 실제 결제창이 열리고,
-   키가 없거나 SDK 로드가 차단된 환경(프리뷰)에서는 데모 알림으로 동작한다.
-   결제 승인(confirm)은 서버가 필요 — TOSS-INTEGRATION.md 참조. */
+/* ══ 결제: 토스페이먼츠 (키 없으면 데모) ══ */
 function pay(discount){
   const amt=(discount||S.discounted)?4410:4900;
   closeLast();
@@ -756,28 +663,46 @@ function pay(discount){
       orderName:'연애·결혼 준비도 정밀 리포트 (100문항)',
       successUrl:base+'pay-success.html',
       failUrl:base+'pay-fail.html'
-    }).catch(()=>{/* 사용자가 결제창을 닫은 경우 */});
+    }).catch(()=>{});
   }else{
     alert('[데모] 토스페이먼츠 결제창이 열립니다 — 결제 금액: '+amt.toLocaleString()+'원\n(정식 배포 사이트에서 toss-config.js에 클라이언트 키를 넣으면 실제 결제창이 열립니다)');
   }
 }
 
-/* ── 망설임 → 마지막 제안 (정확히 1회) ── */
+/* ══ 마지막 제안: 딱 1회 · 10분 카운트다운 ══ */
+let cdTimer=null;
 function showLast(){
-  if(S.lastShown)return; S.lastShown=true;
+  if(S.lastShown)return;S.lastShown=true;
   document.getElementById('last').classList.add('show');
+  let t=600;const el=document.getElementById('cd');
+  const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  el.textContent=fmt(t);
+  cdTimer=setInterval(()=>{t--;el.textContent=fmt(t);
+    if(t<=0){clearInterval(cdTimer);closeLast()}},1000);
 }
 function hesitate(){showLast()}
-function closeLast(){document.getElementById('last').classList.remove('show')}
-let sawOffer=false;
-new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)sawOffer=true}),{threshold:.4})
-  .observe(document.getElementById('price'));
-document.addEventListener('mouseleave',e=>{
-  if(e.clientY<=0&&sawOffer&&!S.lastShown)showLast();
-});
-document.querySelector('#last .pay').addEventListener('click',()=>{
+function closeLast(){
+  if(cdTimer){clearInterval(cdTimer);cdTimer=null}
+  document.getElementById('last').classList.remove('show');
+}
+document.getElementById('lastPay').addEventListener('click',()=>{
   S.discounted=true;
   document.getElementById('offerPrice').innerHTML='<s>4,900</s>4,410<span style="font-size:.4em">원</span>';
   document.getElementById('payBtn').textContent='토스페이로 결제하기 (4,410원)';
+  pay(true);
 });
+document.addEventListener('mouseleave',e=>{
+  if(e.clientY<=0&&document.getElementById('result').classList.contains('show')&&!S.lastShown)showLast();
+});
+
+/* ══ 프리로더 ══ */
+(function(){
+  const l=document.getElementById('loader'),p=document.getElementById('pct');
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){l.remove();greet();return}
+  let n=0;const t=setInterval(()=>{n+=Math.ceil(Math.random()*9);
+    if(n>=100){n=100;clearInterval(t);setTimeout(()=>l.classList.add('done'),200);
+      setTimeout(()=>{l.remove();greet()},900)}
+    p.textContent=n+'%'},34);
+})();
+function greet(){const ns=nextStation();if(ns){dir=1;auto=true;walking=true}}
 </script>
