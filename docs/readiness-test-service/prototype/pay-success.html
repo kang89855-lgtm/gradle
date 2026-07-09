@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>결제 완료 — 반지 전에</title>
+<style>
+  :root{--ink:#0B0B0C;--ink2:#121214;--paper:#F4F2ED;--mute:#8A8880;--volt:#FF4A1A;
+        --line:rgba(244,242,237,.14);
+        --disp:'Impact','Haettenschweiler','Arial Narrow Bold','AppleGothic',sans-serif;
+        --kr:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);color:var(--paper);font-family:var(--kr);min-height:100svh;
+       display:grid;place-items:center;padding:6vw;line-height:1.7}
+  .box{max-width:560px;text-align:center;background:var(--ink2);border:1px solid var(--volt);
+       border-radius:24px;padding:52px 6%}
+  h1{font-family:var(--disp);text-transform:uppercase;font-size:clamp(36px,7vw,60px);
+     line-height:.95;color:var(--volt)}
+  p{margin-top:18px;color:var(--mute);font-size:15px}
+  p b{color:var(--paper)}
+  .meta{margin-top:24px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;
+        color:var(--mute);word-break:break-all;font-variant-numeric:tabular-nums}
+  a{display:inline-block;margin-top:30px;background:var(--volt);color:var(--ink);
+    font-family:var(--disp);text-transform:uppercase;letter-spacing:.05em;font-size:20px;
+    padding:16px 40px;border-radius:999px;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>결제 요청 완료</h1>
+  <p><b>하란:</b> 좋은 선택이에요. 이제 100문항 정밀검사로 모든 영역을 함께 걸어볼게요.</p>
+  <p id="note">결제 승인을 확인하고 있습니다…</p>
+  <div class="meta" id="meta"></div>
+  <a href="./index.html">정밀검사 시작하기</a>
+</div>
+<script>
+/* successUrl 로 전달된 파라미터 표시.
+ * 실제 서비스에서는 이 paymentKey/orderId/amount 를 승인 서버로 보내
+ * 토스 결제 승인 API(POST /v1/payments/confirm, 시크릿 키 사용)를 호출해야
+ * 결제가 최종 완료된다. 서버 연동 전까지는 안내만 표시한다. (TOSS-INTEGRATION.md)
+ */
+const q=new URLSearchParams(location.search);
+const pk=q.get('paymentKey'),oid=q.get('orderId'),amt=q.get('amount');
+if(pk){
+  document.getElementById('meta').textContent=
+    '주문번호 '+oid+' · 금액 '+Number(amt).toLocaleString()+'원 · paymentKey '+pk.slice(0,12)+'…';
+  document.getElementById('note').innerHTML=
+    '결제창 인증이 완료되었습니다. <b>승인 서버 연동 후</b> 이 화면에서 자동으로 최종 승인 처리됩니다.';
+}else{
+  document.getElementById('note').textContent='결제 정보가 없습니다. 처음 화면에서 다시 시도해 주세요.';
+}
+</script>
+</body>
+</html>

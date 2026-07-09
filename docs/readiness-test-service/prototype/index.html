@@ -365,6 +365,8 @@
   © 반지 전에 BANJI JEONE — 연애·결혼 준비도 테스트</p>
 </footer>
 
+<script src="./toss-config.js"></script>
+<script src="https://js.tosspayments.com/v1/payment"></script>
 <script>
 /* ── 프리로더 카운터 ── */
 (function(){
@@ -494,13 +496,25 @@ function showResult(){
   setTimeout(()=>r.scrollIntoView({behavior:'smooth'}),120);
 }
 
-/* ── 결제 (토스페이먼츠 자리) ──
-   정식 오픈 후: loadTossPayments(clientKey).requestPayment('카드',{amount, orderId, orderName:'정밀 리포트'…})
-   현재는 데모 알림만 표시한다. */
+/* ── 결제: 토스페이먼츠 ──
+   toss-config.js 에 클라이언트 키를 넣으면 실제 결제창이 열리고,
+   키가 없거나 SDK 로드가 차단된 환경(프리뷰)에서는 데모 알림으로 동작한다.
+   결제 승인(confirm)은 서버가 필요하므로 pay-success.html 에서 안내 — TOSS-INTEGRATION.md 참조. */
 function pay(discount){
-  const amt=discount||S.discounted?4410:4900;
+  const amt=(discount||S.discounted)?4410:4900;
   closeLast();
-  alert('[데모] 토스페이먼츠 결제창이 열립니다 — 결제 금액: '+amt.toLocaleString()+'원\n(홈페이지 정식 오픈 후 연동됩니다)');
+  if(window.TOSS_CLIENT_KEY&&window.TossPayments){
+    const base=location.href.replace(/[^/]*$/,'');
+    TossPayments(window.TOSS_CLIENT_KEY).requestPayment('카드',{
+      amount:amt,
+      orderId:'banji_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8),
+      orderName:'연애·결혼 준비도 정밀 리포트 (100문항)',
+      successUrl:base+'pay-success.html',
+      failUrl:base+'pay-fail.html'
+    }).catch(()=>{/* 사용자가 결제창을 닫은 경우 */});
+  }else{
+    alert('[데모] 토스페이먼츠 결제창이 열립니다 — 결제 금액: '+amt.toLocaleString()+'원\n(정식 배포 사이트에서 toss-config.js에 클라이언트 키를 넣으면 실제 결제창이 열립니다)');
+  }
 }
 
 /* ── 망설임 → 마지막 제안 (정확히 1회) ── */

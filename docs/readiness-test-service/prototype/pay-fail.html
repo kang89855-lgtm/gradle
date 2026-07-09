@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>결제 실패 — 반지 전에</title>
+<style>
+  :root{--ink:#0B0B0C;--ink2:#121214;--paper:#F4F2ED;--mute:#8A8880;--volt:#FF4A1A;
+        --line:rgba(244,242,237,.14);
+        --disp:'Impact','Haettenschweiler','Arial Narrow Bold','AppleGothic',sans-serif;
+        --kr:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);color:var(--paper);font-family:var(--kr);min-height:100svh;
+       display:grid;place-items:center;padding:6vw;line-height:1.7}
+  .box{max-width:560px;text-align:center;background:var(--ink2);border:1px solid var(--line);
+       border-radius:24px;padding:52px 6%}
+  h1{font-family:var(--disp);text-transform:uppercase;font-size:clamp(36px,7vw,60px);line-height:.95}
+  p{margin-top:18px;color:var(--mute);font-size:15px}
+  p b{color:var(--paper)}
+  .meta{margin-top:24px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--mute)}
+  a{display:inline-block;margin-top:30px;background:var(--volt);color:var(--ink);
+    font-family:var(--disp);text-transform:uppercase;letter-spacing:.05em;font-size:20px;
+    padding:16px 40px;border-radius:999px;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>결제가 완료되지 않았어요</h1>
+  <p><b>하란:</b> 괜찮아요. 결과는 사라지지 않으니, 준비되면 다시 이어서 진행해요.</p>
+  <div class="meta" id="meta"></div>
+  <a href="./index.html#price">다시 시도하기</a>
+</div>
+<script>
+const q=new URLSearchParams(location.search);
+const code=q.get('code'),msg=q.get('message');
+if(code) document.getElementById('meta').textContent='사유: '+(msg||code);
+</script>
+</body>
+</html>
