@@ -20,7 +20,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:linear-gradient(var(--sky) 0%,var(--sky-2) 45%,#CDeffa 60%);color:var(--navy);
        font-family:var(--kr);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
-       overflow:hidden;height:100vh;height:100svh;touch-action:none;user-select:none}
+       overflow:hidden;height:100vh;height:100svh;user-select:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
   button:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:999px}
 
@@ -58,7 +58,7 @@
   @keyframes fall{0%{transform:translateY(-4vh) rotate(0)}100%{transform:translateY(108vh) rotate(420deg)}}
 
   /* ── 3D 씬 ── */
-  #scene{position:fixed;inset:0;z-index:2;perspective:1050px;perspective-origin:50% 30%;overflow:hidden}
+  #scene{position:fixed;inset:0;z-index:2;perspective:1050px;perspective-origin:50% 30%;overflow:hidden;touch-action:none}
   #plane{position:absolute;left:50%;top:36%;width:4600px;height:3200px;
          transform-style:preserve-3d;will-change:transform;border-radius:140px;
          background:
@@ -281,11 +281,12 @@
   #result footer .big em{font-style:normal;color:var(--yellow)}
 
   /* ── 시작 화면 ── */
-  #start{position:fixed;inset:0;z-index:70;display:grid;place-items:center;
-         background:linear-gradient(var(--sky),#8FDCF3);padding:5vw 5vw calc(5vw + env(safe-area-inset-bottom,0px));overflow-y:auto}
+  #start{position:fixed;inset:0;z-index:70;display:flex;
+         background:linear-gradient(var(--sky),#8FDCF3);padding:5vw 5vw calc(5vw + env(safe-area-inset-bottom,0px));overflow-y:auto;-webkit-overflow-scrolling:touch}
   #start.hide{display:none}
   #start .card{background:var(--card);border-radius:30px;box-shadow:var(--shadow);
-         max-width:420px;width:100%;padding:30px 6% 32px;text-align:center}
+         max-width:420px;width:100%;padding:30px 6% 32px;text-align:center;
+         margin:auto;height:fit-content}
   @media(max-width:420px){
     #start h1{font-size:28px}
     #start .tt{font-size:12px;white-space:nowrap}
