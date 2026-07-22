@@ -33,6 +33,9 @@ def main() -> int:
     ap.add_argument("--noise", type=float, default=-30.0, help="무음 임계 dB (기본 -30)")
     ap.add_argument("--min-silence", type=float, default=0.5, help="최소 무음 길이 초 (기본 0.5)")
     ap.add_argument("--pad", type=float, default=0.08, help="발화 구간 앞뒤 여유 초 (기본 0.08)")
+    ap.add_argument("--smooth", type=float, default=0.0,
+                    help="컷마다 넣을 크로스 디졸브 길이 초 (기본 0=하드컷). "
+                         "음성 이음매를 매끄럽게/편집 티 안 나게: 0.08~0.12 권장")
     ap.add_argument("--draft-root", default=None, help="캡컷 드래프트 폴더 직접 지정")
     args = ap.parse_args()
 
@@ -57,9 +60,10 @@ def main() -> int:
           f"{saved / pr.duration * 100 if pr.duration else 0:.0f}% 컷)")
 
     name = args.name or f"{inp.stem}-jumpcut"
-    print(f"[3/3] build_draft: '{name}'")
+    smooth_msg = f", smooth 디졸브 {args.smooth}s" if args.smooth > 0 else " (하드컷)"
+    print(f"[3/3] build_draft: '{name}'{smooth_msg}")
     path = draft_builder.build_jumpcut_draft(
-        str(inp), keeps, pr, draft_name=name, draft_root=args.draft_root
+        str(inp), keeps, pr, draft_name=name, draft_root=args.draft_root, smooth=args.smooth
     )
     print(f"\n✓ 드래프트 생성: {path}")
     print("→ 검증: 캡컷을 열고 이 드래프트를 재생해 컷 지점을 확인하세요. (빌드 성공 ≠ 검증)")
