@@ -162,6 +162,48 @@ def detect_silence(input_path: str, noise_db: float, min_silence: float):
     return out
 
 
+_MEAN_VOL = re.compile(r"mean_volume:\s*(-?[0-9.]+)\s*dB")
+_MAX_VOL = re.compile(r"max_volume:\s*(-?[0-9.]+)\s*dB")
+
+
+def measure_loudness(input_path: str):
+    """ffmpeg volumedetect 로 (mean_dB, max_dB) 를 잰다. 오디오 없으면 None."""
+    ffmpeg = require("ffmpeg")
+    log = subprocess.run(
+        [ffmpeg, "-hide_banner", "-nostats", "-i", input_path, "-af", "volumedetect", "-f", "null", "-"],
+        capture_output=True, text=True,
+    ).stderr
+    m, x = _MEAN_VOL.search(log), _MAX_VOL.search(log)
+    if not m:
+        return None
+    return float(m.group(1)), float(x.group(1)) if x else 0.0
+
+
+def compute_volumes(loudness):
+    """클립별 (mean,max) 리스트 → 음량을 맞추는 volume 배수 리스트.
+
+    중앙값을 목표로: 큰 클립은 줄이고(안전), 작은 클립은 키우되 피크가 -1dBFS 를
+    넘지 않게 헤드룸 내에서만 키운다. 결과적으로 음량이 고르게 된다.
+    """
+    means = [ld[0] for ld in loudness if ld is not None]
+    if not means:
+        return [1.0] * len(loudness)
+    srt = sorted(means)
+    target = srt[len(srt) // 2]  # 중앙값(dB)
+    vols = []
+    for ld in loudness:
+        if ld is None:
+            vols.append(1.0)
+            continue
+        mean_db, max_db = ld
+        gain = target - mean_db
+        if gain > 0:  # 키우는 경우: 피크가 -1dBFS 넘지 않게 제한
+            gain = min(gain, max(0.0, -1.0 - max_db))
+        vol = 10 ** (gain / 20.0)
+        vols.append(max(0.1, min(4.0, vol)))
+    return vols
+
+
 def keep_segments(total: float, silences, pad: float, min_keep: float):
     silences = sorted(silences)
     keeps, cursor = [], 0.0
@@ -199,7 +241,7 @@ def _import_cc():
         sys.exit("[에러] pyCapCut 가 설치돼 있지 않습니다.  →  pip install pyCapCut")
 
 
-def _add_segments(script, cc, material, keeps, cursor, transition, smooth, is_last_clip):
+def _add_segments(script, cc, material, keeps, cursor, transition, smooth, is_last_clip, volume=1.0):
     """한 클립의 보존 구간들을 타임라인에 순서대로 얹는다. 다음 cursor 를 반환."""
     valid = [(s, e) for (s, e) in keeps if _us(e - s) > 0]
     for i, (s, e) in enumerate(valid):
@@ -208,6 +250,7 @@ def _add_segments(script, cc, material, keeps, cursor, transition, smooth, is_la
             material,
             target_timerange=cc.trange(cursor, dur),
             source_timerange=cc.trange(_us(s), dur),
+            volume=volume,
         )
         # 전체(모든 클립 통틀어) 마지막 조각에는 트랜지션을 붙이지 않는다.
         last_overall = is_last_clip and i == len(valid) - 1
@@ -238,12 +281,12 @@ def build_draft(input_path: str, keeps, pr: Probe, name: str, draft_root: str | 
     return root / name
 
 
-def build_combined_draft(clips, name, draft_root, smooth, noise, min_silence, pad, cut_silence):
+def build_combined_draft(clips, name, draft_root, smooth, noise, min_silence, pad, cut_silence, normalize):
     """여러 클립을 순서대로 이어붙여 하나의 긴 드래프트로 만든다.
 
     clips: [(Path, Probe), ...] 순서대로. cut_silence=False 면 각 클립을 통째로
-    (최대한 길게) 넣고, True 면 클립마다 무음을 잘라 넣는다. 클립 사이·조각 사이
-    모두 디졸브로 이어 자연스럽게 한다.
+    (최대한 길게) 넣고, True 면 클립마다 무음을 잘라 넣는다. normalize=True 면
+    클립마다 음량을 재서 고르게 맞춘다. 클립 사이·조각 사이는 디졸브로 잇는다.
     """
     cc = _import_cc()
     first = clips[0][1]
@@ -252,6 +295,13 @@ def build_combined_draft(clips, name, draft_root, smooth, noise, min_silence, pa
     script = folder.create_draft(name, first.width, first.height, fps=first.fps, allow_replace=True)
     script.add_track(cc.TrackType.video)
     transition = getattr(cc.TransitionType, _SMOOTH_TRANSITION) if smooth > 0 else None
+
+    if normalize:
+        print("      음량 측정 중...")
+        loud = [measure_loudness(str(p)) for p, _ in clips]
+        volumes = compute_volumes(loud)
+    else:
+        volumes = [1.0] * len(clips)
 
     cursor = 0
     total_kept = 0.0
@@ -267,9 +317,10 @@ def build_combined_draft(clips, name, draft_root, smooth, noise, min_silence, pa
         total_kept += sum(e - s for s, e in keeps)
         cursor = _add_segments(
             script, cc, material, keeps, cursor, transition, smooth,
-            is_last_clip=(idx == len(clips) - 1),
+            is_last_clip=(idx == len(clips) - 1), volume=volumes[idx],
         )
-        print(f"      + [{idx + 1}/{len(clips)}] {path.name}  (누적 {_fmt(cursor / SEC)})")
+        vtag = f"  vol×{volumes[idx]:.2f}" if normalize else ""
+        print(f"      + [{idx + 1}/{len(clips)}] {path.name}  (누적 {_fmt(cursor / SEC)}){vtag}")
     script.save()
     return root / name, total_kept
 
@@ -311,7 +362,8 @@ def _run_combine(args) -> int:
     print(f"[빌드] 드래프트 '{name}'{smsg} 생성 중...")
     path, kept = build_combined_draft(
         clips, name, args.draft_root, args.smooth,
-        args.noise, args.min_silence, args.pad, cut_silence=not args.no_cut,
+        args.noise, args.min_silence, args.pad,
+        cut_silence=not args.no_cut, normalize=not args.no_normalize,
     )
     total_src = sum(pr.duration for _, pr in clips)
     print(f"\n✓ 완료: {path}")
@@ -335,6 +387,8 @@ def main() -> int:
                     help="폴더 안 영상 전부를 순서대로 이어붙여 긴 영상 1개로")
     ap.add_argument("--no-cut", action="store_true",
                     help="--combine 시 무음도 안 자르고 통째로 이어붙임 (최대한 길게)")
+    ap.add_argument("--no-normalize", action="store_true",
+                    help="--combine 시 클립별 음량 자동 평준화를 끔 (기본은 켜짐)")
     ap.add_argument("--draft-root", default=None, help="캡컷 드래프트 폴더 직접 지정")
     args = ap.parse_args()
 
