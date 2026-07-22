@@ -191,24 +191,17 @@ def _us(sec: float) -> int:
     return int(round(sec * SEC))
 
 
-def build_draft(input_path: str, keeps, pr: Probe, name: str, draft_root: str | None, smooth: float):
+def _import_cc():
     try:
         import pycapcut as cc
+        return cc
     except ImportError:
         sys.exit("[에러] pyCapCut 가 설치돼 있지 않습니다.  →  pip install pyCapCut")
 
-    if not keeps:
-        sys.exit("[에러] 보존할 발화 구간이 없습니다. 무음 임계값(--noise/--min-silence)을 조정하세요.")
 
-    root = find_draft_root(draft_root)
-    folder = cc.DraftFolder(str(root))
-    script = folder.create_draft(name, pr.width, pr.height, fps=pr.fps, allow_replace=True)
-    script.add_track(cc.TrackType.video)
-    material = cc.VideoMaterial(input_path)
-    transition = getattr(cc.TransitionType, _SMOOTH_TRANSITION) if smooth > 0 else None
-
+def _add_segments(script, cc, material, keeps, cursor, transition, smooth, is_last_clip):
+    """한 클립의 보존 구간들을 타임라인에 순서대로 얹는다. 다음 cursor 를 반환."""
     valid = [(s, e) for (s, e) in keeps if _us(e - s) > 0]
-    cursor = 0
     for i, (s, e) in enumerate(valid):
         dur = _us(e - s)
         seg = cc.VideoSegment(
@@ -216,22 +209,115 @@ def build_draft(input_path: str, keeps, pr: Probe, name: str, draft_root: str | 
             target_timerange=cc.trange(cursor, dur),
             source_timerange=cc.trange(_us(s), dur),
         )
-        if transition is not None and i < len(valid) - 1:
-            ns, ne = valid[i + 1]
-            max_dur = 0.4 * min(e - s, ne - ns)
+        # 전체(모든 클립 통틀어) 마지막 조각에는 트랜지션을 붙이지 않는다.
+        last_overall = is_last_clip and i == len(valid) - 1
+        if transition is not None and not last_overall:
+            nxt = valid[i + 1] if i + 1 < len(valid) else None
+            nlen = (nxt[1] - nxt[0]) if nxt else (e - s)
+            max_dur = 0.4 * min(e - s, nlen)
             tdur = _us(min(smooth, max_dur))
             if tdur > 0:
                 seg.add_transition(transition, duration=tdur)
         script.add_segment(seg)
         cursor += dur
+    return cursor
+
+
+def build_draft(input_path: str, keeps, pr: Probe, name: str, draft_root: str | None, smooth: float):
+    cc = _import_cc()
+    if not keeps:
+        sys.exit("[에러] 보존할 발화 구간이 없습니다. 무음 임계값(--noise/--min-silence)을 조정하세요.")
+    root = find_draft_root(draft_root)
+    folder = cc.DraftFolder(str(root))
+    script = folder.create_draft(name, pr.width, pr.height, fps=pr.fps, allow_replace=True)
+    script.add_track(cc.TrackType.video)
+    material = cc.VideoMaterial(input_path)
+    transition = getattr(cc.TransitionType, _SMOOTH_TRANSITION) if smooth > 0 else None
+    _add_segments(script, cc, material, keeps, 0, transition, smooth, is_last_clip=True)
     script.save()
     return root / name
+
+
+def build_combined_draft(clips, name, draft_root, smooth, noise, min_silence, pad, cut_silence):
+    """여러 클립을 순서대로 이어붙여 하나의 긴 드래프트로 만든다.
+
+    clips: [(Path, Probe), ...] 순서대로. cut_silence=False 면 각 클립을 통째로
+    (최대한 길게) 넣고, True 면 클립마다 무음을 잘라 넣는다. 클립 사이·조각 사이
+    모두 디졸브로 이어 자연스럽게 한다.
+    """
+    cc = _import_cc()
+    first = clips[0][1]
+    root = find_draft_root(draft_root)
+    folder = cc.DraftFolder(str(root))
+    script = folder.create_draft(name, first.width, first.height, fps=first.fps, allow_replace=True)
+    script.add_track(cc.TrackType.video)
+    transition = getattr(cc.TransitionType, _SMOOTH_TRANSITION) if smooth > 0 else None
+
+    cursor = 0
+    total_kept = 0.0
+    for idx, (path, pr) in enumerate(clips):
+        material = cc.VideoMaterial(str(path))
+        if cut_silence:
+            sils = detect_silence(str(path), noise, min_silence)
+            keeps = keep_segments(pr.duration, sils, pad, min_keep=0.15)
+        else:
+            keeps = [(0.0, pr.duration)]
+        if not keeps:
+            keeps = [(0.0, pr.duration)]
+        total_kept += sum(e - s for s, e in keeps)
+        cursor = _add_segments(
+            script, cc, material, keeps, cursor, transition, smooth,
+            is_last_clip=(idx == len(clips) - 1),
+        )
+        print(f"      + [{idx + 1}/{len(clips)}] {path.name}  (누적 {_fmt(cursor / SEC)})")
+    script.save()
+    return root / name, total_kept
 
 
 # ────────────────────────────── main ──────────────────────────────
 def _fmt(sec: float) -> str:
     m, s = divmod(sec, 60)
     return f"{int(m):02d}:{s:05.2f}"
+
+
+def list_videos(folder_str: str):
+    """폴더 안 영상 파일을 이름순(시간순)으로 반환."""
+    p = Path(folder_str).expanduser()
+    if p.is_file():  # 파일을 줬으면 그 하나만
+        return [p]
+    if not p.is_dir():
+        sys.exit(f"[에러] 폴더가 없습니다: {p}")
+    vids = sorted(
+        [f for f in p.iterdir() if f.is_file() and f.suffix.lower() in VIDEO_EXTS],
+        key=lambda f: f.name,  # hf_YYYYMMDD_HHMMSS_... → 이름순 = 촬영순
+    )
+    if not vids:
+        sys.exit(f"[에러] 폴더에 영상 파일이 없습니다: {p}")
+    return vids
+
+
+def _run_combine(args) -> int:
+    paths = list_videos(args.input)
+    print(f"[이어붙이기] 영상 {len(paths)}개를 순서대로 하나로 합칩니다"
+          f"{' (무음 컷 포함)' if not args.no_cut else ' (통째로, 최대한 길게)'}:")
+    clips = []
+    for i, path in enumerate(paths):
+        pr = probe(str(path))
+        clips.append((path, pr))
+        print(f"   {i + 1:2d}. {path.name}  ({pr.width}x{pr.height} @ {pr.fps}fps, {_fmt(pr.duration)})")
+
+    name = args.name or f"{Path(args.input).name}-combined"
+    smsg = f", 디졸브 {args.smooth}s" if args.smooth > 0 else ""
+    print(f"[빌드] 드래프트 '{name}'{smsg} 생성 중...")
+    path, kept = build_combined_draft(
+        clips, name, args.draft_root, args.smooth,
+        args.noise, args.min_silence, args.pad, cut_silence=not args.no_cut,
+    )
+    total_src = sum(pr.duration for _, pr in clips)
+    print(f"\n✓ 완료: {path}")
+    print(f"  최종 길이 {_fmt(kept)}  (원본 합계 {_fmt(total_src)}, 클립 {len(clips)}개)")
+    print("→ 캡컷을 열어 이 드래프트를 재생해 확인하세요. (음성 그대로)")
+    return 0
 
 
 def main() -> int:
@@ -245,10 +331,18 @@ def main() -> int:
     ap.add_argument("--pad", type=float, default=0.12, help="발화 앞뒤 여유 초 (기본 0.12)")
     ap.add_argument("--smooth", type=float, default=0.1,
                     help="컷마다 크로스 디졸브 초 (기본 0.1=매끄럽게, 0=하드컷)")
+    ap.add_argument("--combine", action="store_true",
+                    help="폴더 안 영상 전부를 순서대로 이어붙여 긴 영상 1개로")
+    ap.add_argument("--no-cut", action="store_true",
+                    help="--combine 시 무음도 안 자르고 통째로 이어붙임 (최대한 길게)")
     ap.add_argument("--draft-root", default=None, help="캡컷 드래프트 폴더 직접 지정")
     args = ap.parse_args()
 
     print(f"[env] {platform.system()} {platform.machine()}")
+
+    if args.combine:
+        return _run_combine(args)
+
     inp = resolve_input(args.input)
     print(f"[1/3] 분석: {inp.name}")
     pr = probe(str(inp))
