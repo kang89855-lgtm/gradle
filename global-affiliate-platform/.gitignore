@@ -1,0 +1,20 @@
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# environment files — secrets never enter the repo
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+
+# prisma
+prisma/*.db
+prisma/migrations/dev/
+
+.DS_Store
+coverage/
