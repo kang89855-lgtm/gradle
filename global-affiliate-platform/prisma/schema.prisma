@@ -1,0 +1,416 @@
+// Multi-country affiliate platform — core schema
+// HQ reporting currency: KRW. All monetary values stored with explicit currency codes.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Geography & markets
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Country {
+  id            String   @id @default(cuid())
+  code          String   @unique // ISO 3166-1 alpha-2: VN, MY, PH, ID, UZ, GE
+  name          String
+  nameKo        String
+  phase         Int      @default(1) // 1 = launch, 2 = expansion
+  enabled       Boolean  @default(false)
+  // market scoring inputs (0–10)
+  tourismDemand         Float @default(0)
+  paymentGrowth         Float @default(0)
+  purchasingPower       Float @default(0)
+  competitionLevel      Float @default(0) // raw competition (higher = harder)
+  affiliateCoverage     Float @default(0)
+  contentProductionCost Float @default(0)
+
+  regions      Region[]
+  destinations Destination[]
+  keywords     Keyword[]
+  offers       Offer[]
+  complianceRules ComplianceRule[]
+  contentPages ContentPage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Region {
+  id        String @id @default(cuid())
+  countryId String
+  country   Country @relation(fields: [countryId], references: [id])
+  slug      String
+  name      String
+  nameKo    String
+
+  destinations Destination[]
+
+  @@unique([countryId, slug])
+}
+
+model Destination {
+  id         String  @id @default(cuid())
+  countryId  String
+  country    Country @relation(fields: [countryId], references: [id])
+  regionId   String?
+  region     Region? @relation(fields: [regionId], references: [id])
+  slug       String
+  name       String
+  nameKo     String
+  latitude   Float?
+  longitude  Float?
+  // low-competition priority: secondary cities are ranked above saturated hubs
+  priority   Int     @default(0)
+  enabled    Boolean @default(true)
+
+  keywords     Keyword[]
+  offers       Offer[]
+  contentPages ContentPage[]
+
+  @@unique([countryId, slug])
+}
+
+model Language {
+  id      String @id @default(cuid())
+  code    String @unique // ko, en, vi, ms, id, tl
+  name    String
+  enabled Boolean @default(true)
+
+  contentPages ContentPage[]
+}
+
+model Currency {
+  id     String @id @default(cuid())
+  code   String @unique // KRW, USD, VND, MYR, PHP, IDR, UZS, GEL
+  name   String
+  symbol String
+
+  ratesFrom ExchangeRate[] @relation("baseCurrency")
+  ratesTo   ExchangeRate[] @relation("quoteCurrency")
+}
+
+model ExchangeRate {
+  id              String   @id @default(cuid())
+  baseCurrencyId  String
+  baseCurrency    Currency @relation("baseCurrency", fields: [baseCurrencyId], references: [id])
+  quoteCurrencyId String
+  quoteCurrency   Currency @relation("quoteCurrency", fields: [quoteCurrencyId], references: [id])
+  rate            Decimal  @db.Decimal(18, 8)
+  fetchedAt       DateTime @default(now())
+
+  @@index([baseCurrencyId, quoteCurrencyId, fetchedAt])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Keywords (purchase-intent targeting)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Keyword {
+  id            String       @id @default(cuid())
+  countryId     String
+  country       Country      @relation(fields: [countryId], references: [id])
+  destinationId String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
+  locale        String // language of the keyword itself
+  text          String
+  intent        KeywordIntent @default(INFORMATIONAL)
+  category      String? // hotels, local-tours, airport-transfers, esim, ...
+
+  metrics      KeywordMetric[]
+  contentPages ContentPage[]
+
+  @@unique([countryId, locale, text])
+}
+
+enum KeywordIntent {
+  INFORMATIONAL
+  COMMERCIAL // comparison / research
+  TRANSACTIONAL // booking-ready ("예약", "가격", "할인")
+}
+
+model KeywordMetric {
+  id                String  @id @default(cuid())
+  keywordId         String
+  keyword           Keyword @relation(fields: [keywordId], references: [id])
+  monthlySearches   Int?
+  difficulty        Float? // 0–100
+  koreanResultCount Int? // Korean-language documents in SERP
+  cpc               Decimal? @db.Decimal(12, 4)
+  cpcCurrency       String? // currency code of the CPC value
+  offerCount        Int? // bookable affiliate products found
+  avgProductPrice   Decimal? @db.Decimal(14, 2)
+  avgCommission     Decimal? @db.Decimal(14, 2)
+  measuredAt        DateTime @default(now())
+
+  @@index([keywordId, measuredAt])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Content
+// ─────────────────────────────────────────────────────────────────────────────
+
+model ContentPage {
+  id            String       @id @default(cuid())
+  countryId     String
+  country       Country      @relation(fields: [countryId], references: [id])
+  destinationId String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
+  languageId    String
+  language      Language     @relation(fields: [languageId], references: [id])
+  keywordId     String?
+  keyword       Keyword?     @relation(fields: [keywordId], references: [id])
+  slug          String
+  title         String
+  status        ContentStatus @default(DISCOVERED)
+  publishedAt   DateTime?
+  expiresAt     DateTime?
+
+  versions ContentVersion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([languageId, countryId, slug])
+  @@index([status])
+}
+
+// Full profit-pipeline lifecycle. AI-generated content can never reach
+// PUBLISHED without passing FACT_CHECKED and HUMAN_REVIEWED first —
+// the transition rules live in src/lib/content/workflow.ts.
+enum ContentStatus {
+  DISCOVERED
+  PLANNED
+  GENERATED // AI-produced draft — never publishable directly
+  FACT_CHECKED
+  AFFILIATE_LINKED
+  HUMAN_REVIEWED
+  SCHEDULED
+  PUBLISHED
+  MEASURED
+  UPDATED
+  EXPIRED
+  ARCHIVED
+}
+
+model ContentVersion {
+  id        String      @id @default(cuid())
+  pageId    String
+  page      ContentPage @relation(fields: [pageId], references: [id])
+  version   Int
+  body      String // markdown
+  authoredBy String // "ai" | reviewer identifier
+  reviewNote String?
+  createdAt DateTime @default(now())
+
+  @@unique([pageId, version])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Affiliate providers, merchants, offers
+// ─────────────────────────────────────────────────────────────────────────────
+
+model AffiliateProvider {
+  id      String  @id @default(cuid())
+  slug    String  @unique // booking, agoda, klook, getyourguide, direct
+  name    String
+  // env var NAME holding the credential — the value itself is never stored
+  credentialEnvVar String?
+  enabled Boolean @default(true)
+
+  programs AffiliateProgram[]
+}
+
+model AffiliateProgram {
+  id         String            @id @default(cuid())
+  providerId String
+  provider   AffiliateProvider @relation(fields: [providerId], references: [id])
+  name       String
+  category   String // hotels, local-tours, airport-transfers, esim, insurance, flights
+  commissionRate Decimal? @db.Decimal(6, 4) // e.g. 0.0400 = 4 %
+  cookieDays Int?
+  notes      String?
+
+  offers Offer[]
+}
+
+model Merchant {
+  id        String  @id @default(cuid())
+  name      String
+  countryCode String?
+  contactEmail String?
+  status    MerchantStatus @default(PROSPECT)
+  notes     String?
+
+  offers Offer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum MerchantStatus {
+  PROSPECT
+  CONTACTED
+  NEGOTIATING
+  ACTIVE
+  PAUSED
+  ENDED
+}
+
+model Offer {
+  id            String            @id @default(cuid())
+  programId     String?
+  program       AffiliateProgram? @relation(fields: [programId], references: [id])
+  merchantId    String?
+  merchant      Merchant?         @relation(fields: [merchantId], references: [id])
+  countryId     String
+  country       Country           @relation(fields: [countryId], references: [id])
+  destinationId String?
+  destination   Destination?      @relation(fields: [destinationId], references: [id])
+  slug          String            @unique
+  title         String
+  category      String
+  landingUrl    String // provider landing page (before affiliate parameters)
+  price         Decimal?          @db.Decimal(14, 2)
+  priceCurrency String?
+  freeCancellation Boolean        @default(false)
+  status        OfferStatus       @default(ACTIVE)
+  expiresAt     DateTime?
+  lastCheckedAt DateTime? // broken-link detector heartbeat
+  lastCheckOk   Boolean?
+
+  links AffiliateLink[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([countryId, category, status])
+}
+
+enum OfferStatus {
+  ACTIVE
+  EXPIRED
+  BROKEN_LINK
+  PAUSED
+}
+
+model AffiliateLink {
+  id        String @id @default(cuid())
+  offerId   String
+  offer     Offer  @relation(fields: [offerId], references: [id])
+  slug      String @unique // public /go/<slug> identifier
+  subId     String? // provider sub-id / tracking label
+  createdAt DateTime @default(now())
+
+  clicks      ClickEvent[]
+  conversions Conversion[]
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Analytics
+// ─────────────────────────────────────────────────────────────────────────────
+
+model ClickEvent {
+  id         String        @id @default(cuid())
+  linkId     String
+  link       AffiliateLink @relation(fields: [linkId], references: [id])
+  occurredAt DateTime      @default(now())
+  locale     String?
+  countryCode String? // visitor country if known
+  referer    String?
+  visitorHash String? // salted hash — raw identifiers are never stored
+  utmSource  String?
+  utmMedium  String?
+  utmCampaign String?
+
+  @@index([linkId, occurredAt])
+}
+
+model Conversion {
+  id           String        @id @default(cuid())
+  linkId       String
+  link         AffiliateLink @relation(fields: [linkId], references: [id])
+  providerRef  String? // provider-side booking / transaction reference
+  occurredAt   DateTime      @default(now())
+  status       ConversionStatus @default(PENDING)
+
+  revenueEvents RevenueEvent[]
+
+  @@index([linkId, occurredAt])
+}
+
+enum ConversionStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model RevenueEvent {
+  id           String     @id @default(cuid())
+  conversionId String
+  conversion   Conversion @relation(fields: [conversionId], references: [id])
+  amount       Decimal    @db.Decimal(14, 2)
+  currency     String // original payout currency
+  amountKrw    Decimal?   @db.Decimal(14, 2) // converted at booking time for HQ reporting
+  occurredAt   DateTime   @default(now())
+
+  @@index([occurredAt])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Compliance & distribution
+// ─────────────────────────────────────────────────────────────────────────────
+
+model ComplianceRule {
+  id        String  @id @default(cuid())
+  countryId String?
+  country   Country? @relation(fields: [countryId], references: [id])
+  locale    String? // rule text language
+  kind      ComplianceKind
+  text      String
+  required  Boolean @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+enum ComplianceKind {
+  AFFILIATE_DISCLOSURE
+  PRIVACY
+  COOKIE_CONSENT
+  PRICE_ACCURACY
+  ADVERTISING_LABEL
+}
+
+model DistributionChannel {
+  id      String @id @default(cuid())
+  slug    String @unique // blog, naver, brunch, newsletter, ...
+  name    String
+  enabled Boolean @default(true)
+
+  jobs DistributionJob[]
+}
+
+model DistributionJob {
+  id          String              @id @default(cuid())
+  channelId   String
+  channel     DistributionChannel @relation(fields: [channelId], references: [id])
+  contentPageId String
+  scheduledAt DateTime
+  status      DistributionStatus  @default(QUEUED)
+  resultNote  String?
+
+  createdAt DateTime @default(now())
+
+  @@index([status, scheduledAt])
+}
+
+enum DistributionStatus {
+  QUEUED
+  RUNNING
+  DONE
+  FAILED
+  CANCELLED
+}
