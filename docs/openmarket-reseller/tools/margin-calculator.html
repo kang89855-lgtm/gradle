@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리셀러 마진 계산기</title>
+<style>
+  :root {
+    --bg: #f4f6f8; --card: #ffffff; --ink: #1a2330; --sub: #5b6b7d;
+    --line: #dde3ea; --accent: #2563eb; --ok: #16a34a; --warn: #d97706; --bad: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: var(--bg); color: var(--ink); padding: 24px 16px; line-height: 1.5;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: var(--sub); font-size: 13px; margin-bottom: 20px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card h2 { font-size: 15px; margin-bottom: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+  label { display: block; font-size: 12px; color: var(--sub); margin-bottom: 4px; }
+  input, select {
+    width: 100%; padding: 10px 12px; font-size: 15px; border: 1px solid var(--line);
+    border-radius: 8px; background: #fff; color: var(--ink);
+  }
+  input:focus, select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip {
+    padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff;
+    font-size: 13px; cursor: pointer;
+  }
+  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .result { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; text-align: center; }
+  @media (max-width: 520px) { .result { grid-template-columns: 1fr; } }
+  .stat { padding: 14px 8px; border-radius: 10px; background: var(--bg); }
+  .stat .v { font-size: 22px; font-weight: 700; }
+  .stat .k { font-size: 12px; color: var(--sub); margin-top: 2px; }
+  .verdict { margin-top: 14px; padding: 12px 14px; border-radius: 10px; font-size: 14px; font-weight: 600; }
+  .verdict.ok  { background: #ecfdf5; color: var(--ok); }
+  .verdict.warn{ background: #fffbeb; color: var(--warn); }
+  .verdict.bad { background: #fef2f2; color: var(--bad); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  td { padding: 6px 4px; border-bottom: 1px solid var(--line); }
+  td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  .note { font-size: 12px; color: var(--sub); margin-top: 12px; }
+  .minprice { font-size: 14px; margin-top: 10px; }
+  .minprice b { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>리셀러 마진 계산기</h1>
+  <p class="sub">등록 전 필수 검증 — 순마진 15% 미만이면 등록하지 않는다. 수수료율은 카테고리·정책에 따라 다르므로 실제 값으로 조정할 것.</p>
+
+  <div class="card">
+    <h2>1. 채널 선택 (수수료 프리셋)</h2>
+    <div class="chips" id="chips">
+      <button class="chip active" data-fee="10">쿠팡 (10%)</button>
+      <button class="chip" data-fee="9">11번가 (9%)</button>
+      <button class="chip" data-fee="9">G마켓·옥션 (9%)</button>
+      <button class="chip" data-fee="4">내 마켓 (4%)</button>
+    </div>
+    <div class="grid">
+      <div>
+        <label>플랫폼 수수료율 (%)</label>
+        <input type="number" id="fee" value="10" step="0.1" min="0">
+      </div>
+      <div>
+        <label>목표 순마진율 (%)</label>
+        <input type="number" id="target" value="15" step="1" min="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. 비용 입력 (원)</h2>
+    <div class="grid">
+      <div><label>판매가</label><input type="number" id="price" value="19900" step="100" min="0"></div>
+      <div><label>상품 원가 (도매가)</label><input type="number" id="cost" value="9000" step="100" min="0"></div>
+      <div><label>매입/도매처 배송비</label><input type="number" id="shipIn" value="2500" step="100" min="0"></div>
+      <div><label>판매 배송비 부담분 (무료배송이면 실제 택배비)</label><input type="number" id="shipOut" value="0" step="100" min="0"></div>
+      <div><label>포장·부자재</label><input type="number" id="pack" value="0" step="100" min="0"></div>
+      <div><label>건당 광고비</label><input type="number" id="ad" value="0" step="100" min="0"></div>
+      <div><label>반품 충당금율 (% of 판매가)</label><input type="number" id="reserve" value="1.5" step="0.5" min="0"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3. 결과</h2>
+    <div class="result">
+      <div class="stat"><div class="v" id="profit">-</div><div class="k">건당 순이익</div></div>
+      <div class="stat"><div class="v" id="margin">-</div><div class="k">순마진율</div></div>
+      <div class="stat"><div class="v" id="roas">-</div><div class="k">손익분기 ROAS</div></div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+    <div class="minprice" id="minprice"></div>
+    <table id="breakdown"></table>
+    <p class="note">손익분기 ROAS = 1 ÷ 순마진율. 광고 ROAS가 이 값보다 낮으면 광고할수록 손해다.<br>
+    최소 판매가 = (원가 + 배송비 + 포장 + 광고) ÷ (1 − 수수료율 − 충당금율 − 목표순마진율)</p>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const fmt = n => Math.round(n).toLocaleString('ko-KR') + '원';
+
+  document.querySelectorAll('#chips .chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#chips .chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      $('fee').value = btn.dataset.fee;
+      calc();
+    });
+  });
+
+  ['fee','target','price','cost','shipIn','shipOut','pack','ad','reserve']
+    .forEach(id => $(id).addEventListener('input', calc));
+
+  function calc() {
+    const price  = +$('price').value || 0;
+    const cost   = +$('cost').value || 0;
+    const shipIn = +$('shipIn').value || 0;
+    const shipOut= +$('shipOut').value || 0;
+    const pack   = +$('pack').value || 0;
+    const ad     = +$('ad').value || 0;
+    const feeR   = (+$('fee').value || 0) / 100;
+    const resR   = (+$('reserve').value || 0) / 100;
+    const target = (+$('target').value || 0) / 100;
+
+    const fee = price * feeR;
+    const reserve = price * resR;
+    const profit = price - cost - shipIn - shipOut - pack - ad - fee - reserve;
+    const margin = price > 0 ? profit / price : 0;
+
+    $('profit').textContent = fmt(profit);
+    $('margin').textContent = (margin * 100).toFixed(1) + '%';
+    $('roas').textContent = margin > 0 ? Math.ceil(100 / margin) / 100 * 100 + '%' : '—';
+
+    const v = $('verdict');
+    if (margin >= 0.15) { v.className = 'verdict ok';   v.textContent = '✅ 등록 가능 — 목표 마진을 충족한다.'; }
+    else if (margin > 0){ v.className = 'verdict warn'; v.textContent = '⚠️ 마진 부족 — 15% 미만이면 등록하지 않는 것이 원칙. 판매가 인상 또는 소싱처 재검토.'; }
+    else               { v.className = 'verdict bad';  v.textContent = '❌ 역마진 — 팔릴수록 손해. 등록 금지.'; }
+
+    const denom = 1 - feeR - resR - target;
+    const minPrice = denom > 0 ? (cost + shipIn + shipOut + pack + ad) / denom : null;
+    $('minprice').innerHTML = minPrice
+      ? `목표 순마진 ${(target*100).toFixed(0)}% 달성 최소 판매가: <b>${fmt(minPrice)}</b>`
+      : '수수료+충당금+목표마진 합이 100%를 넘어 계산 불가';
+
+    $('breakdown').innerHTML = `
+      <tr><td>판매가</td><td>${fmt(price)}</td></tr>
+      <tr><td>상품 원가</td><td>-${fmt(cost)}</td></tr>
+      <tr><td>매입 배송비</td><td>-${fmt(shipIn)}</td></tr>
+      <tr><td>판매 배송비 부담분</td><td>-${fmt(shipOut)}</td></tr>
+      <tr><td>포장·부자재</td><td>-${fmt(pack)}</td></tr>
+      <tr><td>건당 광고비</td><td>-${fmt(ad)}</td></tr>
+      <tr><td>플랫폼 수수료 (${(feeR*100).toFixed(1)}%)</td><td>-${fmt(fee)}</td></tr>
+      <tr><td>반품 충당금 (${(resR*100).toFixed(1)}%)</td><td>-${fmt(reserve)}</td></tr>
+      <tr><td><b>건당 순이익</b></td><td><b>${fmt(profit)}</b></td></tr>`;
+  }
+  calc();
+</script>
+</body>
+</html>
