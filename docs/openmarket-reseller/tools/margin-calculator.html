@@ -58,19 +58,19 @@
   <div class="card">
     <h2>1. 채널 선택 (수수료 프리셋)</h2>
     <div class="chips" id="chips">
-      <button class="chip active" data-fee="10">쿠팡 (10%)</button>
+      <button class="chip active" data-fee="14">기준 수수료 (14%)</button>
+      <button class="chip" data-fee="10">쿠팡 (10%)</button>
       <button class="chip" data-fee="9">11번가 (9%)</button>
       <button class="chip" data-fee="9">G마켓·옥션 (9%)</button>
-      <button class="chip" data-fee="4">내 마켓 (4%)</button>
     </div>
     <div class="grid">
       <div>
         <label>플랫폼 수수료율 (%)</label>
-        <input type="number" id="fee" value="10" step="0.1" min="0">
+        <input type="number" id="fee" value="14" step="0.1" min="0">
       </div>
       <div>
         <label>목표 순마진율 (%)</label>
-        <input type="number" id="target" value="15" step="1" min="0">
+        <input type="number" id="target" value="35" step="1" min="0">
       </div>
     </div>
   </div>
@@ -78,9 +78,9 @@
   <div class="card">
     <h2>2. 비용 입력 (원)</h2>
     <div class="grid">
-      <div><label>판매가</label><input type="number" id="price" value="19900" step="100" min="0"></div>
+      <div><label>판매가</label><input type="number" id="price" value="27900" step="100" min="0"></div>
       <div><label>상품 원가 (도매가)</label><input type="number" id="cost" value="9000" step="100" min="0"></div>
-      <div><label>매입/도매처 배송비</label><input type="number" id="shipIn" value="2500" step="100" min="0"></div>
+      <div><label>운반비 (매입/도매처 배송비)</label><input type="number" id="shipIn" value="5000" step="100" min="0"></div>
       <div><label>판매 배송비 부담분 (무료배송이면 실제 택배비)</label><input type="number" id="shipOut" value="0" step="100" min="0"></div>
       <div><label>포장·부자재</label><input type="number" id="pack" value="0" step="100" min="0"></div>
       <div><label>건당 광고비</label><input type="number" id="ad" value="0" step="100" min="0"></div>
@@ -140,9 +140,9 @@
     $('roas').textContent = margin > 0 ? Math.ceil(100 / margin) / 100 * 100 + '%' : '—';
 
     const v = $('verdict');
-    if (margin >= 0.15) { v.className = 'verdict ok';   v.textContent = '✅ 등록 가능 — 목표 마진을 충족한다.'; }
-    else if (margin > 0){ v.className = 'verdict warn'; v.textContent = '⚠️ 마진 부족 — 15% 미만이면 등록하지 않는 것이 원칙. 판매가 인상 또는 소싱처 재검토.'; }
-    else               { v.className = 'verdict bad';  v.textContent = '❌ 역마진 — 팔릴수록 손해. 등록 금지.'; }
+    if (margin >= target) { v.className = 'verdict ok';   v.textContent = `✅ 등록 가능 — 목표 마진 ${(target*100).toFixed(0)}%를 충족한다.`; }
+    else if (margin > 0)  { v.className = 'verdict warn'; v.textContent = `⚠️ 목표 미달 (${(margin*100).toFixed(1)}% < ${(target*100).toFixed(0)}%) — 판매가 인상, 소싱처 재검토, 또는 상품 교체.`; }
+    else                  { v.className = 'verdict bad';  v.textContent = '❌ 역마진 — 팔릴수록 손해. 등록 금지.'; }
 
     const denom = 1 - feeR - resR - target;
     const minPrice = denom > 0 ? (cost + shipIn + shipOut + pack + ad) / denom : null;
