@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리셀 등록안 생성기 (묘목)</title>
+<style>
+  :root {
+    --bg: #f4f6f8; --card: #ffffff; --ink: #1a2330; --sub: #5b6b7d;
+    --line: #dde3ea; --accent: #2563eb; --ok: #16a34a; --bad: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: var(--bg); color: var(--ink); padding: 24px 16px; line-height: 1.5;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: var(--sub); font-size: 13px; margin-bottom: 20px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card h2 { font-size: 15px; margin-bottom: 12px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+  label { display: block; font-size: 12px; color: var(--sub); margin-bottom: 4px; }
+  input, textarea {
+    width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid var(--line);
+    border-radius: 8px; background: #fff; color: var(--ink);
+  }
+  textarea { min-height: 160px; font-family: inherit; resize: vertical; }
+  input:focus, textarea:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  button.run {
+    padding: 12px 24px; font-size: 15px; font-weight: 700; color: #fff; background: var(--accent);
+    border: 0; border-radius: 8px; cursor: pointer; margin-top: 4px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  th, td { padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { font-size: 12px; color: var(--sub); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .name { font-weight: 600; }
+  .note { font-size: 12px; color: var(--sub); margin-top: 12px; }
+  .copybtn { padding: 8px 14px; font-size: 13px; border: 1px solid var(--line); background: #fff; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>리셀 등록안 생성기 (묘목)</h1>
+  <p class="sub">소싱처(심폴 등) 페이지에서 상품명과 가격을 복사해 붙여넣으면, 상호가 제거된 등록용 상품명과 등록 판정 기준(필요 최소 시세)을 일괄 생성한다.<br>
+  기준: 판매가는 시장 정상가 고정 · 수수료 14% · 이익 35% · 운반비 5,000원 → <b>필요 최소 시세 = (매입가 + 5,000) ÷ 0.51</b></p>
+
+  <div class="card">
+    <h2>1. 설정</h2>
+    <div class="grid">
+      <div><label>제거할 상호 (쉼표로 여러 개)</label><input id="brands" value="나무생각"></div>
+      <div><label>수수료율 (%)</label><input type="number" id="fee" value="14" step="0.1"></div>
+      <div><label>목표 이익율 (%)</label><input type="number" id="target" value="35" step="1"></div>
+      <div><label>운반비 (원)</label><input type="number" id="ship" value="5000" step="500"></div>
+    </div>
+    <div class="grid" style="grid-template-columns: 1fr;">
+      <div><label>등록용 상품명 뒤에 붙일 용도 키워드 (선택)</label><input id="suffix" value="유실수 과실수 정원 조경"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. 소싱 상품 붙여넣기</h2>
+    <p class="sub" style="margin-bottom:8px">한 줄에 하나씩: <b>상품명 [쉼표 또는 탭] 매입가</b><br>
+    예) 나무생각 왕대추나무 묘목 2년생 접목묘, 8500</p>
+    <textarea id="input" placeholder="나무생각 왕대추나무 묘목 2년생 접목묘, 8500
+나무생각 샤인머스캣 포도나무 묘목 2년생, 12000
+나무생각 블루베리 듀크 2년생 포트묘, 7000"></textarea>
+    <button class="run" id="run">등록안 생성</button>
+  </div>
+
+  <div class="card" id="outCard" style="display:none">
+    <h2>3. 등록안</h2>
+    <table id="out">
+      <thead>
+        <tr><th>#</th><th>등록용 상품명 (상호 제거)</th><th>매입가</th><th>필요 최소 시세</th><th>시세 확인 후 판정</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="copybtn" id="copy">표를 탭 구분 텍스트로 복사 (엑셀 붙여넣기용)</button>
+    <p class="note">판정 방법: 각 상품을 쿠팡·네이버쇼핑에서 검색해 실제 팔리는 정상가를 확인한다. <b>정상가 ≥ 필요 최소 시세</b>면 그 정상가로 등록(이익 35% 확보), 미달이면 등록하지 않는다.<br>
+    등록 시 주의: 상품정보제공고시의 생산자/공급자 칸에는 실제 생산 농원을 기재해야 한다(법정 항목). 품종보호 등록 품종 여부를 소싱처에 확인할 것. 소싱처의 사진·상세문구를 무단 복사하지 말 것.</p>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const fmt = n => Math.round(n).toLocaleString('ko-KR');
+  let rows = [];
+
+  $('run').addEventListener('click', () => {
+    const brands = $('brands').value.split(',').map(s => s.trim()).filter(Boolean);
+    const feeR = (+$('fee').value || 0) / 100;
+    const target = (+$('target').value || 0) / 100;
+    const ship = +$('ship').value || 0;
+    const suffix = $('suffix').value.trim();
+    const denom = 1 - feeR - target;
+
+    rows = $('input').value.split('\n').map(line => line.trim()).filter(Boolean).map(line => {
+      const parts = line.split(/[,\t]/);
+      const rawPrice = parts.length > 1 ? parts[parts.length - 1].replace(/[^\d]/g, '') : '';
+      const cost = rawPrice ? +rawPrice : null;
+      let name = (parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0]).trim();
+      brands.forEach(b => { if (b) name = name.split(b).join(' '); });
+      name = name.replace(/\s+/g, ' ').trim();
+      if (suffix && !name.includes(suffix)) name = name + ' ' + suffix;
+      const minMarket = (cost !== null && denom > 0) ? (cost + ship) / denom : null;
+      return { name, cost, minMarket };
+    });
+
+    const tbody = $('out').querySelector('tbody');
+    tbody.innerHTML = rows.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td class="name">${r.name}</td>
+        <td class="num">${r.cost !== null ? fmt(r.cost) + '원' : '—'}</td>
+        <td class="num">${r.minMarket !== null ? '<b>' + fmt(r.minMarket) + '원</b>' : '매입가 없음'}</td>
+        <td>시세 ≥ 왼쪽 값이면 등록</td>
+      </tr>`).join('');
+    $('outCard').style.display = 'block';
+  });
+
+  $('copy').addEventListener('click', () => {
+    const text = ['등록용 상품명\t매입가\t필요 최소 시세']
+      .concat(rows.map(r => `${r.name}\t${r.cost ?? ''}\t${r.minMarket ? Math.round(r.minMarket) : ''}`))
+      .join('\n');
+    navigator.clipboard.writeText(text).then(() => alert('복사 완료 — 엑셀/시트에 붙여넣으세요.'));
+  });
+</script>
+</body>
+</html>
